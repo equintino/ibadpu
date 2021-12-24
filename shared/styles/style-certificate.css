@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Carattere&family=Sofia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Carattere&family=Marck+Script&family=Petemoss&display=swap');
+
+#certificate table, #certificate #to {
+    margin-bottom: 49px;
+    border: 2px solid #b20605;
+    width: 695px;
+    cursor: pointer;
+}
+
+#certificate p {
+    color: #6f6e6e;
+    margin: 6px 0;
+}
+
+#certificate .data {
+    color: black;
+    font-family: 'Carattere', cursive;
+    font-size: 2em;
+    font-weight: bolder;
+}
+
+#certificate .base {
+    margin: 10px 0;
+    color: #b20605;
+    width: 500px;
+}
+
+#certificate #to {
+    text-align: center;
+    font-size: 2.4em;
+    font-weight: bolder;
+    font-family: 'Carattere', cursive;
+    margin-bottom: 163px;
+}
+
+#certificate #to p {
+    color: #ac0600;
+}
+
+#certificate #to div {
+    margin: 5px;
+    border: 1px solid #b20605;
+}
+
+#certificate .paragraph {
+    line-height: 1.2em;
+    padding: 10px;
+}

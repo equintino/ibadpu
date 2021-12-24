@@ -1,0 +1,15 @@
+#register {
+	max-width: 900px;
+	margin: 20px auto;
+}
+
+#register fieldset {
+	border-radius: 5px;
+	padding: 0 10px 20px 10px;
+	margin: 10px 0;
+	background: #ebe3b5;
+}
+
+#register legend {
+	font-size: 1.2em;
+}

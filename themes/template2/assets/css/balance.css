@@ -1,0 +1,11 @@
+.center{
+    width: 300px;
+    margin: 40px auto;
+    font-size: 1.2em;
+    text-align: center;
+ }
+
+ .month{
+    color: green;
+    font-style: italic;
+ }

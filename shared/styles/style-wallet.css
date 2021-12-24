@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Medula+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Medula+One&display=swap');
+
+#wallet {
+    width: 690px;
+}
+
+#wallet table td, #wallet table tr {
+    margin: 0;
+    padding: 0;
+}
+
+#wallet fieldset {
+    border: 2px solid #761112;
+    padding: 5px;
+}
+
+#wallet .photo img {
+    border: 2px solid #761112;
+}
+
+#wallet .edge {
+    border: 2px solid #761112;
+    width: 60px;
+}
+
+#wallet .address {
+    font-size: .7em;
+    font-family: "arial";
+    color: #761112;
+}
+
+#wallet .label {
+    font-family: "arial";
+    font-size: .8em;
+    font-weight: bolder;
+    color: #761112;
+}
+
+#wallet .year {
+    font-weight: bolder;
+    font-size: 1em;
+}
+
+#wallet .text {
+    color: #7f3f00;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+#wallet .data div, #wallet .dataAddress div {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1em;
+    font-weight: bolder;
+    text-align: center;
+    border: 1px solid #761112;
+    margin: 1px;
+}
+
+#wallet .data div {
+    height: 18px;
+}
+
+#wallet .nomeLogo img {
+    padding-right: 5px;
+}
+
+#wallet .divisor-right {
+    border-left: 2px solid #761112;
+    width: 2%;
+}
+
+#wallet .signature {
+    text-align: center;
+}

@@ -1,0 +1,240 @@
+.body-login{
+    background: #DE6262;  /* fallback for old browsers */
+}
+
+.login-block{
+    background: #DE6262;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #FFB88C, #DE6262);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #FFB88C, #DE6262); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    float:left;
+    width: 100%;
+}
+
+.banner-sec{
+    background:url(https://www.ibadpu.com.br/wp-content/uploads/2019/05/ceu_pomba.png)  no-repeat left bottom;
+    background-size:cover;
+    min-height:500px;
+    border-radius: 0 10px 10px 0;
+    padding:0;
+}
+
+.container-login {
+    margin: 50px auto;
+    background:#fff;
+    border-radius: 10px;
+    box-shadow:15px 20px 0px rgba(0,0,0,0.1);
+}
+
+.carousel-inner{
+    border-radius:0 10px 10px 0;
+}
+
+.carousel-caption{
+    text-align:left;
+    left:5%;
+}
+
+.login-sec{
+    margin-top: 10px;
+    position:relative;
+}
+
+.login-sec .copy-text{
+    position:absolute;
+    width:80%;
+    bottom:20px;
+    font-size:13px;
+    text-align:center;
+}
+
+.login-sec .copy-text i{
+    color:#FEB58A;
+}
+
+.login-sec .copy-text a{
+    color:#E36262;
+}
+
+.login-sec h2{
+    margin-bottom:30px;
+    font-weight:800;
+    font-size:30px;
+    color: #DE6262;
+}
+
+.login-sec h2:after{
+    content:" ";
+    width:100px;
+    height:5px;
+    background:#FEB58A;
+    display:block;
+    margin-top:20px;
+    border-radius:3px;
+    margin-left:auto;
+    margin-right:auto
+}
+
+.btn-login{
+    background: #DE6262;
+    color:#fff;
+    font-weight:600;
+}
+
+.banner-text{
+    width:70%;
+    position:absolute;
+    bottom:40px;
+    padding-left:20px;
+}
+
+.banner-text h2{
+    color:#fff;
+    font-weight:600;
+}
+
+.banner-text h2:after{
+    content:" ";
+    width:100px;
+    height:5px;
+    background:#FFF;
+    display:block;
+    margin-top:20px;
+    border-radius:3px;
+}
+
+.banner-text p{
+    color:#fff;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+.fg-btn, input[type="submit"].fg-btn, input[type="button"].fg-btn {
+    font-weight: normal;
+    font-family: "proxima_nova_rgregular", sans-serif;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    -webkit-font-smoothing: subpixel-antialiased;
+    cursor: pointer;
+    text-align: center;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    outline: none;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    border-radius: 5px;
+}
+
+.fg-btn.tt-none, input[type="submit"].fg-btn.tt-none, input[type="button"].fg-btn.tt-none {
+      text-transform: none;
+}
+
+.fg-btn.mr, input[type="submit"].fg-btn.mr, input[type="button"].fg-btn.mr {
+    margin-right: 8px;
+}
+
+.fg-btn.mr-plus, input[type="submit"].fg-btn.mr-plus, input[type="button"].fg-btn.mr-plus {
+    margin-right: 16px;
+}
+
+.fg-btn.mt, input[type="submit"].fg-btn.mt, input[type="button"].fg-btn.mt {
+    margin-top: 22px;
+}
+
+.fg-btn.bold, input[type="submit"].fg-btn.bold, input[type="button"].fg-btn.bold {
+    font-family: "proxima_novasemibold", sans-serif;
+}
+
+.fg-btn.large, input[type="submit"].fg-btn.large, input[type="button"].fg-btn.large {
+    font-size: 18px;
+    padding: 16px 25px 13px;
+}
+
+.fg-btn.medium, input[type="submit"].fg-btn.medium, input[type="button"].fg-btn.medium {
+    font-size: 15px;
+    padding: 11px 26px 9px;
+}
+
+.fg-btn.small, input[type="submit"].fg-btn.small, input[type="button"].fg-btn.small {
+    font-size: 14px;
+    padding: 9px 10px 7px;
+}
+
+.fg-btn.group-left, input[type="submit"].fg-btn.group-left, input[type="button"].fg-btn.group-left {
+    border-radius: 5px 0 0 5px;
+    border-right: 1px solid #2477bf;
+}
+
+.fg-btn.group-left.medium, input[type="submit"].fg-btn.group-left.medium, input[type="button"].fg-btn.group-left.medium {
+    padding: 11px 11px 9px;
+}
+
+.fg-btn.group-right, input[type="submit"].fg-btn.group-right, input[type="button"].fg-btn.group-right {
+    border-radius: 0 5px 5px 0;
+}
+
+.fg-btn.group-right.inline, input[type="submit"].fg-btn.group-right.inline, input[type="button"].fg-btn.group-right.inline {
+    margin-left: -4px;
+}
+
+.fg-btn.group-right.medium, input[type="submit"].fg-btn.group-right.medium, input[type="button"].fg-btn.group-right.medium {
+    padding: 11px 11px 9px;
+}
+
+.fg-btn.group-right.loading img, .fg-btn.group-right.success img, input[type="submit"].fg-btn.group-right.loading img, input[type="submit"].fg-btn.group-right.success img, input[type="button"].fg-btn.group-right.loading img, input[type="button"].fg-btn.group-right.success img {
+    opacity: 0;
+}
+
+.fg-btn.red {
+    background-color: #d9534f;
+    color: white;
+    border-bottom-color: #bb221c;
+}
+
+.fg-btn.red:hover {
+    background-color: #ff615c;
+}
+
+.fg-btn.red:active {
+    border-bottom-color: #ff615c;
+    transition: border-bottom .1s linear;
+}
+
+.fg-flat-btn, input[type="submit"].fg-flat-btn, input[type="button"].fg-flat-btn {
+    font-weight: normal;
+    font-family: "proxima_nova_rgregular", sans-serif;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    -webkit-font-smoothing: subpixel-antialiased;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.fg-flat-btn.grey, input[type="submit"].fg-flat-btn.grey, input[type="button"].fg-flat-btn.grey {
+    color: #737171;
+    border: 1px solid #bbbbbb;
+    background-color: #f4f4f4;
+}
+
+.fg-flat-btn.grey:hover, input[type="submit"].fg-flat-btn.grey:hover, input[type="button"].fg-flat-btn.grey:hover {
+    background-color: #e8e8e8;
+}
+
+.fg-flat-btn.grey:active, input[type="submit"].fg-flat-btn.grey:active, input[type="button"].fg-flat-btn.grey:active {
+    background-color: #f4f4f4;
+}
+
+.fg-fw {
+  width: 100%;
+}

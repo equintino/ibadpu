@@ -1,0 +1,66 @@
+#membership {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+#membership .side, #membership .side-right {
+    width: 140px;
+}
+
+#membership section.side button {
+    margin-bottom: 4px;
+    border-radius: 10px 0 0 10px;
+}
+
+#membership button {
+    margin-bottom: 4px;
+    border-radius: 10px;
+}
+
+#membership button.add, #membership button.cart {
+    float: right;
+    width: 100%;
+}
+
+#membership .side-right button {
+    border-radius: 0 5px 5px 0;
+    height: 25px;
+    padding: 0 5px;
+}
+
+#membership .side-right input {
+    height: 24px;
+}
+
+#membership #tab-membership {
+    height: 490px;
+    overflow: scroll;
+    width: 800px;
+}
+
+#membership table td {
+    font-size: .8em;
+}
+
+#membership table td, #membership table th {
+    padding: 5px;
+}
+
+#membership table :not(td.data, button, .division) {
+    background: #f1f1f1;
+}
+
+#membership table td.data {
+    background: #fff;
+    color: #504d4d;
+    text-transform: uppercase;
+}
+
+#membership .division {
+    background: #0b0b0ba8;
+}
+
+#membership .badge {
+    cursor: pointer;
+}

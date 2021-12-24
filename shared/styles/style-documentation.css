@@ -1,0 +1,13 @@
+#documentation section {
+    text-align: right;
+    margin-top: -4px;
+}
+
+#documentation section button {
+    border-radius: 0 0 5px 5px;
+}
+
+#documentation table.show tbody tr:hover {
+    background: silver;
+    cursor: pointer;
+}

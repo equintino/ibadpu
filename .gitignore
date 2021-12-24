@@ -1,0 +1,14 @@
+# Created by https://www.toptal.com/developers/gitignore/api/codeio
+# Edit at https://www.toptal.com/developers/gitignore?templates=codeio
+
+.env
+composer.lock
+src/Config/.config.ini
+src/ses/*
+themes/template/assets/style.css
+themes/template/assets/scripts.js
+vendor
+### Codeio ###
+.codio
+
+# End of https://www.toptal.com/developers/gitignore/api/codeio
