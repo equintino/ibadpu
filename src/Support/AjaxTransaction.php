@@ -4,7 +4,7 @@ namespace Support;
 
 class AjaxTransaction
 {
-    private $cleanFields = [ "act", "confSenha", "action" ];
+    private $cleanFields = [ "act", "confPassword", "action" ];
     private $class;
     private $action;
     private $params;
@@ -25,7 +25,7 @@ class AjaxTransaction
 
     public function saveData(): ?string
     {
-        (array_key_exists("Senha", $this->params) ? $this->confSenha(): null);
+        (array_key_exists("password", $this->params) ? $this->confPassword(): null);
         $this->cleanFields();
         $this->setSearch();
         $this->setMethodClass();
@@ -44,11 +44,11 @@ class AjaxTransaction
         return $this->params;
     }
 
-    private function confSenha()
+    private function confPassword()
     {
-        $senha = $this->params["Senha"];
-        $confSenha = $this->params["confSenha"];
-        if($senha !== $confSenha) {
+        $password = $this->params["password"];
+        $confPassword = $this->params["confPassword"];
+        if($password !== $confPassword) {
             print(json_encode("<span class='warning'>The password was not confirmed</span>"));
             die;
         }
@@ -75,11 +75,11 @@ class AjaxTransaction
 
         switch($className) {
             case "User":
-                $this->params["USUARIO"] = &$this->params["Logon"];
-                $this->search = $this->params["Logon"];
+                $this->params["user"] = &$this->params["login"];
+                $this->search = $this->params["login"];
                 break;
             default:
-                unset($this->params["Logon"]);
+                unset($this->params["login"]);
                 $this->search = $this->params["name"];
         }
     }
@@ -117,7 +117,7 @@ class AjaxTransaction
                 break;
             case "change":/** token */
                 $data = $this->class->find($this->search);
-                $data->Senha = $this->class->crypt($this->params["Senha"]);
+                $data->password = $this->class->crypt($this->params["password"]);
                 $data->token = null;
                 $this->class = $data;
                 break;

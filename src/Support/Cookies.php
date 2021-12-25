@@ -15,7 +15,7 @@ class Cookies
 
     public function setCookies($remember, $class, $connectionName)
     {
-        $login = $class->Logon;
+        $login = $class->login;
         if($remember) {
             $time = time() + 60*60*24*7;
             $className = get_class($class);
@@ -24,7 +24,7 @@ class Cookies
             }
             $data["expire"] = $time;
             setcookie($className, http_build_query($data), $time, "/");
-            setcookie("login", $class->Logon, $time, "/");
+            setcookie("login", $class->login, $time, "/");
             setcookie("connectionName", $connectionName, $time, "/");
             setcookie("remember", 1, $time, "/");
         } else {

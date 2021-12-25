@@ -7,7 +7,7 @@ use Database\Migrations\CreateGroupsTable;
 
 class Group extends Model implements Models
 {
-    public static $entity = "tb_groups";
+    public static $entity = "groups_";
 
     /** @var array */
     private $required = [ "name" ];
@@ -61,15 +61,15 @@ class Group extends Model implements Models
 
         /** Update */
         if(!empty($this->id)) {
-            $groupId = $this->id;
+            $group_id = $this->id;
             $group = $this->read("SELECT id FROM " . self::$entity . " WHERE name = :name AND id != :id",
-                "name={$this->name}&id={$groupId}");
+                "name={$this->name}&id={$group_id}");
             if($group->rowCount()) {
                 $this->message = "<span class='warning'>The Informed Group is already registered</span>";
                 return null;
             }
 
-            $this->update(self::$entity, $this->safe(), "id = :id", "id={$groupId}");
+            $this->update(self::$entity, $this->safe(), "id = :id", "id={$group_id}");
             if($this->fail()) {
                 $this->message = "<span class='danger'>Error updating, verify the data</span>";
                 return null;
@@ -91,7 +91,7 @@ class Group extends Model implements Models
             }
             $this->message = "<span class='success'>Registration successfully</span>";
         }
-        $this->data = $this->read("SELECT * FROM " . self::$entity . " WHERE id=:id", "id={$groupId}")->fetch();
+        $this->data = $this->read("SELECT * FROM " . self::$entity . " WHERE id=:id", "id={$group_id}")->fetch();
 
         return $this;
     }

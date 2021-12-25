@@ -12,10 +12,10 @@ class User extends Model implements Models
     private $group;
 
     /** @var string $entity database table */
-    public static $entity = "users";
+    public static $entity = "tb_usuarios";
 
     /** @var array filds required */
-    private $required = [ "login", "password", "user", "name", "email" ];
+    private $required = [ "Logon", "Senha", "USUARIO", "Nome", "Email" ];
 
     public function getEntity()
     {
@@ -24,7 +24,7 @@ class User extends Model implements Models
 
     public function setPasswd(string $passwd)
     {
-        $this->password = $this->crypt($passwd);
+        $this->Senha = $this->crypt($passwd);
     }
 
     public function load(int $id, string $columns = "*", bool $msgDb = false): ?User
@@ -52,14 +52,14 @@ class User extends Model implements Models
             $terms = implode("&", $terms);
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE {$params} ", $terms, $msgDb);
         } elseif(filter_var($search, FILTER_VALIDATE_EMAIL)) {
-            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE email=:email", "email={$search}", $msgDb);
+            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE Email=:Email", "Email={$search}", $msgDb);
         } elseif(filter_var($login, FILTER_SANITIZE_STRIPPED)) {
-            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE login=:login", "login={$login}", $msgDb);
+            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE Logon=:Logon", "Logon={$login}", $msgDb);
         } else {
-            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name", "name={$login}", $msgDb);
+            $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE Nome=:Nome", "Nome={$login}", $msgDb);
         }
 
-        if($this->fail || $find->rowCount() === 0) {
+        if($this->fail || !$find->rowCount()) {
             $this->message = (empty($this->fail()) ? "<span class='warning'>Unscribed email user informed</span>" : $this->fail()->errorInfo[2]);
             return null;
         }
@@ -104,8 +104,8 @@ class User extends Model implements Models
 
     private function update_(bool $msgDb)
     {
-        $email = $this->read("SELECT id FROM " . self::$entity . " WHERE email = :email AND id != :id",
-            "email={$this->Email}&id={$this->id}");
+        $email = $this->read("SELECT id FROM " . self::$entity . " WHERE Email = :Email AND id != :id",
+            "Email={$this->Email}&id={$this->id}");
         if($email->rowCount()) {
             $this->message = "<span class='warning'>The informed e-mail is already registered</span>";
             return null;
@@ -121,10 +121,10 @@ class User extends Model implements Models
 
     private function create_(bool $msgDb)
     {
-        if($this->find($this->email, "*", $msgDb)) {
+        if($this->find($this->Email, "*", $msgDb)) {
             $this->message = "<span class='warning'>The informed e-mail is already registered</span>";
             return null;
-        } elseif($this->find($this->login, "*", $msgDb)) {
+        } elseif($this->find($this->Logon, "*", $msgDb)) {
             $this->message = "<span class='warning'>The informed login is already registered</span>";
             return null;
         }
@@ -162,7 +162,7 @@ class User extends Model implements Models
             }
         }
 
-        if(!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        if(!filter_var($this->Email, FILTER_VALIDATE_EMAIL)) {
             $this->message = "<span class='warning'>The e-mail format does not appear valid</span>";
             return false;
         }
@@ -184,8 +184,8 @@ class User extends Model implements Models
 
     public function getGroup(): ?Group
     {
-        if(!empty($this->group_id)) {
-            return $this->group = (new Group())->load($this->group_id);
+        if(!empty($this->Group_id)) {
+            return $this->group = (new Group())->load($this->Group_id);
         }
         return $this->group = null;
     }

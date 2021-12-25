@@ -20,15 +20,14 @@ class CreateUsersTable implements CreateTable
     {
         $schema = Schema::create($entity, $this->type, function(Blueprint $table) {
             $table->increment("id");
-            $table->string("Nome");
-            $table->string("Email",100)->unique();
-            $table->string("Logon",50)->unique();
-            $table->string("Senha,USUARIO");
-            $table->int("IDEmpresa")->nullable()->default(1);
-            $table->bool("Visivel")->nullable()->default(1);
-            $table->int("PRINCIPAL")->nullable();
-            $table->string("Cargo",255)->nullable();
-            $table->int("Usuario_id,Group_id")->nullable();
+            $table->string("name");
+            $table->string("email",100)->unique();
+            $table->string("login",50)->unique();
+            $table->string("password,user");
+            $table->bool("active")->nullable()->default(1);
+            $table->string("occupation",255)->nullable();
+            $table->int("company_id")->nullable()->default(1);
+            $table->int("group_id")->nullable();
             $table->token();
             $table->timestamps();
             return $table->run();

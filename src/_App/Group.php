@@ -19,17 +19,17 @@ class Group extends Controller
     {
         $groups = $this->group()->all() ?? [];
         $screens = Safety::screens("/pages");
-        $groupId = ((new User())->find($_SESSION["login"]->Logon)->Group_id ?? null);
+        $group_id = ((new User())->find($_SESSION["login"]->login)->group_id ?? null);
 
-        $this->view->render("shield", [ compact("groups","screens","groupId") ]);
+        $this->view->render("shield", [ compact("groups","screens","group_id") ]);
     }
 
     public function load(array $data): void
     {
-        $dGroup = $this->group()->find($data["groupName"]);
-        if($dGroup) {
+        $group = $this->group()->find($data["groupName"]);
+        if($group) {
             $security["access"] = [];
-            foreach(explode(",", $dGroup->access) as $screen) {
+            foreach(explode(",", $group->access) as $screen) {
                 array_push($security["access"], Safety::renameScreen($screen));
             }
             echo json_encode($security);

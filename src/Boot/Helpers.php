@@ -41,7 +41,6 @@ function theme(string $path)
     if(preg_match("/ops/", $_SERVER["REQUEST_URI"])) {
         return "../themes/" . CONF_VIEW_THEME . "/{$path}";
     } elseif($bar === 4) {
-        //return "../themes/" . CONF_VIEW_THEME . "/{$path}";
         return "../themes/" . CONF_VIEW_THEME . "/{$path}";
     } else {
         return "themes/" . CONF_VIEW_THEME . "/{$path}";

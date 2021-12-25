@@ -1,3 +1,1 @@
-<?php
-
-require __DIR__ . "/../../" . theme("login.php");
+<?php require __DIR__ . "/../../" . theme("login.php");

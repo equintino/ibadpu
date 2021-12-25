@@ -41,7 +41,7 @@ class Web extends Controller
 
     public function init()
     {
-        $logged = ucfirst($_SESSION["login"]->Logon);
+        $logged = ucfirst($_SESSION["login"]->login);
         echo "<script>var logged='{$logged}'</script>";
         $this->view->insertTheme();
     }

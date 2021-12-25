@@ -3,7 +3,7 @@
         <fieldset class="fieldset">
             <legend>GRUPOS</legend>
             <?php foreach($groups as $group): ?>
-                <p class="btnAction <?= ($group->id === $groupId ? "active" : null) ?>"><?= $group->name ?></p>
+                <p class="btnAction <?= ($group->id === $group_id ? "active" : null) ?>"><?= $group->name ?></p>
             <?php endforeach ?>
         </fieldset>
         <button class="button save" style="float: right">Adicionar Grupo</button>

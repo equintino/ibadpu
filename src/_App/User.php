@@ -19,16 +19,16 @@ class User extends Controller
     public function init(?array $data): void
     {
         $params = [];
-        $companyId = ($data["companyId"] ?? null);
+        $company_id = ($data["company_id"] ?? null);
         $this->view->render("user", $params);
     }
 
     public function list(?array $data): void
     {
         $data["act"] = "list";
-        $login = $_SESSION["login"]->Logon;
-        if($data["companyId"] !== "undefined") {
-            $users = (new \Models\User())->find(["IDEmpresa" => $data["companyId"]]);
+        $login = $_SESSION["login"]->login;
+        if(!empty($data["company_id"])) {
+            $users = (new \Models\User())->find(["company_id" => $data["company_id"]]);
         } else {
             $users = (new \Models\User())->all();
         }
@@ -37,7 +37,7 @@ class User extends Controller
         $groups = (new Group())->all();
         $params = [ $data, compact("login", "users", "user", "groups") ];
 
-        echo "<script>var companyId = '" . $data["companyId"] . "' </script>";
+        // echo "<script>var company_id = '" . ($data["company_id"] ?? 1) . "' </script>";
         $this->view->setPath("Modals")->render("user", $params);
     }
 
@@ -63,9 +63,9 @@ class User extends Controller
 
     public function save(array $data): void
     {
-        $data["USUARIO"] = &$data["Logon"];
-        $data["IDEmpresa"] = ($data["IDEmpresa"] !== "undefined" ? $data["IDEmpresa"] : 1);
-        $data = $this->confSenha($data);
+        $data["user"] = &$data["login"];
+        $data["company_id"] = ($data["company_id"] !== "undefined" ? $data["company_id"] : 1);
+        $data = $this->confPassword($data);
         $user = new \Models\User();
 
         $user->bootstrap($data);
@@ -86,28 +86,27 @@ class User extends Controller
 
     public function reset(array $data): void
     {
-        $user = (new \Models\User())->find($data["Logon"]);
-        $user->token($data["Logon"]);
+        $user = (new \Models\User())->find($data["login"]);
+        $user->token($data["login"]);
         echo json_encode($user->message());
     }
 
     public function delete(array $data): void
     {
-        $user = (new \Models\User())->find($data["Logon"]);
+        $user = (new \Models\User())->find($data["login"]);
         $user->destroy();
         echo json_encode($user->message());
     }
 
-    private function confSenha(array $params): ?array
+    private function confPassword(array $params): ?array
     {
-        $passwd = $params["Senha"];
-        $confPasswd = $params["confSenha"];
+        $passwd = $params["password"];
+        $confPasswd = $params["confPassword"];
         if($passwd !== $confPasswd) {
-            print(json_encode("<span class='warning'>A senha não foi confirmada</span>"));
+            print(json_encode("<span class='warning'>The password was not confirmed</span>"));
             die;
-        }
-        else {
-            unset($params["confSenha"]);
+        } else {
+            unset($params["confPassword"]);
         }
         return $params;
     }

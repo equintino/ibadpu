@@ -26,7 +26,7 @@ class View
 
     public function render(string $page, array $params = [])
     {
-        $logged = ($_SESSION["login"]->Logon ?? null);
+        $logged = ($_SESSION["login"]->login ?? null);
 
         /** makes variables available to the page */
         if($params) {
@@ -76,9 +76,9 @@ class View
             $login = $_SESSION["login"];
         }
         /** allows or prohibits access */
-        if(!empty($login) && $login->Group_id) {
+        if(!empty($login) && $login->group_id) {
             $group = new Group();
-            $gAccess = $group->load($login->Group_id, "*", true);
+            $gAccess = $group->load($login->group_id, "*", true);
             if(!$gAccess && preg_match("/[doesn't exist][inválido]/", $group->message())) {
                 $createTable = new CreationProcess();
                 $data = [

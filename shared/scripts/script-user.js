@@ -30,7 +30,7 @@ function exhibition(element) {
             })
             .on("click", function() {
                 const formData = new FormData();
-                formData.append("Logon", login);
+                formData.append("login", login);
                 if($(this).val() == 1) {
                     let url = "user/delete/" + login;
                     if(saveData(url, formData, "Excluindo")) {
@@ -48,7 +48,7 @@ function exhibition(element) {
                 if($(this).val() == 1) {
                     let url = "user/password/reset";
                     const formData = new FormData();
-                    formData.append("Logon", login);
+                    formData.append("login", login);
                     saveData(url, formData);
                     modal.hide();
                 }
@@ -75,15 +75,14 @@ function disabledTableLine(dom) {
         }
     });
 }
-
 function scriptUser() {
-    if(typeof(companyId) !== "undefined") {
+    if(typeof(company_id) !== "undefined") {
         disabledTableLine("#exhibition table tbody tr");
     }
     $("select[name=NomeFantasia]").on("change", function() {
-        var companyId = $(this).val();
-        var url = "user/list/company/" + companyId;
-        if(companyId != "") {
+        var company_id = $(this).val();
+        var url = "user/list/company/" + company_id;
+        if(company_id != "") {
             $("#exhibition").load(url, function() {
                 exhibition("#exhibition table#tabList tbody td");
                 disabledTableLine("#exhibition table tbody tr");
@@ -93,8 +92,8 @@ function scriptUser() {
     $(".header button").on("click", function() {
         $(".loading").show();
         var btnAction = $(this).text();
-        var companyId = $("select[name=NomeFantasia]").val();
-        if(companyId == "") {
+        var company_id = $("select[name=NomeFantasia]").val();
+        if(company_id == "") {
             alertLatch("Selecione a EMPRESA", "var(--cor-warning)");
             $(this).closest(".header")
                 .find("select")
@@ -110,13 +109,13 @@ function scriptUser() {
                 .on("submit", function(e) {
                     e.preventDefault();
                     const formData = new FormData($(this).find("form")[0]);
-                    formData.append("IDEmpresa",companyId);
+                    formData.append("company_id", company_id);
                     var link = "user/save";
                     var result = saveData(link, formData);
                     if(result) $("#exhibition form#login-register").find("button[type=reset]").trigger("click");
             });
         } else {
-            let url = "user/list/company/" + companyId;
+            let url = "user/list/company/" + company_id;
             $("#exhibition").load(url, function() {
                 exhibition("#exhibition table#tabList tbody td");
                 disabledTableLine("#exhibition table tbody tr");
