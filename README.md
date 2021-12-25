@@ -10,7 +10,7 @@
 ```
 ```shell
 
-composer create-project edmilson/initial-default-project
+composer create-project edmilson/ibadpu
 
 ```
 
