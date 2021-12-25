@@ -84,7 +84,7 @@ class Group extends Model implements Models
                 $this->message = "<span class='warning'>The Informed Group is already registered</span>";
                 return null;
             }
-            $groupId = $this->create(self::$entity, $this->safe());
+            $group_id = $this->create(self::$entity, $this->safe());
             if($this->fail()) {
                 $this->message = "<span class='danger'>Error to Register, Check the data</span>";
                 return null;
