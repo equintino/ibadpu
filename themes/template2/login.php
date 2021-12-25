@@ -59,31 +59,13 @@
 						</ol>
 						<div class="carousel-inner" role="listbox">
 							<div class="carousel-item active">
-								<img class="d-block img-fluid" src="https://www.ibadpu.com.br/wp-content/uploads/2019/05/ceu_pomba.png" alt="First slide">
-								<div class="carousel-caption d-none d-md-block">
-									<div class="banner-text">
-										<!-- <h2>This is Heaven</h2>
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p> -->
-									</div>
-								</div>
+								<img class="d-block img-fluid" src="<?= theme("assets/img/ceu_pomba.jpg") ?>" alt="First slide" >
 							</div>
 							<div class="carousel-item">
-								<img class="d-block img-fluid" src="https://www.ibadpu.com.br/wp-content/uploads/2019/05/New-Project-21.jpg" alt="First slide">
-								<div class="carousel-caption d-none d-md-block">
-									<div class="banner-text">
-										<!-- <h2>This is Heaven</h2>
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p> -->
-									</div>
-								</div>
+								<img class="d-block img-fluid" src="<?= theme("assets/img/microfone.jpg") ?>" alt="Second slide">
 							</div>
 							<div class="carousel-item">
-								<img class="d-block img-fluid" src="https://www.ibadpu.com.br/wp-content/uploads/2019/05/sunset-1815991_1280.jpg" alt="First slide">
-								<div class="carousel-caption d-none d-md-block">
-									<div class="banner-text">
-										<!-- <h2>This is Heaven</h2>
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p> -->
-									</div>
-								</div>
+								<img class="d-block img-fluid" src="<?= theme("assets/img/noite.jpg") ?>" alt="Third slide">
 							</div>
 						</div>
 					</div>
