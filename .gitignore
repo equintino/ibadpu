@@ -7,6 +7,8 @@ src/Config/.config.ini
 src/ses/*
 themes/template/assets/style.css
 themes/template/assets/scripts.js
+themes/template2/assets/style.css
+themes/template2/assets/scripts.js
 vendor
 ### Codeio ###
 .codio

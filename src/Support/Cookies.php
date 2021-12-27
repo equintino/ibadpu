@@ -26,7 +26,7 @@ class Cookies
             setcookie($className, http_build_query($data), $time, "/");
             setcookie("login", $class->login, $time, "/");
             setcookie("connectionName", $connectionName, $time, "/");
-            setcookie("remember", 1, $time, "/");
+            setcookie("remember", true, $time, "/");
         } else {
             $this->clean($this->names);
         }

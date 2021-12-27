@@ -42,7 +42,6 @@ class View
         if(!strpos($this->path, "Modals") && !empty($this->access) && !$this->restrictAccess($page)) {
             return print("<h5 align='center' style='color: var(--cor-primary)'>Restricted access</h5>");
         }
-
         require $this->path . "/{$page}.php";
     }
 

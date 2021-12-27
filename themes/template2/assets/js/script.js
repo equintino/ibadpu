@@ -26,21 +26,21 @@ $(function($) {
         $("#boxe_main, #mask_main").show();
         $("#boxe_main").load("config", function() {
             $("#boxe_main #config-form").append("<button class='button-style mt-3' style='margin-top: 10px' >Save</button>");
-        }).on("submit", function(e) {
+        })
+        .on("submit", function(e) {
             e.preventDefault();
             var url = "src/Support/Ajax/save.php";
             var dataSet = $("#config-form").serializeArray();
-            dataSet.push(
-                {
-                    name: "act",
-                    value: "config"
-                }
-            );
+            dataSet.push({
+                name: "act",
+                value: "config"
+            });
             let msg = saveForm("connection","add", "null", url);
             if(msg) {
                 window.location.reload();
             }
-        }).css({
+        })
+        .css({
             top: "0",
             "padding": "30px"
         });

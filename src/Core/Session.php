@@ -16,6 +16,7 @@ class Session
         if(!session_id()) {
             session_save_path($connectionDirectory);
             session_name("SVSESSID");
+            // ini_set('session.gc_maxlifetime', 3600);
             session_start();
         }
 
@@ -24,9 +25,9 @@ class Session
         }
     }
 
-    public function confSID($atual, $ant)
+    public function confSID($current, $old)
     {
-        return  crypt($atual,$this->SID) == $this->SID;
+        return  crypt($current,$this->SID) == $this->SID;
     }
 
     public function getSID()
@@ -45,7 +46,7 @@ class Session
         return $this->login;
     }
 
-    public function setLogin($login)
+    public function setLogin($login): void
     {
         $_SESSION['login'] = (object)$login;
         $this->login = (object)$login;

@@ -28,7 +28,7 @@ class Web extends Controller
             echo "<script>var initializing=true</script>";
         }
 
-        if($route) {
+        if($route && !empty($_SESSION["login"])) {
             $types = $config->types;
             $act = "add";
             $this->view->setPath("Modals")->render($route, [ compact("login", "types", "act") ]);

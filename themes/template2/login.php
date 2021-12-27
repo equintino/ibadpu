@@ -24,11 +24,11 @@
 					<form action="#" class="login-form form-signin" method="post">
 						<div class="form-group">
 							<label for="exampleInputEmail1" class="text-uppercase">Usuário</label>
-							<input name="login" type="text" class="form-control" placeholder="" autofocus required />
+							<input name="login" type="text" class="form-control" placeholder="" autofocus required value="<?= ($_COOKIE["login"] ?? null) ?>"/>
 						</div>
 						<div class="form-group">
 							<label for="exampleInputPassword1" class="text-uppercase">Senha</label>
-							<input name="password" type="password" class="form-control" placeholder="">
+							<input name="password" type="password" class="form-control" placeholder="" />
 						</div>
 						<div class="form-group">
 							<label for="connection-name" class="text-uppercase">Servidor</label>
@@ -42,7 +42,7 @@
 						</div>
 						<div class="form-check">
 							<label class="form-check-label">
-							<input type="checkbox" class="form-check-input"/>
+							<input name="remember" type="checkbox" class="form-check-input" value=true <?= (!empty($_COOKIE["remember"]) ? "checked" : null) ?>/>
 							&nbsp Lembre-me
 						</label>
 						</div><br />
