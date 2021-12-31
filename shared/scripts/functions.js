@@ -169,7 +169,7 @@
         },
         new: function(params) {
             $("body").append(
-                "<section id='" + params.box + "' ><div id='title' class='title'></div><span id='message'></span><div id='content'></div><div id='buttons' style='text-align: right'></div></section>"
+                "<section id='" + params.box + "' ><div id='title' class='title'></div><span id='message'></span><div id='content'></div></section>"
             );
             let idName = $("#" + params.box);
             idName.css({
@@ -182,20 +182,13 @@
             });
             idName.find("#title").html(params.title).show();
             idName.find("#content").load(params.url, params.post, function() {
-
+                let buttons = "<div id='buttons' style='text-align: right; margin-bottom: -25px'>" + params.buttons + "</div>";
+                $(this).parent().append(buttons).find("button").css("border-radius","0 0 5px 5px");
+                params.callback();
             }).css({
                 "max-height": "450px",
                 "overflow-y": "scroll"
             });
-            idName.find("#buttons").html(params.buttons).show();
-            params.callback();
-            this.styles({
-                element: $("#" + params.box).find("#buttons button"),
-                css: {
-                   "border-radius": "0 0 5px 5px"
-                }
-            });
-
             return this;
         },
         on: function() {
@@ -370,6 +363,41 @@ var changeCheck = function(element, optionGreen, optionRed) {
     return true;
 };
 
+/** @return resp */
+const loadData = function(link, data = null, dataType = "JSON", msg = "Loading...") {
+    var resp = null;
+    $.ajax({
+        url: link,
+        type: "POST",
+        dataType: dataType,
+        context: msg,
+        async: false,
+        data: data,
+        beforeSend: function() {
+            $("#mask_main").show();
+            loading.show({
+                text: msg
+            });
+        },
+        success: function(response) {
+            resp = response;
+        },
+        error: function(error) {
+            alertLatch("Could not load data", "var(--cor-danger)");
+            setTimeout(function() {
+                loading.hide();
+                $("#mask_main").fadeOut();
+            }, setTime);
+        },
+        complete: function() {
+            if($("#boxe_main").css("display") === "none")$("#mask_main").hide();
+            loading.hide();
+        }
+    });
+    return resp;
+};
+
+/** @return bool with file data */
 var saveData = function(link, data, msg = "Saving") {
     var success = false;
     $.ajax({
@@ -415,6 +443,7 @@ var saveData = function(link, data, msg = "Saving") {
     return success;
 };
 
+/** @return bool */
 var saveAjax = function(link, data, msg = "Saving") {
     var success = false;
     $.ajax({
@@ -502,4 +531,15 @@ const thumbImage = (origin, destination) => {
     if (file) {
         destination.src = URL.createObjectURL(file)
     }
+}
+
+const unserializedData = (data) => {
+    let urlParams = new URLSearchParams(data);
+    let unserialized = {}; // prepare result object
+    let key;
+    let value;
+    for ([key, value] of urlParams) { // get pair > extract it to key/value
+        unserialized[key] = value;
+    }
+    return unserialized
 }

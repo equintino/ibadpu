@@ -2,9 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-use Support\AjaxTransaction;
-use Models\Company;
 use Models\Group;
 
 class User extends Controller

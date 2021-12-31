@@ -2,8 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-
 class Documentation extends Controller
 {
     protected $page = "documentation";

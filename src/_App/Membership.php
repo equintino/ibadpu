@@ -2,7 +2,6 @@
 
 namespace _App;
 
-use Core\View;
 use Models\Photo;
 
 class Membership extends Controller
@@ -74,7 +73,7 @@ class Membership extends Controller
                 return null;
             }
         }
-        if(!empty($_FILES["certificate"])) {
+        if($_FILES["certificate"]["error"] === 0) {
             $id = (!empty($data["certificate_id"]) ? $data["certificate_id"] : null);
             $certificate_id = $this->updateCertificate($id);
             if(!empty($certificate_id) && is_numeric($certificate_id)) {
@@ -83,6 +82,8 @@ class Membership extends Controller
                 alertLatch("Could not save the certificate", "var(--car-danger)");
                 return null;
             }
+        } else {
+            unset($data["certificate_id"]);
         }
         unset($data["file"]);
         $membership->bootstrap($this->validate($data));

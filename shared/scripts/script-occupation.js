@@ -1,31 +1,11 @@
-function occupationAction() {
+const occupationAction = () => {
     $("#registerOccupation #occupation-register").on("submit", function(e) {
         e.preventDefault();
         let that = $(this);
-        let data = $(this).serialize();
-        $.ajax({
-            url: "occupation/save",
-            type: "POST",
-            dataType: "JSON",
-            data: data,
-            beforeSend: function() {
-                $(".loading").show();
-            },
-            success: function(response) {
-                let background = "var(--cor-warning)";
-                if(response.indexOf("success") !== -1) {
-                    background = "var(--cor-success)";
-                    that.find("[type=reset]").trigger("click");
-                }
-                alertLatch(response, background);
-            },
-            error: function(error) {
-                console.log(error);
-            },
-            complete: function() {
-                $(".loading").hide();
-            }
-        });
+        let formData = new FormData($(this)[0]);
+        if(saveData("occupation/save", formData)) {
+            that.find("[type=reset]").trigger("click");
+        }
     });
 }
 const scriptOccupation = () => {
@@ -70,28 +50,9 @@ const scriptOccupation = () => {
                             if($(this).val() == 0) {
                                 return false;
                             }
-                            $.ajax({
-                                url: "occupation/delete/id/" + id,
-                                type: "POST",
-                                dataType: "JSON",
-                                beforeSend: function() {
-                                    $(".loading").show();
-                                },
-                                success: function(response) {
-                                    background = "var(--cor-warning)";
-                                    if(response.indexOf("success")) {
-                                        background = "var(--cor-success)";
-                                    }
-                                    alertLatch(response, background);
-                                    $("#registerOccupation #list").trigger("click");
-                                },
-                                error: function(error) {
-                                    console.log(error);
-                                },
-                                complete: function() {
-                                    $(".loading").hide();
-                                }
-                            });
+                            if(saveData("occupation/delete/id/" + id, [])) {
+                                $("#registerOccupation #list").trigger("click");
+                            }
                         });
                     }
                 });

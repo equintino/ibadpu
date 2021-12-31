@@ -1,7 +1,7 @@
 <div id="new-moviment">
     <section class="side-left" >
-        <button class="button btn-info" type="button" value="visualiza">Pré-visualizar</button>
-        <button class="button btn-success" type="button" value="conclui" >Concluir</button>
+        <button class="button btn-info" type="button" value="preview">Pré-visualizar</button>
+        <button class="button btn-success" type="button" value="conclude" >Concluir</button>
     </section>
     <section class="midle">
         <form enctype="multipart/form-data" id="cadastro" action="#" method="POST" >

@@ -2,8 +2,6 @@
 
 namespace Database;
 
-use Core\Model;
-
 class Blueprint
 {
     private $entity;

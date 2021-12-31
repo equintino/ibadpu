@@ -94,29 +94,9 @@ function scriptMembership() {
                         if(file !== "undefined") {
                             formData.append("file", file);
                         }
-                        $.ajax({
-                            url: "membership/update",
-                            type: "POST",
-                            dataType: "JSON",
-                            processData: false,
-                            contentType: false,
-                            cache: true,
-                            data: formData,
-                            beforeSend: function() {
-                                $(".loading").show();
-                            },
-                            success: function(response) {
-                                modal.close();
-                                alertLatch(response, "var(--cor-success)");
-                            },
-                            error: function(error) {
-                                console.log(error);
-                                alertLatch("Whoops! Gave some mistake", "var(--cor-danger)");
-                            },
-                            complete: function() {
-                                $(".loading").hide();
-                            }
-                        });
+                        if(saveData("membership/update", formData)) {
+                            modal.close();
+                        }
                     }
                 });
                 $(".loading").hide();

@@ -2,8 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-
 class Proof extends Controller
 {
     protected $page = "proof";
@@ -41,12 +39,13 @@ class Proof extends Controller
 
     public function month(array $data): ?string
     {
+        $months = [];
         $where = [ "year" => $data["year"] ];
         $moviments = (new \Models\Moviment())->search($where);
         foreach($moviments as $moviment) {
             $months[] = $moviment->month;
         }
-        return print(json_encode(array_unique($months)));
+        return print(!empty($months) ? json_encode(array_unique($months)) : null);
     }
 
     public function proof(array $data): ?string

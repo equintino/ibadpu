@@ -2,8 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-
 class Occupation extends Controller
 {
     protected $page = "occupation";

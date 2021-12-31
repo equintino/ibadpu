@@ -2,8 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-
 class Wallet extends Controller
 {
     protected $page = "wallet";

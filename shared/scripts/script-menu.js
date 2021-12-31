@@ -1,4 +1,4 @@
-function identif(page, logged="Nenhum usuário logado") {
+const identif = (page, logged="Nenhum usuário logado") => {
     switch(page) {
         case "home":
             return "<i>Usuário:</i> " + logged;
@@ -25,7 +25,7 @@ function identif(page, logged="Nenhum usuário logado") {
     }
 }
 
-function callScript(name) {
+const callScript = (name) => {
     switch(name) {
         case "user":
             scriptUser();

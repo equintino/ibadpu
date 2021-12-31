@@ -2,12 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-use Support\AjaxTransaction;
-use Models\Company;
-use Models\Group;
-use Models\Balance;
-
 class Impression extends Controller
 {
     protected $page = "imprression";

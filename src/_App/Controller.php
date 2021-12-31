@@ -2,7 +2,6 @@
 
 namespace _App;
 
-use Models\Group;
 use Core\View;
 
 abstract class Controller

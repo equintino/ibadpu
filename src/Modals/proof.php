@@ -12,7 +12,10 @@
             <label>mês:</label>
             <select name="month"></select>
             <table class="my-table"></table>
-            <button class="button btn-danger" disabled style="float: right">Salvar</button>
+            <div style="float: right">
+                <button type="reset" class="button btn-default" >Limpar</button>
+                <button type="submit" class="button btn-danger" disabled >Salvar</button>
+            </div>
         </form>
     </fieldset>
 </div>

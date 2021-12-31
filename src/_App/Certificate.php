@@ -2,7 +2,6 @@
 
 namespace _App;
 
-use Core\View;
 use Models\Membership;
 
 class Certificate extends Controller

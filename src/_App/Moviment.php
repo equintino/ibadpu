@@ -2,10 +2,6 @@
 
 namespace _App;
 
-use Core\View;
-use Support\AjaxTransaction;
-use Models\Company;
-use Models\Group;
 use Models\Balance;
 
 class Moviment extends Controller
@@ -35,9 +31,9 @@ class Moviment extends Controller
     public function new(): void
     {
         $balance = (new \Models\Balance())->lastMonth();
-        $month = (new \DateTime("{$balance->year}-" . monthToNumber($balance->month)))->modify("+1 month")->format("m");
-        $month = mb_strtoupper($this->numberMonth($month));
-        $year = $balance->year;
+        $date = explode("-",(new \DateTime("{$balance->year}-" . monthToNumber($balance->month)))->modify("+1 month")->format("m-Y"));
+        $month = mb_strtoupper($this->numberMonth($date[0]));
+        $year = $date[1];
 
         $this->view->setPath("Modals")->render("new_moviment", [ compact("month", "year") ]);
     }
@@ -120,7 +116,8 @@ class Moviment extends Controller
             $moviment->save();
             $resp[] = $moviment->message();
         }
-        return print(json_encode($resp));
+        // return print(json_encode($resp));
+        return print(json_encode($moviment->message()));
     }
 
     public function delete(array $data)
@@ -160,7 +157,7 @@ class Moviment extends Controller
 
     public function summarie(array $data)
     {
-        $params = $_POST["response"];
+        $params = $_POST["data"];
         $previousMonthBalance = (float) ($params[0]["previousMonthBalance"]);
         unset($params[0]);
 

@@ -2,7 +2,6 @@
 
 namespace _App;
 
-use Core\View;
 use Core\Connect;
 
 class Config extends Controller
