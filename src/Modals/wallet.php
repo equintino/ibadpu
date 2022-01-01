@@ -22,6 +22,10 @@
             visibility: visible;
         }
     }
+
+    @page {
+        size: 21.0cm 29.7cm portrait; /* a4 paper. */
+    }
 </style>
 <div id="wallet" class="printable">
     <?php

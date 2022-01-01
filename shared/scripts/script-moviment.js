@@ -77,6 +77,8 @@ const scriptMoviment = () => {
             });
         }
     })
+
+    /** Open report */
     $("#moviment a").on("click", function(e) {
         e.preventDefault();
         let year = $(this).attr("data-year");
@@ -129,6 +131,7 @@ const scriptMoviment = () => {
                                             $("#div_dialogue").hide();
                                             $("#mask_main").css("z-index","2");
                                         } else {
+                                            /** Open impression preview */
                                             let dataPost = {
                                                 "year": getYearMonthDay(date, 0),
                                                 "month": getYearMonthDay(date, 1)

@@ -80,7 +80,6 @@
 </style>
 <div id="printable" class="summarie">
     <img class="water-mark" src="<?= theme("assets/img/timbrado.png") ?>" alt="" />
-
     <table class="my-table" >
         <thead>
             <tr style="background: var(--cor-primary); text-align: center"><th colspan="3" style="color: white; font-size: .9em">RELATÓRIO MENSAL DE <?= $month ?> DE <?= $year ?></th></tr>
@@ -125,8 +124,6 @@
             </tr>
         </tfoot>
     </table>
-
-
     <div class="signature">
         <div style="text-align: center; float: left">
             <span><img src="<?= theme("assets/img/RMon.png") ?>" alt="" width="50px" height="50px" style="margin-bottom: -10px" /></span><br>
