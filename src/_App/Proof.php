@@ -13,11 +13,18 @@ class Proof extends Controller
 
     public function init(?array $data): void
     {
-        $moviments = (new \Models\Moviment())->all(0, 0, "year", "year desc");
-        foreach($moviments as $moviment) {
-            $years[] = $moviment->year;
+        $movimentDb = new \Models\Moviment();
+        $moviments = $movimentDb->all(0, 0, "year", "year desc");
+        if(!is_array($moviments) && preg_match("/doesn't exist/", $moviments)) {
+            $movimentDb->createThisTable();
+        } else {
+            if(!empty($moviments)) {
+                foreach($moviments as $moviment) {
+                    $years[] = $moviment->year;
+                }
+            }
         }
-        $years = array_unique($years);
+        $years = (!empty($years) ? array_unique($years) : null);
         $this->view->setPath("Modals")->render($this->page, [ compact("years") ]);
     }
 

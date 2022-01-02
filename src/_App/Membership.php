@@ -23,6 +23,7 @@ class Membership extends Controller
                 alertLatch("Created new table, try again");
             }
         } else {
+            $membership = ($membership ?? []);
             $certificate = $this->certificate;
             $this->view->render($this->page, [ compact("membership","certificate") ]);
         }
@@ -121,7 +122,8 @@ class Membership extends Controller
 
     private function newRegister(): int
     {
-        $membership = (new \Models\Membership())->all(0,0,"id,register","register desc")[0]->register;
+        $membershipDb = (new \Models\Membership())->all(0,0,"id,register","register desc");
+        $membership = ($membershipDb ? $membershipDb[0]->register : 0);
         return date("Y") . str_pad(substr($membership,4)+1, "3", "0", STR_PAD_LEFT);
     }
 }

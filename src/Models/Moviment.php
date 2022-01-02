@@ -57,7 +57,7 @@ class Moviment extends Model implements Models
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false): ?array
+    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false)
     {
         $all = $this->read("SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order) . ($limit !== 0 ? $this->limit() : null), "limit={$limit}&offset={$offset}");
 

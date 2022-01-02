@@ -30,10 +30,14 @@ class Moviment extends Controller
 
     public function new(): void
     {
-        $balance = (new \Models\Balance())->lastMonth();
-        $date = explode("-",(new \DateTime("{$balance->year}-" . monthToNumber($balance->month)))->modify("+1 month")->format("m-Y"));
-        $month = mb_strtoupper($this->numberMonth($date[0]));
-        $year = $date[1];
+        $balanceDb = new \Models\Balance();
+        if(preg_match("/doesn't exist/", ($balanceDb->all(0)))) {
+            $balanceDb->createThisTable();
+        }
+        $balance = $balanceDb->lastMonth();
+        $date = ($balance ? explode("-",(new \DateTime("{$balance->year}-" . monthToNumber($balance->month)))->modify("+1 month")->format("m-Y")) : null);
+        $month = (is_array($date) ? mb_strtoupper($this->numberMonth($date[0])) : mb_strtoupper($this->numberMonth(date("m"))));
+        $year = ($date[1] ?? date("Y"));
 
         $this->view->setPath("Modals")->render("new_moviment", [ compact("month", "year") ]);
     }

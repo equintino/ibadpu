@@ -81,7 +81,7 @@ class Occupation extends Model implements Models
     }
 
     /** @var $liimit int */
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "name", bool $msg = false): ?array
+    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "name", bool $msg = false)
     {
         $sql = "SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order);
         $sql .= ($limit !== 0 ? $this->limit() : null);

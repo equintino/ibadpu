@@ -86,7 +86,7 @@ abstract class Model
         return $this->message;
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msgDb = false): ?array
+    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msgDb = false)
     {
         $all = $this->read("SELECT {$columns} FROM  "
             . static::$entity . " "

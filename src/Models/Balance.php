@@ -52,7 +52,7 @@ class Balance extends Model implements Models
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false): ?array
+    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false)
     {
         $all = $this->read("SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order) . $this->limit(), "limit={$limit}&offset={$offset}");
 
@@ -69,9 +69,10 @@ class Balance extends Model implements Models
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function lastMonth(): object
+    public function lastMonth(): ?object
     {
-        return $this->read("SELECT * FROM " . self::$entity . " ORDER BY id DESC")->fetchObject(__CLASS__);
+        $data = $this->read("SELECT * FROM " . self::$entity . " ORDER BY id DESC");
+        return ($data->rowCount() ? $data->fetchObject(__CLASS__) : null);
     }
 
     public function save(): ?Balance
