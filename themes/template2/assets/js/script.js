@@ -23,7 +23,6 @@ var setTime = 500;
 
 $(function($) {
     if(typeof(initializing) !== "undefined") {
-        $("#boxe_main, #mask_main").show();
         $("#boxe_main").load("config", function() {
             $("#boxe_main #config-form").append("<button class='button-style mt-3' style='margin-top: 10px' >Save</button>");
         })
@@ -44,6 +43,7 @@ $(function($) {
             top: "0",
             "padding": "30px"
         });
+        $("#boxe_main, #mask_main").show();
     }
     /** authentication */
     $("form.form-signin").on("submit", function(e) {

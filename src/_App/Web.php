@@ -24,18 +24,19 @@ class Web extends Controller
         $connectionName= filter_input(INPUT_COOKIE, "connectionName", FILTER_SANITIZE_STRIPPED);
         $checked = filter_input(INPUT_COOKIE, "remember", FILTER_SANITIZE_STRIPPED);
 
-        if(!$connectionList) {
-            echo "<script>var initializing=true</script>";
+        if(empty($connectionList)) {
+            $initializing = true;
+            echo "<script>var initializing = {$initializing}</script>";
         }
 
-        if($route && !empty($_SESSION["login"])) {
+        if( !empty($route) && (!empty($_SESSION["login"]) || empty($connectionList)) ) {
             $types = $config->types;
             $act = "add";
             $this->view->setPath("Modals")->render($route, [ compact("login", "types", "act") ]);
         } else {
             $this->view->setPath("public")->render("login", [
-                    compact("version","connectionList","login","connectionName","checked")
-                ]);
+                compact("version","connectionList","login","connectionName","checked")
+            ]);
         }
     }
 
