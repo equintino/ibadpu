@@ -1,6 +1,9 @@
 const scriptDocumentation = () => {
     let documentation = $("#documentation #form-documentation");
     let buttonName;
+    documentation.find("[type='file']").on("change", function() {
+        documentation.find("button").attr("disabled",false);
+    });
     documentation.find("button").on("click", function() {
         buttonName = $(this).text();
         if(buttonName === "Adicionar Novo") {
@@ -16,9 +19,6 @@ const scriptDocumentation = () => {
                 documentation.find("button[type=reset]").trigger("click");
             }
         }
-    });
-    documentation.find("[type='file']").on("change", function() {
-        documentation.find("button").attr("disabled",false);
     });
     $("#documentation table.show tbody tr").on("click", function() {
         let id = $(this).attr("id");

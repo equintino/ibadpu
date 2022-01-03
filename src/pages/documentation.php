@@ -20,9 +20,9 @@
                     <tr><th>Nome</th><th>Descrição</th><th>Arquivo</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><input type="text" name="names[]" /></td>
-                        <td><input type="text" name="descriptions[]" size="50"/></td>
-                        <td><input type="file" name="files[]" /></td></tr>
+                    <tr><td><input type="text" name="names[]"  required/></td>
+                        <td><input type="text" name="descriptions[]" size="50" required/></td>
+                        <td><input type="file" name="files[]"  required/></td></tr>
                 </tbody>
             </table>
             <section>
