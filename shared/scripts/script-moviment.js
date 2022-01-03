@@ -108,13 +108,12 @@ const scriptMoviment = () => {
                             buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
                             callback: function() {
                                 $("#div_dialogue button").on("click", function() {
-                                    if($(this).text() === "Fechar") {
-                                        $("#div_dialogue #content").html("");
-                                        $("#div_dialogue").hide();
-                                        $("#mask_main").css("z-index","2");
-                                    } else {
+                                    if($(this).text() !== "Fechar") {
                                         window.print();
                                     }
+                                    $("#div_dialogue #content").html("");
+                                    $("#div_dialogue").hide();
+                                    $("#mask_main").css("z-index","2");
                                 });
                             }
                         });
@@ -128,6 +127,7 @@ const scriptMoviment = () => {
                                 callback: function() {
                                     $("#div_dialogue button").on("click", function() {
                                         if($(this).text() === "Fechar") {
+                                            $("#div_dialogue #content").html("");
                                             $("#div_dialogue").hide();
                                             $("#mask_main").css("z-index","2");
                                         } else {
