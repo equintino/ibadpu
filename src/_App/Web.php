@@ -29,7 +29,7 @@ class Web extends Controller
             echo "<script>var initializing = {$initializing}</script>";
         }
 
-        if( !empty($route) && (!empty($_SESSION["login"]) || empty($connectionList)) ) {
+        if( (!empty($route) && (!empty($_SESSION["login"]) || empty($connectionList))) || $route === "/token" ) {
             $types = $config->types;
             $act = "add";
             $this->view->setPath("Modals")->render($route, [ compact("login", "types", "act") ]);

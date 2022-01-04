@@ -65,21 +65,26 @@ $(function($) {
                     var lkToken = "token";
                     $("#boxe_main, #mask_main").show();
                     $("#boxe_main").load(lkToken, function() {
-                        $("#form-token").find("[name=Senha]").focus();
-                    }).on("submit", function(e) {
+                        $("#form-token").find("[name=password]").focus();
+                    })
+                    .on("submit", function(e) {
                         e.preventDefault();
                         var formData = new FormData($("form#form-token")[0]);
                         formData.append("act","login");
                         formData.append("action","change");
-                        formData.append("Logon",login);
-                        if(formData.get("Senha") !== formData.get("confSenha")) {
+                        formData.append("login",login);
+                        if(formData.get("password") !== formData.get("confPassword")) {
                             alertLatch("The passwords are different", "var(--cor-warning)");
-                        } else if(formData.get("Senha") === "") {
+                        } else if(formData.get("password") === "") {
                             alertLatch("Invalid blank password", "var(--cor-warning)");
                         } else {
-                            if(saveData(link, formData, "Salvando"))$("#boxe_main, #mask_main").fadeOut();
+                            if(saveData(link, formData, "Saving")) {
+                                $("#boxe_main, #mask_main").hide();
+                                $(location).attr("href","");
+                            }
                         }
-                    }).css({
+                    })
+                    .css({
                         top: "20%",
                         "padding": "30px"
                     });
