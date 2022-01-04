@@ -119,43 +119,46 @@ const scriptMoviment = () => {
                         });
                     });
                     $(buttons).on("click", function() {
-                        let html = loadData("moviment/summarie", { data }, "html");
-                        if(html !== null) {
-                            modal.modal({
-                                html: html,
-                                buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
-                                callback: function() {
-                                    $("#div_dialogue button").on("click", function() {
-                                        if($(this).text() === "Fechar") {
-                                            $("#div_dialogue #content").html("");
-                                            $("#div_dialogue").hide();
-                                            $("#mask_main").css("z-index","2");
-                                        } else {
-                                            /** Open impression preview */
-                                            let dataPost = {
-                                                "year": getYearMonthDay(date, 0),
-                                                "month": getYearMonthDay(date, 1)
-                                            };
-                                            modal.new({
-                                                url: "impression",
-                                                post: dataPost,
-                                                box: "box_print",
-                                                buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
-                                                callback: function() {
-                                                    $("#mask_main").css("z-index", "5");
-                                                    $("#box_print button").on("click", function() {
-                                                        if($(this).text() === "Imprimir") {
-                                                            window.print();
-                                                        }
-                                                        $("#box_print").remove();
-                                                        $("#mask_main").css("z-index", "4");
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
+                        let btnName = $(this).text();
+                        if(btnName === "Resumo") {
+                            let html = loadData("moviment/summarie", { data }, "html");
+                            if(html !== null) {
+                                modal.modal({
+                                    html: html,
+                                    buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
+                                    callback: function() {
+                                        $("#div_dialogue button").on("click", function() {
+                                            if($(this).text() === "Fechar") {
+                                                $("#div_dialogue #content").html("");
+                                                $("#div_dialogue").hide();
+                                                $("#mask_main").css("z-index","2");
+                                            } else {
+                                                /** Open impression preview */
+                                                let dataPost = {
+                                                    "year": getYearMonthDay(date, 0),
+                                                    "month": getYearMonthDay(date, 1)
+                                                };
+                                                modal.new({
+                                                    url: "impression",
+                                                    post: dataPost,
+                                                    box: "box_print",
+                                                    buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
+                                                    callback: function() {
+                                                        $("#mask_main").css("z-index", "5");
+                                                        $("#box_print button").on("click", function() {
+                                                            if($(this).text() === "Imprimir") {
+                                                                window.print();
+                                                            }
+                                                            $("#box_print").remove();
+                                                            $("#mask_main").css("z-index", "4");
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         }
                     });
                 }
