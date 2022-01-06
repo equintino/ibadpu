@@ -17,7 +17,7 @@ class Membership extends Controller
 
     public function init(?array $data): void
     {
-        $membership = (new \Models\Membership())->all(0);
+        $membership = (new \Models\Membership())->activeAll(0);
         if(!is_array($membership) &&  preg_match("/doesn't exist/", $membership)) {
             if((new \Models\Membership())->createThisTable()) {
                 alertLatch("Created new table, try again");

@@ -87,10 +87,10 @@
 			<label>Igreja de Origem:</label>
 			<input type="text" name="origin_church" value="<?= ($membership->origin_church ?? null) ?>" />
 			<label>Função:</label>
-			<select name="occupation_id">
-				<option></option>
+			<select name="occupation_id" required>
+				<option value="0"></option>
 				<?php
-				if(!empty($occupations)):var_dump($occupations);
+				if(!empty($occupations)):
 					foreach($occupations as $occupation): ?>
 						<option value="<?= $occupation->id ?>" <?= (!empty($membership) && $occupation->id === $membership->occupation_id ? "selected" : null) ?>><?= $occupation->name ?></option>
 				<?php endforeach;

@@ -86,8 +86,15 @@ function scriptMembership() {
             callback: function() {
                 $("#boxe_main button").on("click", function() {
                     if($(this).text() === "Save") {
-                        let form = $("#boxe_main form")[0];
-                        let formData = new FormData(form);
+                        let form = $("#boxe_main form");
+                        let required = form.find("[required]");
+                        let name = required.attr("name");
+                        required.focus().css("background","pink");
+                        if(typeof required !== "undefined" && required.val() == "0") {
+                            name = (name === "occupation_id" ? "Função" : name);
+                            return alertLatch("O campo \"" + name + "\" requerido", "var(--cor-warning)");
+                        }
+                        let formData = new FormData(form[0]);
 
                         /** pick up attached files */
                         let file = $("#boxe_main form [type=file]")[0].files[0];
