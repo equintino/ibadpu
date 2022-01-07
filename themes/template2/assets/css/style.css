@@ -460,8 +460,8 @@ main .form-signin {
 
 #boxe_main, #boxe2_main {
     position: fixed;
-    width: 50%;
-    left: 25%;
+    width: 70%;
+    left: 15%;
     margin-top: 75px;
     display: -ms-flexbox;
     display: flex;

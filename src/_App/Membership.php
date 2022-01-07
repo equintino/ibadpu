@@ -29,6 +29,15 @@ class Membership extends Controller
         }
     }
 
+    public function noMember(?array $data): void
+    {
+        $search = [
+            "active" => 0
+        ];
+        $noMembers = ( (new \Models\Membership())->search($search) ?? [] );
+        $this->view->setPath("Modals")->render("nomembers", [ compact("noMembers") ]);
+    }
+
     public function show()
     {
         $list = $this->list();
@@ -74,7 +83,7 @@ class Membership extends Controller
                 return null;
             }
         }
-        if($_FILES["certificate"]["error"] === 0) {
+        if(!empty($_FILES) && $_FILES["certificate"]["error"] === 0) {
             $id = (!empty($data["certificate_id"]) ? $data["certificate_id"] : null);
             $certificate_id = $this->updateCertificate($id);
             if(!empty($certificate_id) && is_numeric($certificate_id)) {

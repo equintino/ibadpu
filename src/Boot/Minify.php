@@ -22,6 +22,7 @@
     $minCSS->add(__DIR__ . "/../../shared/styles/style-wallet.css");
     $minCSS->add(__DIR__ . "/../../shared/styles/style-occupation.css");
     $minCSS->add(__DIR__ . "/../../shared/styles/style-documentation.css");
+    $minCSS->add(__DIR__ . "/../../shared/styles/style-nomembers.css");
 
     /** MinifyCss */
     $minCSS->minify(__DIR__ . $themes . CONF_VIEW_THEME . "/assets/style.css");

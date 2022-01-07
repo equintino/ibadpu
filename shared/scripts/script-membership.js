@@ -71,6 +71,7 @@ function scriptMembership() {
         let id = ($(this).attr("data-id") ?? 0);
         let add_edit = $(this).hasClass("add");
         let way = (add_edit ? "Novo Membro": name);
+        // loading.show({});
         modal.show({
             title: way,
             content: "membership/register/" + id
@@ -89,8 +90,8 @@ function scriptMembership() {
                         let form = $("#boxe_main form");
                         let required = form.find("[required]");
                         let name = required.attr("name");
-                        required.focus().css("background","pink");
                         if(typeof required !== "undefined" && required.val() == "0") {
+                            required.trigger("focus").css("background","pink");
                             name = (name === "occupation_id" ? "Função" : name);
                             return alertLatch("O campo \"" + name + "\" requerido", "var(--cor-warning)");
                         }
@@ -106,8 +107,14 @@ function scriptMembership() {
                         }
                     }
                 });
-                $(".loading").hide();
+                // loading.hide();
             }
+        });
+    });
+    $("#membership .no_members").on("click", function() {
+        modal.show({
+            title: "EX-MEMBROS OU VISITANTES",
+            content: "membership/no_member"
         });
     });
     let members_ids = [];

@@ -55,6 +55,9 @@
         },
         /** @var title, message, content */
         show: function(params) {
+            loading.show({
+                text: "loading..."
+            });
             let that = this;
             this.closeEnable();
             this.escapeEnable();
@@ -64,10 +67,15 @@
                 "overflow-y": "scroll",
                 "max-height": "450px"
             });
-            if(params.content != null) this.content.load(params.content, params.params, function() {
-                if(params.callback != null) params.callback();
-                that.complete();
-            }).show();
+            if(params.content != null) {
+                this.content.load(params.content, params.params, function() {
+                    if(params.callback != null) params.callback();
+                    that.complete();
+                    loading.hide();
+                }).show();
+            } else {
+                loading.hide();
+            }
             if(params.buttons != null) this.buttons.html(params.buttons).show();
             this.mask.show();
             this.nameModal.show().css({
@@ -127,23 +135,38 @@
             });
         },
         open: function(params) {
+            loading.show({
+                text: "loading..."
+            });
             this.closeEnable();
             if(params.title != null) this.title.html(params.title).show();
             if(params.message != null) this.message.html(params.message).show();
-            if(params.content != null) this.content.load(params.content).show();
+            if(params.content != null) this.content.load(params.content, function() {
+                loading.hide();
+                // this.complete();
+            }).show();
             this.mask.fadeIn();
             this.nameModal.fadeIn().css({
                 display: "flex",
                 top: 0
             });
-            this.complete();
+            // this.complete();
             return this;
         },
         modal: function(params) {
+            loading.show({
+                text: "loading..."
+            });
             let that = this;
             if(params.title != null) this.dialogue.find("#title").html(params.title).show();
             if(params.message != null) this.dialogue.find("#message").html(params.message).show();
-            if(params.content != null) this.dialogue.find("#content").load(params.content, params.params).show();
+            if(params.content != null) {
+                this.dialogue.find("#content").load(params.content, params.params, function() {
+                    loading.hide();
+                }).show();
+            } else {
+                loading.hide();
+            }
             if(params.html != null) this.dialogue.find("#content").html(params.html).show();
             if(params.buttons != null) this.dialogue.find("#buttons").html(params.buttons).show();
             if(params.callback != null) params.callback();
@@ -168,6 +191,9 @@
             return this;
         },
         new: function(params) {
+            loading.show({
+                text: "loading..."
+            });
             $("body").append(
                 "<section id='" + params.box + "' ><div id='title' class='title'></div><span id='message'></span><div id='content'></div></section>"
             );
@@ -185,6 +211,7 @@
                 let buttons = "<div id='buttons' style='text-align: right; margin-bottom: -25px'>" + params.buttons + "</div>";
                 $(this).parent().append(buttons).find("button").css("border-radius","0 0 5px 5px");
                 params.callback();
+                loading.hide();
             }).css({
                 "max-height": "450px",
                 "overflow-y": "scroll"
@@ -430,10 +457,10 @@ var saveData = function(link, data, msg = "Saving") {
         },
         error: function(error) {
             alertLatch("Could not save change", "var(--cor-danger)");
-            setTimeout(function() {
-                loading.hide();
-                $("#mask_main").fadeOut();
-            }, setTime);
+            // setTimeout(function() {
+            //     loading.hide();
+            //     $("#mask_main").fadeOut();
+            // }, setTime);
         },
         complete: function() {
             if($("#boxe_main").css("display") === "none")$("#mask_main").hide();

@@ -6,6 +6,7 @@
 			SELECIONADO <span id="selected">0</span>/<?= count($membership) ?>
 		</button>
 		<button class="button btn-warning add" data-name = "markOff" >DESMARCAR</button>
+		<button class="button btn-secondary no_members" data-name = "no_members" >NÃO MEMBROS</button>
 	</section>
 	<section id="tab-membership" style="hight: 500px">
 	    <?php if(!empty($membership)):
