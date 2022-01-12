@@ -2,7 +2,6 @@
     #wallet fieldset {
         background: url("<?= theme('assets/img/logo_marcadagua.png') ?>") no-repeat center;
     }
-
     @media print {
         body * {
             visibility: hidden;
@@ -34,16 +33,16 @@
     <fieldset class="mb-1">
         <table border="0" id="tab-wallet" width="100%">
             <tr>
-                <td rowspan="3" class="photo"><img src="<?= url("image/id/{$membership->photo_id}") ?>" alt="" height="80px" width="70px" /></td>
-                <td rowspan="1" colspan="3" valign="bottom" class="nomeLogo" ><img src="<?= theme("assets/img/nomeLogo.png") ?>" alt="" height='45px'/></td>
+                <td rowspan="3" class="photo"><img src="<?= url("image/id/{$membership->photo_id}") ?>" alt="" /></td>
+                <td rowspan="1" colspan="3" valign="bottom" class="nameLogo" ><img src="<?= theme("assets/img/nomeLogo.png") ?>" alt=""/></td>
                 <td style="padding-left: 2px" rowspan="12"></td>
                 <td class="divisor-right" rowspan="12"></td>
-                <td class="label" style="padding-left: 10px" colspan="2" rowspan="2" >Endereço: </td>
-                <td class="dataAddress" colspan="4" rowspan="2" style="width: 100%"><div><?= "{$membership->type} {$membership->address}, {$membership->number} " . ($membership->complement ? "({$membership->complement})" : null) . " - {$membership->municipality} - {$membership->neighborhood}/{$membership->UF}" ?></div></td>
+                <td class="label" align="right" colspan="2" rowspan="2" >Endereço: </td>
+                <td class="dataAddress" colspan="4" rowspan="2" ><div><?= "{$membership->type} {$membership->address}, {$membership->number} " . ($membership->complement ? "({$membership->complement})" : null) . " - {$membership->municipality} - {$membership->neighborhood}/{$membership->UF}" ?></div></td>
                 <td rowspan="12"></td>
             </tr>
             <tr>
-                <td colspan="3" class="address" style="padding-left: 3px; height: 20px" valign="top">Rua da Paz, 11 - Parque União - Bonsucesso</td>
+                <td colspan="3" class="address" valign="top">Rua da Paz, 11 - Parque União - Bonsucesso</td>
             </tr>
             <tr>
                 <td class="label" align="right" colspan="2">Registro:</td>
@@ -71,8 +70,8 @@
                 <td valign="bottom" align="center" class="label" colspan="1">Nascimento: </td>
                 <td valign="bottom" align="center" class="label" colspan="2">Estado Civel: </td>
                 <td style="width: 0px"></td>
-                <td class="label year" valign="top" align="center"><?= $year1 ?></td>
-                <td class="label year" valign="top" align="center"><?= $year2 ?></td>
+                <td class="label year" valign="top" align="center" width=""><?= $year1 ?></td>
+                <td class="label year" valign="top" align="center" width="50%"><?= $year2 ?></td>
                 <td class="label year" valign="top" align="center"><?= $year3 ?></td>
                 <td class="label year" valign="top" align="center"><?= $year4 ?></td>
                 <td style="width: 0px"></td>

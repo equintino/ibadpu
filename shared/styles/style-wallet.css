@@ -1,45 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Medula+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Medula+One&display=swap');
 
-#wallet {
-    width: 690px;
-}
-
-#wallet table td, #wallet table tr {
-    margin: 0;
-    padding: 0;
-}
-
 #wallet fieldset {
     border: 2px solid #761112;
     padding: 5px;
+    background-size: 260px;
+    width: 1020px;
+    height: 370px;
 }
 
 #wallet .photo img {
     border: 2px solid #761112;
-}
-
-#wallet .edge {
-    border: 2px solid #761112;
-    width: 60px;
+    width: 110px;
+    height: 130px;
+    margin-right: 2px;
 }
 
 #wallet .address {
-    font-size: .7em;
-    font-family: "arial";
     color: #761112;
+    padding-left: 3px;
+    font-size: 1.1em;
 }
 
 #wallet .label {
-    font-family: "arial";
-    font-size: .8em;
     font-weight: bolder;
     color: #761112;
-}
-
-#wallet .year {
-    font-weight: bolder;
-    font-size: 1em;
+    font-size: 1.3em;
 }
 
 #wallet .text {
@@ -48,21 +34,9 @@
     font-style: italic;
 }
 
-#wallet .data div, #wallet .dataAddress div {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.1em;
-    font-weight: bolder;
-    text-align: center;
-    border: 1px solid #761112;
-    margin: 1px;
-}
-
-#wallet .data div {
-    height: 18px;
-}
-
-#wallet .nomeLogo img {
+#wallet .nameLogo img {
     padding-right: 5px;
+    height: 65px;
 }
 
 #wallet .divisor-right {
@@ -72,4 +46,25 @@
 
 #wallet .signature {
     text-align: center;
+}
+
+#wallet .data div, #wallet .dataAddress div {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.7em;
+    font-weight: bolder;
+    text-align: center;
+    border: 1px solid #761112;
+    margin: 3px;
+}
+
+#wallet .data div {
+    height: 27px;
+}
+
+#wallet .edge {
+    border: 2px solid #761112;
+}
+
+#wallet .year {
+    font-weight: bolder;
 }
