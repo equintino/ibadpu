@@ -154,7 +154,7 @@ function abbreviationName($string, $act = null){
 
             if ($x !== 1 && $x !== count($surname) && strlen($str) > 3){
                 $fullName .= firstLetter($str) . ". ";
-            } elseif ($x === count($surname) && strlen($string) > 26) {
+            } elseif ($x === count($surname) && strlen($string) > 22) {
                 $fullName .= firstLetter($str) . ". ";
             } else {
                 $fullName .= ucfirst($str) . ' ';
