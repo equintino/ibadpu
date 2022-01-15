@@ -22,23 +22,45 @@ const scriptDocumentation = () => {
     });
     $("#documentation table.show tbody tr").on("click", function() {
         let id = $(this).attr("id");
-        let img = "documentation/show";
-        modal.show({
-            content: img,
-            params: {
-                id: id
-            },
-            buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
-            callback: function() {
-                $("#boxe_main button").on("click", function() {
-                    if($(this).text() === "Fechar") {
-                        $("#boxe_main #content").html("");
-                        $("#boxe_main, #mask_main").hide();
-                    } else {
-                        window.print();
-                    }
-                });
-            }
-        });
+        window.open("documentation/show/id/" + id);
+        // let img = "documentation/show";
+        // modal.show({
+        //     content: img,
+        //     params: {
+        //         id: id
+        //     },
+        //     buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
+        //     callback: function() {
+        //         $("#boxe_main button").on("click", function() {
+        //             if($(this).text() === "Fechar") {
+        //                 $("#boxe_main #content").html("");
+        //                 $("#boxe_main, #mask_main").hide();
+        //             } else {
+        //                 /** Open impression preview */
+        //                 // let dataPost = {
+        //                 //     "year": getYearMonthDay(date, 0),
+        //                 //     "month": getYearMonthDay(date, 1)
+        //                 // };
+        //                 // modal.new({
+        //                 //     url: "impression",
+        //                 //     post: dataPost,
+        //                 //     box: "box_print",
+        //                 //     buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
+        //                 //     callback: function() {
+        //                 //         $("#mask_main").css("z-index", "5");
+        //                 //         $("#box_print button").on("click", function() {
+        //                 //             if($(this).text() === "Imprimir") {
+        //                 //                 window.print();
+        //                 //             }
+        //                 //             $("#box_print").remove();
+        //                 //             $("#mask_main").css("z-index", "4");
+        //                 //         });
+        //                 //     }
+        //                 // });
+        //                 window.print();
+        //             }
+        //         });
+        //     }
+        // });
     });
 }
