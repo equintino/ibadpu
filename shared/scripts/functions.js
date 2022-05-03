@@ -457,10 +457,6 @@ var saveData = function(link, data, msg = "Saving") {
         },
         error: function(error) {
             alertLatch("Could not save change", "var(--cor-danger)");
-            // setTimeout(function() {
-            //     loading.hide();
-            //     $("#mask_main").fadeOut();
-            // }, setTime);
         },
         complete: function() {
             if($("#boxe_main").css("display") === "none")$("#mask_main").hide();
@@ -478,8 +474,6 @@ var saveAjax = function(link, data, msg = "Saving") {
         type: "POST",
         dataType: "JSON",
         context: msg,
-        // processData: false,
-        // contentType: false,
         async: false,
         data: data,
         beforeSend: function() {

@@ -67,6 +67,10 @@ $(function() {
             $(".content").load(name, function() {
                 callScript(name);
                 $(".loading, #mask_main").hide();
+                let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
+                if(hasButton == "true") {
+                    $(".navbar-toggler-icon").trigger("click")
+                }
             });
         }
     });

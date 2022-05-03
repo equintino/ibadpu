@@ -100,24 +100,6 @@ const scriptMoviment = () => {
                         evt.preventDefault();
                         let id = $(this).attr("href");
                         window.open("proof/show/id/" + id);
-                        // let img = "proof/show";
-                        // modal.modal({
-                        //     content: img,
-                        //     params: {
-                        //         id: id
-                        //     },
-                        //     buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
-                        //     callback: function() {
-                        //         $("#div_dialogue button").on("click", function() {
-                        //             if($(this).text() !== "Fechar") {
-                        //                 window.print();
-                        //             }
-                        //             $("#div_dialogue #content").html("");
-                        //             $("#div_dialogue").hide();
-                        //             $("#mask_main").css("z-index","2");
-                        //         });
-                        //     }
-                        // });
                     });
                     $(buttons).on("click", function() {
                         let btnName = $(this).text();

@@ -1,37 +1,12 @@
 #nomembers {
     display: flex;
     justify-content: center;
-    /* padding-top: 30px; */
 }
-
-/* #nomembers .side, #nomembers .side-right {
-    width: 140px;
-} */
-
-/* #nomembers section.side button {
-    margin-bottom: 4px;
-    border-radius: 10px 0 0 10px;
-} */
 
 #nomembers button {
     margin-bottom: 4px;
     border-radius: 10px;
 }
-
-/* #nomembers button.add, #nomembers button.cart, #nomembers button.no_members {
-    float: right;
-    width: 100%;
-} */
-
-/* #nomembers .side-right button {
-    border-radius: 0 5px 5px 0;
-    height: 25px;
-    padding: 0 5px;
-} */
-
-/* #nomembers .side-right input {
-    height: 24px;
-} */
 
 #nomembers #tab-nomembers {
     height: 490px;
@@ -60,7 +35,3 @@
 #nomembers .division {
     background: #0b0b0ba8;
 }
-
-/* #nomembers .badge {
-    cursor: pointer;
-} */

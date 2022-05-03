@@ -71,7 +71,6 @@ function scriptMembership() {
         let id = ($(this).attr("data-id") ?? 0);
         let add_edit = $(this).hasClass("add");
         let way = (add_edit ? "Novo Membro": name);
-        // loading.show({});
         modal.show({
             title: way,
             content: "membership/register/" + id
@@ -107,7 +106,6 @@ function scriptMembership() {
                         }
                     }
                 });
-                // loading.hide();
             }
         });
     });

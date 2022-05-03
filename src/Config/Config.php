@@ -97,8 +97,7 @@ class Config
     {
         if($this->data["type"] === "sqlsrv") {
             $name = "Database";
-        }
-        elseif($this->data["type"] === "mysql") {
+        } elseif($this->data["type"] === "mysql") {
             $name = "dbname";
         }
         $this->dsn .= "{$name}={$database}";
