@@ -15,14 +15,16 @@
         <?php else: ?>
         <legend>ADICIONAR DOCUMENTO</legend>
         <form id="form-documentation" method="POST" action="#" enctype="multipart/form-data" >
-            <table class="my-table">
+            <table class="my-table table-responsive">
                 <thead>
                     <tr><th>Nome</th><th>Descrição</th><th>Arquivo</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><input type="text" name="names[]"  required/></td>
-                        <td><input type="text" name="descriptions[]" size="50" required/></td>
-                        <td><input type="file" name="files[]"  required/></td></tr>
+                    <tr>
+                        <td><input type="text" name="names[]"  required/></td>
+                        <td><input type="text" name="descriptions[]" required/></td>
+                        <td><input type="file" name="files[]"  required/></td>
+                    </tr>
                 </tbody>
             </table>
             <section>
