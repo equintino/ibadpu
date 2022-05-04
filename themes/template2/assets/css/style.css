@@ -202,7 +202,7 @@ main .form-signin {
 
 @media screen and (max-width: 900px) {
     main .form-input {
-        height: 40px;
+        /* height: 40px; */
     }
 
     nav li {
@@ -235,7 +235,7 @@ main .form-signin {
 }
 
 .form-input {
-    width: 88%;
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
     height: 25px;
