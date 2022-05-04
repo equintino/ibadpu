@@ -1,7 +1,7 @@
 <?php if(!empty($act) && $act === "list"): ?>
 <fieldset class="fieldset p-3" >
     <legend>FUNÇÕES</legend>
-    <table id="tabList" class="my-table" width="100%" >
+    <table id="tabList" class="my-table">
         <thead>
             <tr>
                 <th>NOME</th>
