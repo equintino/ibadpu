@@ -1,14 +1,18 @@
 <div id="membership">
-	<section class="side">
-		<button class="button button-primary add" data-name = "add" >NOVO MEMBRO</button>
-		<button class="button button-primary cart" data-name = "cart" >
-			CARTEIRINHA<br>
-			SELECIONADO <span id="selected">0</span>/<?= count($membership) ?>
-		</button>
-		<button class="button btn-warning add" data-name = "markOff" >DESMARCAR</button>
-		<button class="button btn-secondary no_members" data-name = "no_members" >NÃO MEMBROS</button>
+	<section class="buttons">
+		<div class="col">
+			<button class="button button-primary add" data-name = "add" >NOVO MEMBRO</button>
+			<button class="button button-primary cart" data-name = "cart" >
+				CARTEIRINHA <span id="selected">0</span>/<?= count($membership) ?>
+			</button>
+			<button class="button btn-warning add" data-name = "markOff" >DESMARCAR</button>
+			<button class="button btn-secondary no_members" data-name = "no_members" >NÃO MEMBROS</button>
+		</div>
+		<div class="col-2">
+			<input style="padding-left: 8px" type="text" name="search" placeholder="pesquisa de membros" autofocus />
+		</div>
 	</section>
-	<section id="tab-membership" style="hight: 500px">
+	<section id="tab-membership">
 	    <?php if(!empty($membership)):
 			foreach($membership as $member): ?>
 			<table id="<?= mb_strToUpper($member->name, "UTF-8") ?>" cellspacing=0 border=1 class="table-compact table-responsive" widht="100%">
@@ -60,8 +64,5 @@
 				</table>
 	    	<?php endforeach;
 		endif ?>
-	</section>
-	<section class="side-right">
-		<input type="text" name="search" size="8" autofocus /><button id="search"><i class="fa fa-search" ></i></button>
 	</section>
 </div>

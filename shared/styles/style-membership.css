@@ -1,42 +1,70 @@
 #membership {
-    display: flex;
-    justify-content: center;
-    padding-top: 30px;
+    /* display: flex;
+    justify-content: center; */
+    padding-top: 10px;
+}
+
+@media screen and (max-width: 900px) {
+    #membership {
+        padding-top: 25px;
+    }
 }
 
 #membership .side, #membership .side-right {
-    width: 140px;
+    /* width: 140px; */
 }
 
-#membership section.side button {
+/* @media screen and (max-width: 600px) {
+    #membership .side {
+        visibility: collapse;
+    }
+} */
+
+/* #membership section.side button {
     margin-bottom: 4px;
     border-radius: 10px 0 0 10px;
-}
+} */
 
-#membership button {
-    margin-bottom: 4px;
+#membership button, #membership [name=search] {
+    margin-bottom: 5px;
     border-radius: 10px;
+    padding: 5px;
 }
 
 #membership button.add, #membership button.cart, #membership button.no_members {
-    float: right;
-    width: 100%;
+    /* float: right; */
+    /* width: 100%; */
 }
 
-#membership .side-right button {
+/* #membership .side-right button {
     border-radius: 0 5px 5px 0;
     height: 25px;
     padding: 0 5px;
+} */
+
+/* #membership .side-right input { */
+#membership [name=search] {
+    height: 30px;
+    width: 200px;
 }
 
-#membership .side-right input {
-    height: 24px;
+#membership .buttons {
+    margin: auto;
+    max-width: 800px;
 }
 
 #membership #tab-membership {
+    margin: auto;
     height: 490px;
     overflow: scroll;
-    width: 800px;
+    max-width: 800px;
+}
+
+@media screen and (max-width: 900px) {
+    #membership #tab-membership {
+        height: 100%;
+        margin: 0 10px;
+    }
 }
 
 #membership table td {
