@@ -25,7 +25,7 @@ class Proof extends Controller
             }
         }
         $years = (!empty($years) ? array_unique($years) : null);
-        $this->view->setPath("Modals")->render($this->page, [ compact("years") ]);
+        $this->view->render($this->page, [ compact("years") ]);
     }
 
     public function show(array $data): void

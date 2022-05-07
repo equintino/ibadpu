@@ -23,6 +23,7 @@
     $minCSS->add(__DIR__ . "/../../shared/styles/style-occupation.css");
     $minCSS->add(__DIR__ . "/../../shared/styles/style-documentation.css");
     $minCSS->add(__DIR__ . "/../../shared/styles/style-nomembers.css");
+    $minCSS->add(__DIR__ . "/../../shared/styles/style-proof.css");
 
     /** MinifyCss */
     $minCSS->minify(__DIR__ . $themes . CONF_VIEW_THEME . "/assets/style.css");

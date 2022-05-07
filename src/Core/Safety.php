@@ -85,7 +85,8 @@ abstract class Safety
             "moviment" => "Movimentação Financeira",
             "documentation" => "Documentação",
             "management" => "Gerenciamento",
-            "occupation" => "Funções"
+            "occupation" => "Funções",
+            "proof" => "Inserir Comprovantes"
         ];
         $key = trim($key);
         return (array_key_exists($key, $screens) ? $screens[$key] : $key);

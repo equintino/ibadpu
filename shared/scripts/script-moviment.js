@@ -184,14 +184,16 @@ const scriptMoviment = () => {
             $(this).val(null);
         }
     });
-    moviment.querySelector(".buttons").onclick = (e) => {
-        let btnName = e.target.value
-        let form = $("#moviment form")
-        if(btnName === "clear") {
-            form.trigger("reset")
-            form.find("[required]").css("background", "white")
-        } else {
-            form.trigger("submit")
+    if(typeof(moviment) !== "undefined" && moviment.querySelector(".new") !== null) {
+        moviment.querySelector(".buttons").onclick = (e) => {
+            let btnName = e.target.value
+            let form = $("#moviment form")
+            if(btnName === "clear") {
+                form.trigger("reset")
+                form.find("[required]").css("background", "white")
+            } else {
+                form.trigger("submit")
+            }
         }
     }
     $("#moviment form").on("submit", function(e) {

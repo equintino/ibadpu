@@ -44,10 +44,10 @@
                </table>
             </form>
          </section>
-               <div class="buttons">
-                  <button class="button btn-default" type="reset" value="clear">Limpar</button>
-                  <button class="button btn-danger" type="submit" value="save">Adcionar</button>
-               </div>
+         <div class="buttons">
+            <button class="button btn-default" type="reset" value="clear">Limpar</button>
+            <button class="button btn-danger" type="submit" value="save">Adcionar</button>
+         </div>
          <!-- <section class="side"></section> -->
       </div>
    <?php elseif(!empty($params[0])): ?>
