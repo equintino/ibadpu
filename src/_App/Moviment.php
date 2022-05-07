@@ -30,6 +30,7 @@ class Moviment extends Controller
 
     public function new(): void
     {
+        $act = "new";
         $balanceDb = new \Models\Balance();
         if(preg_match("/doesn't exist/", ($balanceDb->all(0)))) {
             $balanceDb->createThisTable();
@@ -39,7 +40,8 @@ class Moviment extends Controller
         $month = (is_array($date) ? mb_strtoupper($this->numberMonth($date[0])) : mb_strtoupper($this->numberMonth(date("m"))));
         $year = ($date[1] ?? date("Y"));
 
-        $this->view->setPath("Modals")->render("new_moviment", [ compact("month", "year") ]);
+        // $this->view->setPath("Modals")->render("new_moviment", [ compact("month", "year") ]);
+        $this->view->render("moviment", [ compact("month", "year", "act") ]);
     }
 
     public function add(array $data)

@@ -151,12 +151,12 @@ const scriptMoviment = () => {
 
     /** Page new_moviment */
     /** Mask */
-    $("#new-moviment form [name=day]").mask("#0");
-    $("#new-moviment form [name=value]").mask("#.##0,00", { reverse: true });
+    $("#moviment form [name=day]").mask("#0");
+    $("#moviment form [name=value]").mask("#.##0,00", { reverse: true });
 
-    $('#new-moviment #type').hide();
-    $('#new-moviment #proof').hide();
-    $('#new-moviment select[name=in_out]').on("change", function(){
+    $('#moviment #type').hide();
+    $('#moviment #proof').hide();
+    $('#moviment select[name=in_out]').on("change", function(){
         if($(this).val() == 'deposit'){
             $('#type').show();
             $('#proof').hide();
@@ -165,10 +165,10 @@ const scriptMoviment = () => {
             $('#proof').show();
             $('#description :input').remove();
             $('#description').text('');
-            $('#description').append('<input required type="text" name="description" size="50" />');
+            $('#description').append('<input required type="text" name="description" />');
         }
     })
-    $('#new-moviment #type').on("click", function(){
+    $('#moviment #type').on("click", function(){
         var checked=$("input:checked").val();
         if(checked == 'ofe'){
             $('#description').text('OFERTA').val('offer');
@@ -177,26 +177,51 @@ const scriptMoviment = () => {
             $("#description").html(list);
         }
     });
-    $('#new-moviment :file').on("change", function(){
+    $('#moviment :file').on("change", function(){
         var ext=$(this).val().split('.');
         if(ext[1] != 'jpg' && ext[1] != 'jpeg' && ext[1] != 'png' && ext[1] != 'pdf'){
             alertLatch('This file is not allowed',"var(--cor-warning)");
             $(this).val(null);
         }
     });
-    $("#new-moviment form").on("submit", function(e) {
+    moviment.querySelector(".buttons").onclick = (e) => {
+        let btnName = e.target.value
+        let form = $("#moviment form")
+        if(btnName === "clear") {
+            form.trigger("reset")
+            form.find("[required]").css("background", "white")
+        } else {
+            form.trigger("submit")
+        }
+    }
+    $("#moviment form").on("submit", function(e) {
+        let abort = 0
+        let save = () => {
+            if(saveData("moviment/add", formData)) {
+                $(this).find("button[type=reset]").trigger("click");
+            }
+            $(this).find("[name=day]").trigger("focus");
+        }
         e.preventDefault();
         let formData = new FormData($(this)[0]);
-        if(saveData("moviment/add", formData)) {
-            $(this).find("button[type=reset]").trigger("click");
+        $("#moviment form").find("[required]").css("background", "white")
+        $("#moviment form [required]").each(function(i,elem) {
+            if($(elem).attr("required") !== null && $(elem).val() === "") {
+                $(elem).on("focus").css("background", "pink")
+                abort = 1;
+            }
+        })
+        if(abort === 0) {
+            save()
+        } else {
+            alertLatch("The field or fields are requireds", "var(--cor-warning")
         }
-        $(this).find("[name=day]").trigger("focus");
     });
 
     /** Preview */
-    $("#new-moviment [value=preview").on("click", function(e) {
+    $("#moviment [value=preview").on("click", function(e) {
         e.preventDefault();
-        let data = $("#new-moviment form").serialize();
+        let data = $("#moviment form").serialize();
         let yearMonth = unserializedData(data);
         let url = "moviment/" + yearMonth.year + "/" + yearMonth.month;
         let response = loadData(url);
@@ -225,7 +250,7 @@ const scriptMoviment = () => {
                     $("#boxe_main table tbody .delete").on("click", function() {
                         let id = $(this).closest("tr").attr("data-id");
                         if(saveData("moviment/delete/" + id)) {
-                            $("#new-moviment [value=preview").trigger("click");
+                            $("#moviment [value=preview").trigger("click");
                         }
                     });
                     $("#boxe_main input, #boxe_main select").on("change", function() {
@@ -281,10 +306,10 @@ const scriptMoviment = () => {
     });
 
     /** Close report */
-    $("#new-moviment [value=conclude]").on("click", function(){
+    $("#moviment [value=conclude]").on("click", function(){
         let data = {
-            month: $("#new-moviment form [name=month]").val(),
-            year: $("#new-moviment form [name=year]").val()
+            month: $("#moviment form [name=month]").val(),
+            year: $("#moviment form [name=year]").val()
         };
         modal.confirm({
             title: "Fechamento do relatório",
