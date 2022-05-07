@@ -7,7 +7,7 @@ const scriptDocumentation = () => {
     documentation.find("button").on("click", function() {
         buttonName = $(this).text();
         if(buttonName === "Adicionar Novo") {
-            documentation.find("table").append("<tr><td><input type='text' name='names[]' /></td><td><input type='text' name='descriptions[]' size='50'/></td><td><input type='file' name='files[]' /></td></tr>");
+            documentation.find("table").append("<tr><td><input type='text' name='names[]' /></td><td><input type='text' name='descriptions[]' /></td><td><input type='file' name='files[]' /></td></tr>");
         }
     });
     documentation.on("submit", function(e) {
