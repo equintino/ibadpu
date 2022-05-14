@@ -5,7 +5,7 @@
     <div class="table-conf">
         <fieldset class="fieldset pt-3" style="width: 100%">
             <legend>BANCO DE DADOS</legend>
-            <table aria-describedby="List of access to the bank" id="tab-conf" class="my-table table-responsive" >
+            <table aria-describedby="List of access to the bank" id="tab-conf" class="my-table" >
                 <thead>
                     <tr>
                         <th scope=1></th>

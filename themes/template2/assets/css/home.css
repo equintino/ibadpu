@@ -1,14 +1,15 @@
 .home > h3{
     color: #87340e;
-    text-shadow: 2px 2px 2px gray;
+    /* text-shadow: 2px 2px 2px gray; */
     text-align: center;
     margin-top: 50px;
-    padding-bottom: 40px;
+    padding-bottom: 30px;
+    font-size: 1.6em;
 }
 
 .home > p{
-    font-weight: bolder;
+    /* font-weight: bolder; */
     text-align: center;
     font-size: 1.4em;
-    text-shadow: 1px 1px 1px white;
+    /* text-shadow: 1px 1px 1px white; */
 }

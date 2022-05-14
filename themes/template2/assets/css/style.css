@@ -396,6 +396,7 @@ main .form-signin {
     background: var(--cor-primary-light);
     padding: 20px;
     min-height: 160px;
+    overflow: scroll;
 }
 
 .fieldset legend {

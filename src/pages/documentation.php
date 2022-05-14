@@ -15,7 +15,7 @@
         <?php else: ?>
         <legend>ADICIONAR DOCUMENTO</legend>
         <form id="form-documentation" method="POST" action="#" enctype="multipart/form-data" >
-            <table class="my-table table-responsive">
+            <table class="my-table">
                 <thead>
                     <tr><th>Nome</th><th>Descrição</th><th>Arquivo</th></tr>
                 </thead>
@@ -27,12 +27,12 @@
                     </tr>
                 </tbody>
             </table>
-            <section>
-                <button class="button btn-info" >Adicionar Novo</button>
-                <button class="button btn-default" type="reset" >Limpar</button>
-                <button class="button btn-danger" disabled >Salvar</button>
-            </section>
         </form>
         <?php endif ?>
     </fieldset>
+    <section>
+        <button class="button btn-info" value="new" >Adicionar Novo</button>
+        <button class="button btn-default" type="reset" value="reset" >Limpar</button>
+        <button class="button btn-danger" disabled value="save" >Salvar</button>
+    </section>
 </div>

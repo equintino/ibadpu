@@ -57,7 +57,7 @@
 <?php elseif(!empty($act) && $act === "list"): ?>
     <fieldset class="fieldset p-3" >
         <legend>LISTA DE USUÁRIOS</legend>
-        <table id="tabList" class="my-table table-responsive" width="100%" >
+        <table id="tabList" class="my-table" width="100%" >
             <thead>
                 <tr>
                     <th></th>

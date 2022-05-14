@@ -1,5 +1,5 @@
 <style>
-    .body{
+    .body {
         background: url('<?= theme("assets/img/ceu.jpg") ?>');
         background-position: center;
     }
