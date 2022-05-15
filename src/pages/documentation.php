@@ -30,9 +30,11 @@
         </form>
         <?php endif ?>
     </fieldset>
+    <?php if($act === "add"): ?>
     <section>
         <button class="button btn-info" value="new" >Adicionar Novo</button>
         <button class="button btn-default" type="reset" value="reset" >Limpar</button>
         <button class="button btn-danger" disabled value="save" >Salvar</button>
     </section>
+    <?php endif ?>
 </div>

@@ -589,8 +589,9 @@ main .form-signin {
 
 #div_dialogue {
     position: fixed;
-    width: 50%;
-    margin: -5px 25%;
+    width: 70%;
+    margin: 0 15%;
+    /* margin: -5px 25%; */
     display: -ms-flexbox;
     display: flex;
     -ms-flex-direction: column;
@@ -607,6 +608,20 @@ main .form-signin {
     border-radius: 5px;
     display: none;
     /* overflow: scroll; */
+}
+
+@media screen and (max-width: 900px) {
+    #boxe_main, #boxe2_main, #div_dialogue {
+        width: 90%;
+        margin-top: 5%;
+        left: 5%;
+        max-height: 90%;
+    }
+
+    #div_dialogue {
+        max-width: 90%;
+        margin-left: 0px;
+    }
 }
 
 /* button stylization */
