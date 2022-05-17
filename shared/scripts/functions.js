@@ -300,8 +300,18 @@ var alertLatch = function(text, background) {
 
 /** save configuration */
 var saveForm = function(act, action, connectionName = null, url = "../Suporte/Ajax/save.php") {
-    let success;
-    let data = $("#boxe_main form").serialize();
+    let success
+    let form = $("#boxe_main form")
+    let data = $("#boxe_main form").serialize()
+
+    for(let value of form[0]) {
+        value.style = "background: white"
+        if(value.required && value.value === "") {
+            $(value).trigger("focus")
+            alertLatch("This field is required", "var(--cor-warning)")
+            return value.style = "background: pink"
+        }
+    }
     $.ajax({
         url: url,
         type: "POST",

@@ -9,10 +9,11 @@ function scriptConfig() {
                 title: "Preencha os dados abaixo:",
                 content: content,
             }).complete({
-                buttons: "<button class='button save' >Save</button>",
+                buttons: "<button class='button save' value='save' >Salvar</button>",
                 callback:function() {
-                    $(buttons).on("click", function() {
-                        if($(this).text() === "Save") {
+                    $(buttons).on("click", function(e) {
+                        let btnName = e.target["value"]
+                        if(btnName === "save") {
                             saveForm("connection","add", "null", url);
                         }
                     });
