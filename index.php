@@ -93,6 +93,7 @@
         $router->post("/documentation/save", "Documentation:save");
         $router->post("/documentation/show", "Documentation:show");
         $router->get("/documentation/show/id/{id}", "Documentation:showImage");
+        $router->post("/documentation/delete/id/{id}", "Documentation:delete");
 
 
         /** Proof */

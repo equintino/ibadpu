@@ -8,7 +8,7 @@
             </thead>
             <tbody>
                 <?php foreach($documentations as $documentation): ?>
-                <tr id="<?= $documentation->id ?>"><td><?= $documentation->name ?></td><td><?= $documentation->description ?></td></tr>
+                <tr id="<?= $documentation->id ?>"><td><?= $documentation->name ?></td><td><?= $documentation->description ?></td><td data-action="edit"><i class="fa fa-pencil" ></i></td><td data-action="delete"><i class="fa fa-times" ></i></td></tr>
                 <?php endforeach ?>
             </tbody>
         </table>

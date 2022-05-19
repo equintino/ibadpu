@@ -12,18 +12,38 @@ const scriptDocumentation = () => {
         } else {
             $("#documentation #form-documentation").trigger("submit")
         }
-    });
+    })
     $("#documentation #form-documentation").on("submit", function(e) {
         e.preventDefault()
         let documentation = $("#documentation #form-documentation")
         let link = "documentation/save"
         let formData = new FormData(documentation[0])
         if(saveData(link, formData)){
-            documentation.find("button[type=reset]").trigger("click")
+            documentation.closest("#documentation").find("section button[type=reset]").trigger("click")
         }
-    });
-    $("#documentation table.show tbody tr").on("click", function() {
-        let id = $(this).attr("id");
-        window.open("documentation/show/id/" + id);
-    });
+    })
+    $("#documentation table.show tbody tr").on("click", function(e) {
+        let id = $(this).attr("id")
+        if(typeof(e.target.parentElement.attributes["data-action"]) !== "undefined") {
+            let action = e.target.parentElement.attributes["data-action"].value
+            let description = e.target.parentElement.parentElement.children[1].textContent
+            if(action === "delete") {
+                modal.confirm({
+                    title: "Deseja realmente excluir este documento?",
+                    message: description,
+                    buttons: "<button class='button cancel' value='close'>NÃO</button><button class='button save' value='delete'>SIM</button>"
+                }).on("click", function(e) {
+                    if(e.target.value === "delete") {
+                        if(saveData("documentation/delete/id/" + id, id)) {
+                            $(".content").load("documentation/init", function() {
+                                scriptDocumentation()
+                            })
+                        }
+                    }
+                })
+            }
+        } else {
+            window.open("documentation/show/id/" + id)
+        }
+    })
 }

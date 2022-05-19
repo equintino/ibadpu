@@ -57,4 +57,12 @@ class Documentation extends Controller
         }
         return print(json_encode($documentation->message()));
     }
+
+    public function delete(array $data): string
+    {
+        $id = $data["id"];
+        $documentation = (new \Models\Documentation())->load($id);
+        $documentation->destroy();
+        return print(json_encode($documentation->message()));
+    }
 }
