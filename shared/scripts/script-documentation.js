@@ -41,6 +41,25 @@ const scriptDocumentation = () => {
                         }
                     }
                 })
+            } else {
+                modal.show({
+                    title: "Modo de Edição",
+                    content: "documentation/edit/" +id,
+                    buttons: "<button class='button save' value='save'>Alterar</button>"
+                }).callback(function() {
+                    $(buttons).find("button").on("click", function() {
+                        let btnName = this.value
+                        if(btnName === "save") {
+                            let formData = new FormData(modal.content.find("#form-documentation")[0])
+                            if(saveData("documentation/update", formData)) {
+                                $(".content").load("documentation/init", function() {
+                                    modal.close()
+                                    scriptDocumentation()
+                                })
+                            }
+                        }
+                    })
+                })
             }
         } else {
             window.open("documentation/show/id/" + id)

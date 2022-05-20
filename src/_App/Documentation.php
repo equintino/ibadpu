@@ -24,6 +24,19 @@ class Documentation extends Controller
         $this->view->render($this->page, [ compact("act") ]);
     }
 
+    public function edit(array $data): void
+    {
+        $id = $data["id"];
+        $documentation = (new \Models\Documentation())-> load($id);
+        // $document = [
+        //     "id" => $documentation->id,
+        //     "name" => $documentation->name,
+        //     "description" => $documentation->description
+        // ];
+        // return print(json_encode($document));
+        $this->view->setPath("Modals")->render("documentation", [ compact("documentation") ]);
+    }
+
     public function show(array $data): void
     {
         $id = $data["id"];
@@ -54,6 +67,28 @@ class Documentation extends Controller
             $file["size"] = $files["size"][$key];
             $file["tmp_name"] = $files["tmp_name"][$key];
             $ids[] = $documentation->fileSave($file);
+        }
+        return print(json_encode($documentation->message()));
+    }
+
+    public function update(array $data)
+    {
+        $file = $_FILES["file"];
+        $id = $data["id"];
+        $documentation = (new \Models\Documentation())->load($id);
+        foreach($data as $name => $value) {
+            $documentation->$name = $value;
+        }
+        if($file["error"] === 0) {
+            $file["name"] = $data["name"];
+            $file["description"] = $data["description"];
+            if(is_numeric($documentation->fileSave($file, $id))) {
+                return print(json_encode("<span class='success'>File succefully</span>"));
+            }
+        } else {
+            if(is_numeric($documentation->save())) {
+                return print(json_encode("<span class='success'>File succefully</span>"));
+            }
         }
         return print(json_encode($documentation->message()));
     }

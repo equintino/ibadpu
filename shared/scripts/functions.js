@@ -143,14 +143,12 @@
             if(params.message != null) this.message.html(params.message).show();
             if(params.content != null) this.content.load(params.content, function() {
                 loading.hide();
-                // this.complete();
             }).show();
             this.mask.fadeIn();
             this.nameModal.fadeIn().css({
                 display: "flex",
                 top: 0
             });
-            // this.complete();
             return this;
         },
         modal: function(params) {
@@ -218,10 +216,10 @@
             });
             return this;
         },
-        on: function() {
-            this.buttons.find("button").on("click", function() {
-                alert("clicou");
-            });
+        on: function(event, func) {
+            this.nameModal.on(event, function() {
+                func()
+            })
         },
         complete: function(params) {
             if(typeof(params) !== "undefined") {
@@ -233,8 +231,8 @@
             }
             return this;
         },
-        callback: function(params) {
-            // params.callback();
+        callback: function(func) {
+            func()
         },
         close: function(params) {
             $("#mask_main").trigger("click");
