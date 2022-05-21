@@ -108,7 +108,6 @@ class Documentation extends Model implements Models
         if(empty($this->id)) {
             return $this->create_();
         }
-        //return $this;
     }
 
     private function update_()
@@ -149,7 +148,8 @@ class Documentation extends Model implements Models
                 $params[":{$key}"] = $value;
             }
 
-            $stmt->bindParam(":image", $image, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
+            //$stmt->bindParam(":image", $image, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
+            $stmt->bindParam(":image", $image, \PDO::PARAM_LOB);
             $stmt->bindParam(':size', $size, \PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
             $stmt->bindParam(':description', $description, \PDO::PARAM_STR);
