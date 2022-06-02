@@ -19,7 +19,8 @@
         $('#y').val(c.y);
         $('#w').val(c.w);
         $('#h').val(c.h);
-    };
+    }
+    var photo_id;
     imgFile.onchange = evt => {
         thumbImage(imgFile, imgCrop)
         $(imgCrop).Jcrop({
@@ -28,6 +29,20 @@
             setSelect: [0,0,138,152]
         })
         inputFile.style.display = "none"
+
+        /** to get last photo id */
+        photo_id = cadastro.querySelector("input[name=photo_id]").value
+        if(photo_id === "") {
+            $.ajax({
+                url: "image/lastid",
+                type: "POST",
+                dataType: "JSON",
+                success: function(response) {
+                    let lastId = parseInt(response)
+                    cadastro.querySelector("input[name=photo_id]").value = lastId + 1
+                }
+            })
+        }
     }
     form_crop.onsubmit = evt => {
         evt.preventDefault()
@@ -41,14 +56,13 @@
             let hasFile = imgCrop.src.split("/").pop()
             if(hasFile !== "#") {
                 let formData = new FormData(form_crop)
-                const [file] = imgFile.files
+                formData.append("id", photo_id)
                 $.ajax({
                     url: "image/cropped",
                     type: "POST",
                     data: formData,
                     processData: false,
                     contentType: false,
-                    // dataType: "script",
                     xhrFields:{
                         responseType: 'blob'
                     },
@@ -57,13 +71,8 @@
                     },
                     success: function(response) {
                         let url = window.URL || window.webkitURL
-                        // return console.log(
-                        //     response,
-                        //     url.createObjectURL(response)
-                        // )
                         let src = url.createObjectURL(response)
                         $("#thumb_image").attr("src", src)
-                        // document.getElementById("imgInp").src = src
                         modal.mask.trigger("click")
                     },
                     error: function(error) {

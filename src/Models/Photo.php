@@ -53,7 +53,7 @@ class Photo extends Model implements Models
 
     public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "id"): ?array
     {
-        $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE " . $this->order($order);
+        $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE 1=1 " . $this->order($order);
         if($limit !== 0) {
             $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
         } else {
@@ -110,7 +110,6 @@ class Photo extends Model implements Models
         if(empty($this->id)) {
             return $this->create_();
         }
-        //return $this;
     }
 
     private function update_()

@@ -73,17 +73,7 @@ class Membership extends Controller
     public function update(array $data): ?string
     {
         $membership = new \Models\Membership();
-        if(!empty($_FILES["file"])) {
-            $id = (empty($data["photo_id"]) ? 0 : $data["photo_id"]);
-            $photo_id = $this->updatePhoto($id);
-            if(!empty($photo_id) && is_numeric($photo_id)) {
-                $data["photo_id"] = $photo_id;
-            } else {
-                alertLatch("Could not save the photo", "var(--car-danger)");
-                return null;
-            }
-        }
-        if(!empty($_FILES) && $_FILES["certificate"]["error"] === 0) {
+        if($_FILES["certificate"]["error"] === 0) {
             $id = (!empty($data["certificate_id"]) ? $data["certificate_id"] : null);
             $certificate_id = $this->updateCertificate($id);
             if(!empty($certificate_id) && is_numeric($certificate_id)) {

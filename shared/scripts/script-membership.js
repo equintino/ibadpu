@@ -103,12 +103,11 @@ function scriptMembership() {
 
                         /** pick up attached files */
                         let file = $("#boxe_main form [type=file]")[0].files[0]
-                        let fileName = thumb_image.src
                         if(file !== "undefined") {
                             formData.append("file", file)
-                            formData.append("blob", fileName)
                         }
                         if(saveData("membership/update", formData)) {
+                            alertLatch("Is need reload for update to the photo", "var(--cor-warning)")
                             modal.close();
                         }
                     }

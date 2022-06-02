@@ -128,6 +128,7 @@
         $router->get("/certificate/id/{id}", "Certificate:showImage");
         $router->get("/image/crop", "Photo:crop");
         $router->post("/image/cropped", "Photo:cropped");
+        $router->post("/image/lastid", "Photo:lastid");
 
 
         /** Logout */

@@ -45,8 +45,11 @@ class Photo extends Controller
         } else {
             echo 'error';
         }
+    }
 
-        // $this->view->setPath("Modals")->render("recorte");
+    public function lastid(): string
+    {
+        return print(json_encode((new \Models\Photo())->activeAll(1,0,"id","id desc")[0]->id));
     }
 
     public function showImage($data): void
@@ -69,16 +72,6 @@ class Photo extends Controller
     }
 
     private function imageCreateFromAny($filepath) {
-        // $type = exif_imagetype($filepath); // [] if you don't have exif you could use getImageSize()
-        // $allowedTypes = array(
-        //     1,  // [] gif
-        //     2,  // [] jpg
-        //     3,  // [] png
-        //     6   // [] bmp
-        // );
-        // if (!in_array($type, $allowedTypes)) {
-        //     return false;
-        // }
         $type = $this->getMime($filepath);
         switch ($type) {
             case "image/gif" :
@@ -91,24 +84,6 @@ class Photo extends Controller
                 return imageCreateFromJpeg($filepath);
         }
     }
-
-    // private function showImageType()
-    // {
-    //     switch ($details['mime']) {
-    //         case 'image/jpeg':
-    //             return imagejpeg($image_p, null, $quality);
-    //             break;
-    //         case 'image/gif':
-    //             return imagegif($image_p, null, $quality);
-    //             break;
-    //         case 'image/png':
-    //             return imagepng($image_p, null, $quality);
-    //             break;
-    //         case 'image/webp':
-    //             return imagewebp($image_p, null, $quality);
-    //             break;
-    //     }
-    // }
 
     private function getMime($fileName): string
     {
@@ -124,75 +99,5 @@ class Photo extends Controller
                 return "image/jpeg";
         }
     }
-
-//     function image_resize($path, $width = 200, $height = 200, $save = null, $quality = 100)
-// {
-//         $details = getimagesize($path);
-
-//         if (!$details) {
-//             trigger_error('Imagem inválida');
-//             return false;
-//         }
-
-//         $width_orig = $details[0];
-//         $height_orig = $details[1];
-
-//         // Calculando a proporção
-//         $ratio_orig = $width_orig / $height_orig;
-
-//         if ($width / $height > $ratio_orig) {
-//             $width = $height * $ratio_orig;
-//         } else {
-//             $height = $width / $ratio_orig;
-//         }
-
-//         if (is_string($save) === false) {
-//             $save = null;
-//             header('Content-Type: ' . $details['mime']);
-//         }
-
-//         $image_p = imagecreatetruecolor($width, $height);
-
-//         switch ($details['mime']) {
-//             case 'image/jpeg':
-//                 $image = imagecreatefromjpeg($path);
-//                 break;
-//             case 'image/gif':
-//                 $image = imagecreatefromgif($path);
-//                 break;
-//             case 'image/png':
-//                 $image = imageCreateFromPng($path);
-//                 break;
-//             case 'image/webp':
-//                 $image = imagecreatefromwebp($path);
-//                 break;
-//             default:
-//                 trigger_error('Formato não suportado');
-//                 $image_p = null;
-//                 return false;
-//         }
-
-//         imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-
-//         if ( in_array($details['mime'], array('image/png', 'image/webp')) ) {
-//             imagealphablending($image_p, true);
-//             imagesavealpha($image_p, true);
-//         }
-
-//         switch ($details['mime']) {
-//             case 'image/jpeg':
-//                 imagejpeg($image_p, $save, $quality);
-//                 break;
-//             case 'image/gif':
-//                 imagegif($image_p, $save);
-//                 break;
-//             case 'image/png':
-//                 imagepng($image_p, $save, $quality);
-//                 break;
-//             case 'image/webp':
-//                 imagewebp($image_p, $save, $quality);
-//                 break;
-//         }
-//     }
 
 }
