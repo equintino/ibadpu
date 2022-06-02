@@ -58,7 +58,7 @@ class Membership extends Model implements Models
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
-        if($this->fail || !$find->rowCount()) {
+        if($this->fail || (isset($find) && !$find->rowCount()) || empty($find)) {
             $this->message = "<span class='warning'>Not found member</span>";
             return null;
         }

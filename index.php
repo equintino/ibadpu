@@ -126,6 +126,8 @@
         $router->namespace("_App");
         $router->get("/image/id/{id}", "Photo:showImage");
         $router->get("/certificate/id/{id}", "Certificate:showImage");
+        $router->get("/image/crop", "Photo:crop");
+        $router->post("/image/cropped", "Photo:cropped");
 
 
         /** Logout */

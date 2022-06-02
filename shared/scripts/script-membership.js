@@ -88,18 +88,25 @@ function scriptMembership() {
                     if($(this).text() === "Save") {
                         let form = $("#boxe_main form");
                         let required = form.find("[required]");
-                        let name = required.attr("name");
-                        if(typeof required !== "undefined" && required.val() == "0") {
-                            required.trigger("focus").css("background","pink");
-                            name = (name === "occupation_id" ? "Função" : name);
-                            return alertLatch("O campo \"" + name + "\" requerido", "var(--cor-warning)");
+
+                        /** Require compulsory fields */
+                        for(var field of required) {
+                            if(field.value == "") {
+                                let fieldName = field.previousElementSibling.textContent.trim()
+                                $(field).trigger("focus").css("background", "pink")
+
+                                return alertLatch("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)");
+                            }
                         }
+
                         let formData = new FormData(form[0]);
 
                         /** pick up attached files */
-                        let file = $("#boxe_main form [type=file]")[0].files[0];
+                        let file = $("#boxe_main form [type=file]")[0].files[0]
+                        let fileName = thumb_image.src
                         if(file !== "undefined") {
-                            formData.append("file", file);
+                            formData.append("file", file)
+                            formData.append("blob", fileName)
                         }
                         if(saveData("membership/update", formData)) {
                             modal.close();

@@ -557,6 +557,9 @@ function monthNumber(month) {
 
 const thumbImage = (origin, destination) => {
     const [file] = origin.files
+    console.log(
+        file
+    )
     if (file) {
         destination.src = URL.createObjectURL(file)
     }

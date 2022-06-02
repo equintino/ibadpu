@@ -3,13 +3,12 @@
 		<input type="hidden" name="id" value="<?= ($membership->id ?? null) ?>" />
 		<input type="hidden" name="photo_id" value="<?= ($membership->photo_id ?? null) ?>" />
 		<div class="photo">
-  			<img id="thumb_image" src="<?= url("image/id/" . ($membership->photo_id ?? 0)) ?>" alt="" />
+  			<img id="thumb_image" src="<?= url("image/id/" . ($membership->photo_id ?? 0)) ?>" alt="" height="152" width="138" />
 			<input accept="image/*" type='file' id="imgInp"/>
 		</div>
-
 		<fieldset><legend>Dados Pessoais <span style="float: right">Registro: <strong><?= ($membership->register ?? $newRegister) ?></strong></span></legend>
 			<label>Nome: </label>
-			<input type="text" name="name" value="<?= ($membership->name ?? null) ?>" />
+			<input type="text" name="name" value="<?= ($membership->name ?? null) ?>" required/>
 			<label>Nascimento:</label>
 			<input type="date" name="birth_date" value="<?= ($membership->birth_date ?? null) ?>" />
 			<label>Sexo:</label>
@@ -88,7 +87,7 @@
 			<input type="text" name="origin_church" value="<?= ($membership->origin_church ?? null) ?>" />
 			<label>Função:</label>
 			<select name="occupation_id" required>
-				<option value="0"></option>
+				<option value=""></option>
 				<?php
 				if(!empty($occupations)):
 					foreach($occupations as $occupation): ?>
@@ -117,12 +116,71 @@
 </div>
 <script>
     /** Register Member */
-	imgInp.onchange = evt => {
-		thumbImage(imgInp, thumb_image)
+	imgInp.onclick = evt => {
+		evt.preventDefault()
+		// const [file] = imgInp.files
+		modal.modal({
+			title: "SELECIONE UMA FOTO",
+			message: "Recorte a foto para o tamanho ideal",
+			content: "image/crop",
+		})
+		// thumbImage(imgInp, thumb_image)
 	}
 	if(typeof imgCert !== "undefined") {
 		imgCert.onchange = evt => {
 			thumbImage(imgCert, thumb_cert)
 		}
 	}
+
+	/** Resize */
+	// $(document).ready(function () {
+
+	// 	var files
+
+	// 	// Add events
+	// 	$('#imgInp').on('change', prepareUpload)
+
+	// 	// Grab the files and set them to our variable
+	// 	function prepareUpload(event) {
+	// 		files = event.target.files
+	// 		console.log("aqui",files)
+	// 	}
+
+	// 	// Initialization
+	// 	const compress = new Compress()
+
+	// 	// Attach listener
+	// 	const upload = document.getElementById('imgInp')
+	// 	upload.addEventListener('change', function (evt) {
+	// 		const files = [...evt.target.files]
+	// 		compress.compress(files, {
+	// 			size: 4, // the max size in MB, defaults to 2MB
+	// 			quality: .75, // the quality of the image, max is 1,
+	// 			maxWidth: 138, // the max width of the output image, defaults to 1920px
+	// 			maxHeight: 152, // the max height of the output image, defaults to 1920px
+	// 			resize: true, // defaults to true, set false if you do not want to resize the image width and height
+	// 			rotate: false, // See the rotation section below
+	// 		}).then((data) => {
+	// 			console.log(
+	// 				data
+	// 			)
+	// 			// returns an array of compressed images
+	// 		})
+	// 	}, false)
+
+	// 	compress.attach('#imgInp', {
+	// 		size: 4,
+	// 		quality: .75
+	// 	}).then((results) => {
+	// 		// Example mimes:
+	// 		// image/png, image/jpeg, image/jpg, image/gif, image/bmp, image/tiff, image/x-icon,  image/svg+xml, image/webp, image/xxx, image/png, image/jpeg, image/webp
+	// 		// If mime is not provided, it will default to image/jpeg
+	// 		const img1 = results[0]
+	// 		const base64str = img1.data
+	// 		const imgExt = img1.ext
+	// 		const file = Compress.convertBase64ToFile(base64str, imgExt)
+	// 		// -> Blob {size: 457012, type: "image/png"}
+	// 		console.log(file)
+	// 	})
+	// })
 </script>

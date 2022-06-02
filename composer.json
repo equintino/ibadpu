@@ -14,7 +14,8 @@
     "require": {
         "php": ">=7.0",
         "coffeecode/router": "^1.0",
-        "matthiasmullie/minify": "^1.3"
+        "matthiasmullie/minify": "^1.3",
+        "smottt/wideimage": "9999999-dev"
     },
     "autoload": {
         "files": [

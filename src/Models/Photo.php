@@ -75,16 +75,19 @@ class Photo extends Model implements Models
         }
     }
 
-    public function fileSave(array $file, int $photo_id)
+    public function fileSave(array $file, $photo_id)
     {
-        $dataDb = $this->load($photo_id);
+        $dataDb = (is_numeric($photo_id) ? $this->load($photo_id) : null);
         if($dataDb) {
             $data["id"] = $dataDb->id;
         }
-        $data["name"] = $file["name"];
-        $data["type"] = $this->indType($file["type"]);
-        $data["size"] = $file["size"];
-        $data["photo"] = file_get_contents($file["tmp_name"]);
+
+        if(!empty($file)) {
+            $data["name"] = $file["name"];
+            $data["type"] = $this->indType($file["type"]);
+            $data["size"] = $file["size"];
+            $data["photo"] = file_get_contents($file["tmp_name"]);
+        }
         $this->bootstrap($data);
         return ($this->save() ?? $this->message());
     }
@@ -222,7 +225,7 @@ class Photo extends Model implements Models
         return $this;
     }
 
-    private function indType($type): int
+    public function indType($type): int
     {
         if(strpos($type, "/")) {
             $t = explode("/", $type)[1];

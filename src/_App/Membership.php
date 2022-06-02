@@ -118,8 +118,9 @@ class Membership extends Controller
         return $data;
     }
 
-    private function updatePhoto(int $photo_id)
+    private function updatePhoto($photo_id = null)
     {
+        $_FILES["file"] = ($_FILES["file"] ?? []);
         $photo = new Photo();
         return $photo->fileSave($_FILES["file"], $photo_id);
     }
