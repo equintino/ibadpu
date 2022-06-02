@@ -150,7 +150,7 @@ class Photo extends Model implements Models
                 $params[":{$key}"] = $value;
             }
 
-            $stmt->bindParam(":photo", $photo, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
+            $stmt->bindParam(":photo", $photo, \PDO::PARAM_LOB, 0);//, \PDO::SQLSRV_ENCODING_BINARY);
             $stmt->bindParam(':size', $size, \PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, \PDO::PARAM_STR);
             $stmt->bindParam(':type', $type, \PDO::PARAM_STR);
