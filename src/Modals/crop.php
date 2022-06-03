@@ -1,3 +1,10 @@
+<style>
+    #img {
+        width: 90%;
+        overflow: scroll;
+        height: 90%;
+    }
+</style>
 <div id="crop">
     <form id="form_crop" class="ml-4" action="image/cropped" method="post" enctype="multipart/form-data">
         <input type="hidden" id="x" name="x" />
@@ -8,7 +15,7 @@
         <button class="button" value="cancel">Cancelar</button>
         <button class="button save" type="submit" value="crop" >Recortar Imagem</button>
     </form>
-    <div class="p-2" style="margin-top: 20px">
+    <div id="img" class="p-2" style="margin-top: 20px">
         <img src="#" id="imgCrop" alt=""/>
     </div>
 </div>
