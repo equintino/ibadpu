@@ -120,7 +120,7 @@
 		evt.preventDefault()
 		modal.modal({
 			title: "SELECIONE UMA FOTO",
-			message: "Recorte a foto para o tamanho ideal",
+			message: "Você pode ajustar a foto dentro da moldura",
 			content: "image/crop",
 		})
 	}
