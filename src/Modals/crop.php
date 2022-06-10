@@ -6,19 +6,23 @@
             padding: 20px 40px 40px; */
         }
     }
+
     #frame {
         border: 1px solid #ccc;
         padding: 5px;
         width: 138px;
         margin: 0 auto;
     }
+
     #frame > img {
         display: block;
     }
+
     #controls {
         display: block;
         text-align: center;
     }
+
     #controls a {
         padding: 0 5%;
         height: 50px;
@@ -27,10 +31,12 @@
         font-weight: 300;
         color: #888;
     }
+
     #controls a:hover {
         color: #000;
         text-decoration: none;
     }
+
     .hidden {
         display: none !important;
     }
@@ -58,14 +64,14 @@
     <div id="frame">
         <img src="#" id="imgCrop" alt="" />
     </div>
-    <form id="form_crop" class="ml-4" action="image/cropped" method="post" enctype="multipart/form-data">
+    <form id="form_crop" class="ml-4 pb-2" action="image/cropped" method="post" enctype="multipart/form-data">
         <input type="hidden" name="x" />
         <input type="hidden" name="y" />
         <input type="hidden" name="w" />
         <input type="hidden" name="h" />
         <span id="inputFile"><input type="file" name="image" id="imgFile" /></span>
-        <button class="button" value="cancel">Cancelar</button>
-        <button class="button save" type="submit" value="crop" >Recortar Imagem</button>
+        <!-- <button class="button" value="cancel">Cancelar</button>
+        <button class="button save" type="submit" value="crop" >Recortar Imagem</button> -->
     </form>
 </div>
 <script language="Javascript">
@@ -154,45 +160,5 @@
     }
     form_crop.onsubmit = evt => {
         evt.preventDefault()
-    }
-    form_crop.onclick = evt => {
-        let btnName = evt.target.value
-        let link = form_crop.action.split("/").pop()
-        if(btnName === "cancel") {
-            modal.mask.trigger("click")
-        } else if(btnName === "crop") {
-            let hasFile = imgCrop.src.split("/").pop()
-            if(hasFile !== "#") {
-                let formData = new FormData(form_crop)
-                formData.append("id", photo_id)
-                $.ajax({
-                    url: "image/cropped",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    xhrFields:{
-                        responseType: 'blob'
-                    },
-                    beforeSend: function() {
-
-                    },
-                    success: function(response) {
-                        let url = window.URL || window.webkitURL
-                        let src = url.createObjectURL(response)
-                        $("#thumb_image").attr("src", src)
-                        modal.mask.trigger("click")
-                    },
-                    error: function(error) {
-                        console.log(error)
-                    },
-                    complete: function() {
-
-                    }
-                })
-            } else {
-                alertLatch("There are't file selected", "var(--cor-warning)")
-            }
-        }
     }
 </script>

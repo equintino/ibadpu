@@ -118,10 +118,49 @@
     /** Register Member */
 	imgInp.onclick = evt => {
 		evt.preventDefault()
-		modal.modal({
+		let conf = modal.modal({
 			title: "SELECIONE UMA FOTO",
 			message: "Você pode ajustar a foto dentro da moldura",
 			content: "image/crop",
+			buttons: "<button class='button' value='cancel'>Cancelar</button><button class='button save' type='submit' value='crop' >Recortar Imagem</button>"
+		})
+		$(modal.dialogue).find("button").on("click", function(e) {
+			if(this.value === "crop") {
+				let hasFile = imgCrop.src.split("/").pop()
+				if(hasFile !== "#") {
+					let formData = new FormData(form_crop)
+					formData.append("id", photo_id)
+					$.ajax({
+						url: "image/cropped",
+						type: "POST",
+						data: formData,
+						processData: false,
+						contentType: false,
+						xhrFields:{
+							responseType: 'blob'
+						},
+						beforeSend: function() {
+							$(".loading").show()
+						},
+						success: function(response) {
+							let url = window.URL || window.webkitURL
+							let src = url.createObjectURL(response)
+							$("#thumb_image").attr("src", src)
+							modal.mask.trigger("click")
+						},
+						error: function(error) {
+							console.log(error)
+						},
+						complete: function() {
+							$(".loading").hide()
+						}
+					})
+				} else {
+					alertLatch("There are't file selected", "var(--cor-warning)")
+				}
+			} else {
+				modal.mask.trigger("click")
+			}
 		})
 	}
 	if(typeof imgCert !== "undefined") {
