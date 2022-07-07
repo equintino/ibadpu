@@ -2,8 +2,12 @@
 
 namespace _App;
 
+use Traits\CropTrait;
+
 class Photo extends Controller
 {
+    use CropTrait;
+
     public function __construct()
     {
         parent::__construct();
@@ -21,18 +25,24 @@ class Photo extends Controller
             isset($data['y']) &&
             isset($data['w']) &&
             isset($data['h'])) {
-            $targ_w = $data['w'];
-            $targ_h = $data['h'];
-            $jpeg_quality = 100;
+            $x = $data["x"];
+            $y = $data["y"];
 
             $fileName = $_FILES['image']['tmp_name'];
-            $img_r = $this->imageCreateFromAny($fileName);
-            $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-            imagecopyresampled($dst_r,$img_r,0,0,$data['x'],$data['y'],$targ_w,$targ_h,$data['w'],$data['h']);
 
-            $type = $this->getMime($fileName);
-            header('Content-type: ' . $type);
-            imagejpeg($dst_r,null,$jpeg_quality);
+            $im = $this->imageCreateFromAny($fileName);
+            $this->cut = 1;
+            $this->x = $data["x"];
+            $this->y = $data["y"];
+            $this->width = $data["w"];
+            $this->height = $data["h"];
+            $this->resize_width = 138;
+            $this->resize_height = 152;
+            $this->im = $im;
+            $this->dstimg = null;
+            $this->newimg();
+
+            header('Content-type: ' . $this->getMime($fileName));
 
             unset($data["x"],$data["y"],$data["w"],$data["h"]);
             $photo = new \Models\Photo();
@@ -42,9 +52,25 @@ class Photo extends Controller
             $data["photo"] = ob_get_contents();
             $photo->bootstrap($data);
             $photo->save();
+            return $this->resizeThumbnailImage($fileName, $data["w"], $data["h"], $x, $y);
         } else {
             echo 'error';
         }
+    }
+
+    private function resizeThumbnailImage($fileName, $width, $height, $start_width, $start_height)
+ {
+        $newWidth = ((15200 / $height) / 100) * $width;
+        $newImage = imagecreatetruecolor(138, 152);
+        $img_r = $this->imageCreateFromAny($fileName);
+        imagecopyresampled($newImage,$img_r,0,0,$start_width,$start_height,$newWidth,152,$width,$height);
+
+        return $this->imageType($fileName, $newImage);
+    }
+
+    private function show($dst_r, $quality)
+    {
+        return imagejpeg($dst_r,null,$quality);
     }
 
     public function lastid(): string
@@ -71,7 +97,8 @@ class Photo extends Controller
         return print(json_encode($file->message()));
     }
 
-    private function imageCreateFromAny($filepath) {
+    private function imageCreateFromAny($filepath)
+    {
         $type = $this->getMime($filepath);
         switch ($type) {
             case "image/gif" :
@@ -82,6 +109,21 @@ class Photo extends Controller
                 return imageCreateFromBmp($filepath);
             default:
                 return imageCreateFromJpeg($filepath);
+        }
+    }
+
+    private function imageType($filepath, $newImage)
+    {
+        $type = $this->getMime($filepath);
+        switch ($type) {
+            case "image/gif" :
+                return imageGif($newImage, null);
+            case "image/png" :
+                return imagePng($newImage, null, 0);
+            case "image/bmp" :
+                return imageBmp($newImage, null, 100);
+            default:
+                return imageJpeg($newImage, null, 100);
         }
     }
 
