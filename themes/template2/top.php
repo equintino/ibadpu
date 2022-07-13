@@ -25,6 +25,7 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="<?= url("membership/init") ?>" data-id="membership/init">Fichas</a>
                     <a class="dropdown-item" href="<?= url("occupation/init") ?>" data-id="occupation/init">Funções</a>
+                    <a class="dropdown-item" href="<?= url("membership/birthday") ?>" data-id="membership/birthday">Aniversariantes</a>
                 </div>
             </li>
             <?php endif ?>

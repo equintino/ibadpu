@@ -12,6 +12,8 @@ const identif = (page, logged="Nenhum usuário logado") => {
             return "LISTA DE MEMBROS";
         case "occupation/init":
             return "FUNÇÕES";
+        case "membership/birthday":
+            return "ANIVERSARIANTES";
         case "moviment": case "moviment/new":
             return "MOVIMENTAÇÃO FINANCEIRA";
         case "documentation/init":

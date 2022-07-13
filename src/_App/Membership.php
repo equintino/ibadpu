@@ -126,4 +126,74 @@ class Membership extends Controller
         $membership = ($membershipDb ? $membershipDb[0]->register : 0);
         return date("Y") . str_pad(substr($membership,4)+1, "3", "0", STR_PAD_LEFT);
     }
+
+    public function birthday()
+    {
+        $memberships = new \Models\Membership();
+        $birthdays = $this->splitForMonth($memberships);
+        $this->view->render("birthday", [compact("birthdays")]);
+    }
+
+    private function splitForMonth(\Models\Membership $membership): ?array
+    {
+        foreach($membership->activeAll() as $membership) {
+            if($membership->birth_date) {
+                $birthmonth = explode("-", $membership->birth_date);
+                switch($birthmonth[1]) {
+                    case "01":
+                        $january[] = $membership;
+                        break;
+                    case "02":
+                        $february[] = $membership;
+                        break;
+                    case "03":
+                        $march[] = $membership;
+                        break;
+                    case "04":
+                        $abril[] = $membership;
+                        break;
+                    case "05":
+                        $mai[] = $membership;
+                        break;
+                    case "06":
+                        $june[] = $membership;
+                        break;
+                    case "07":
+                        $july[] = $membership;
+                        break;
+                    case "08":
+                        $august[] = $membership;
+                        break;
+                    case "09":
+                        $september[] = $membership;
+                        break;
+                    case "10":
+                        $october[] = $membership;
+                        break;
+                    case "11":
+                        $november[] = $membership;
+                        break;
+                    case "12":
+                        $dezember[] = $membership;
+                        break;
+                    default:
+                        null;
+                }
+            }
+        }
+        return [
+            "january" => $january,
+            "february" => $february,
+            "march" => $march,
+            "abril" => $abril,
+            "mai" => $mai,
+            "june" => $june,
+            "july" => $july,
+            "august" => $august,
+            "september" => $september,
+            "october" => $october,
+            "november" => $november,
+            "dezember" => $dezember
+        ];
+    }
 }

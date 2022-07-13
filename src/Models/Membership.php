@@ -103,11 +103,11 @@ class Membership extends Model implements Models
     public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false): ?array
     {
         $sql = "SELECT {$columns} FROM  " . static::$entity . " WHERE active=1 " . $this->order($order);
-        if($limit !== 0) {
-            $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
-        } else {
+        // if($limit !== 0) {
+        //     $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
+        // } else {
             $all = $this->read($sql);
-        }
+        // }
 
         if(!$all->rowCount()) {
             $this->message = "Your query has not returned any registrations";
