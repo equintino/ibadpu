@@ -134,6 +134,13 @@ class Membership extends Controller
         $this->view->render("birthday", [compact("birthdays")]);
     }
 
+    public function birthmonth(array $data): void
+    {
+        $month = $this->numberMonth($data["month"]);
+        $birthmonths = $this->splitForMonth(new \Models\Membership())[$month];
+        $this->view->setPath("Modals")->render("birth", [ compact("birthmonths") ]);
+    }
+
     private function splitForMonth(\Models\Membership $membership): ?array
     {
         foreach($membership->activeAll() as $membership) {
@@ -195,5 +202,24 @@ class Membership extends Controller
             "november" => $november,
             "dezember" => $dezember
         ];
+    }
+
+    private function numberMonth(int $month): string
+    {
+        $months = [
+            1 => "january",
+            2 => "february",
+            3 => "march",
+            4 => "abril",
+            5 => "mai",
+            6 => "june",
+            7 => "july",
+            8 => "august",
+            9 => "september",
+            10 => "october",
+            11 => "november",
+            12 => "dezember"
+        ];
+        return $months[$month];
     }
 }

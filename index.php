@@ -57,6 +57,7 @@
         $router->post("/membership/update", "Membership:update");
         $router->get("/membership/no_member", "Membership:noMember");
         $router->get("/membership/birthday", "Membership:birthday");
+        $router->post("/membership/birthmonth", "Membership:birthmonth");
 
 
         /** Occupation Screens */

@@ -43,8 +43,16 @@ class Web extends Controller
     public function init()
     {
         $logged = ucfirst($_SESSION["login"]->login);
+        $month = date("m");
         echo "<script>var logged='{$logged}'</script>";
         $this->view->insertTheme();
+        echo "<script>
+                modal.show({
+                    title: 'Aniversariantes do Mês',
+                    content: 'membership/birthmonth',
+                    params: { month: {$month} }
+                })
+        </script>";
     }
 
     public function home(): void
