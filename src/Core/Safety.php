@@ -82,6 +82,7 @@ abstract class Safety
             "user" => "Login de Acesso",
             "shield" => "Segurança",
             "membership" => "Lista de Membros",
+            "birthday" => "Aniversariantes",
             "moviment" => "Movimentação Financeira",
             "documentation" => "Documentação",
             "management" => "Gerenciamento",
