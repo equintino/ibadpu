@@ -131,7 +131,21 @@ class Membership extends Controller
     {
         $memberships = new \Models\Membership();
         $birthdays = $this->splitForMonth($memberships);
-        $this->view->render("birthday", [compact("birthdays")]);
+        $months = [
+            "Janeiro" => "january",
+            "Fevereiro" => "february",
+            "Março" => "march",
+            "Abril" => "abril",
+            "Maio" => "mai",
+            "Junho" => "june",
+            "Julho" => "july",
+            "Agosto" => "august",
+            "Setembro" => "september",
+            "Outubro" => "october",
+            "Novembro" => "november",
+            "Dezembro" => "dezember"
+        ];
+        $this->view->render("birthday", [compact("birthdays","months")]);
     }
 
     public function birthmonth(array $data): void
@@ -189,18 +203,18 @@ class Membership extends Controller
             }
         }
         return [
-            "january" => $january,
-            "february" => $february,
-            "march" => $march,
-            "abril" => $abril,
-            "mai" => $mai,
-            "june" => $june,
-            "july" => $july,
-            "august" => $august,
-            "september" => $september,
-            "october" => $october,
-            "november" => $november,
-            "dezember" => $dezember
+            "january" => $this->sortingByDay($january),
+            "february" => $this->sortingByDay($february),
+            "march" => $this->sortingByDay($march),
+            "abril" => $this->sortingByDay($abril),
+            "mai" => $this->sortingByDay($mai),
+            "june" => $this->sortingByDay($june),
+            "july" => $this->sortingByDay($july),
+            "august" => $this->sortingByDay($august),
+            "september" => $this->sortingByDay($september),
+            "october" => $this->sortingByDay($october),
+            "november" => $this->sortingByDay($november),
+            "dezember" => $this->sortingByDay($dezember)
         ];
     }
 
@@ -221,5 +235,15 @@ class Membership extends Controller
             12 => "dezember"
         ];
         return $months[$month];
+    }
+
+    private function sortingByDay($memberships)
+    {
+        foreach($memberships as $membership) {
+            $day = (int) explode("-",$membership->birth_date)[2];
+            $list[$day] = $membership;
+        }
+        ksort($list);
+        return $list;
     }
 }

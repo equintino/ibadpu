@@ -32,6 +32,11 @@
         background: white;
     }
 
+    #birthday main div > span {
+        color: red;
+        font-weight: bolder;
+    }
+
     #birthday main div section {
         font-size: 1.2em;
         background: gray;
@@ -42,77 +47,13 @@
 <div id="birthday">
     <h2>PARABÉNS!!!</h2>
     <main>
+        <?php foreach($months as $key => $month): ?>
         <div>
-            <section>Janeiro</section>
-            <?php foreach($birthdays["january"] as $january): ?>
-            <div><?= mb_strtoupper($january->name) ?></div>
+            <section><?= $key ?> (<?= count($birthdays["january"]) ?>)</section>
+            <?php foreach($birthdays[$month] as $membership): ?>
+            <div><span><?= explode("-",$membership->birth_date)[2] ?></span> - <?= mb_strtoupper($membership->name) ?></div>
             <?php endforeach ?>
         </div>
-        <div>
-            <section>Fevereiro</section>
-            <?php foreach($birthdays["february"] as $february): ?>
-            <div><?= mb_strtoupper($february->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Março</section>
-            <?php foreach($birthdays["march"] as $march): ?>
-            <div><?= mb_strtoupper($march->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Abril</section>
-            <?php foreach($birthdays["abril"] as $abril): ?>
-            <div><?= mb_strtoupper($abril->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Maio</section>
-            <?php foreach($birthdays["mai"] as $mai): ?>
-            <div><?= mb_strtoupper($mai->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Junho</section>
-            <?php foreach($birthdays["june"] as $june): ?>
-            <div><?= mb_strtoupper($june->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Julho</section>
-            <?php foreach($birthdays["july"] as $july): ?>
-            <div><?= mb_strtoupper($july->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Agosto</section>
-            <?php foreach($birthdays["august"] as $august): ?>
-            <div><?= mb_strtoupper($august->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Setembro</section>
-            <?php foreach($birthdays["september"] as $september): ?>
-            <div><?= mb_strtoupper($september->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Outubro</section>
-            <?php foreach($birthdays["october"] as $october): ?>
-            <div><?= mb_strtoupper($october->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Novembro</section>
-            <?php foreach($birthdays["november"] as $november): ?>
-            <div><?= mb_strtoupper($november->name) ?></div>
-            <?php endforeach ?>
-        </div>
-        <div>
-            <section>Dezembro</section>
-            <?php foreach($birthdays["dezember"] as $dezember): ?>
-            <div><?= mb_strtoupper($dezember->name) ?></div>
-            <?php endforeach ?>
-        </div>
+        <?php endforeach ?>
     </main>
 </div>
