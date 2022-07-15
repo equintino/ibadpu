@@ -239,9 +239,12 @@ class Membership extends Controller
 
     private function sortingByDay($memberships)
     {
+        $oldDay = 0;
         foreach($memberships as $membership) {
             $day = (int) explode("-",$membership->birth_date)[2];
+            $day = ($day === $oldDay ? $day + 1 : $day);
             $list[$day] = $membership;
+            $oldDay = $day;
         }
         ksort($list);
         return $list;

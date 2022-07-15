@@ -49,7 +49,7 @@
     <main>
         <?php foreach($months as $key => $month): ?>
         <div>
-            <section><?= $key ?> (<?= count($birthdays["january"]) ?>)</section>
+            <section><?= $key ?> (<?= count($birthdays[$month]) ?>)</section>
             <?php foreach($birthdays[$month] as $membership): ?>
             <div><span><?= explode("-",$membership->birth_date)[2] ?></span> - <?= mb_strtoupper($membership->name) ?></div>
             <?php endforeach ?>
