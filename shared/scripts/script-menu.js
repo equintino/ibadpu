@@ -89,6 +89,6 @@ $(function() {
         }
         setTimeout(function() {
             showBirthMonths()
-        }, 1000)
+        }, 2000)
     }
 });
