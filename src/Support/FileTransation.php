@@ -72,7 +72,6 @@ class FileTransation
 
             $this->local = ( !fwrite($handle, $text) ? false : true );
             fclose($handle);
-            //header('Refresh:0');
         }
     }
 

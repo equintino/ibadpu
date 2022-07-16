@@ -17,7 +17,7 @@ class Config
     public $local;
     public $message;
     public $types = [ "mysql", "sqlsrv" ];
-    public $text = "[local]\r\ndsn='sqlsrv:Server=127.0.0.1;Database=lojascom_n'\r\nuser='SA'\r\npasswd='TVFudG4zOTIxMg=='\r\n[localMysql]\r\ndsn='mysql:host=localhost;dbname=lojascom_n'\r\nuser='root'\r\npasswd='TVFfbnRuMzkyMTI='";
+    // public $text = "[local]\r\ndsn='sqlsrv:Server=127.0.0.1;Database=lojascom_n'\r\nuser='SA'\r\npasswd='TVFudG4zOTIxMg=='\r\n[localMysql]\r\ndsn='mysql:host=localhost;dbname=lojascom_n'\r\nuser='root'\r\npasswd='TVFfbnRuMzkyMTI='";
 
     public function __construct()
     {
