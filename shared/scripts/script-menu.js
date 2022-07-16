@@ -77,16 +77,18 @@ $(function() {
         }
     });
 
-    $("#topHeader ul li [data-id=home]").trigger("click")
-    let showBirthMonths = () => {
-        let now = new Date
-        modal.show({
-            title: 'Aniversariantes do Mês',
-            content: 'membership/birthmonth',
-            params: { month: now.getMonth() + 1 }
-        })
+    if(typeof logged !== "undefined") {
+        $("#topHeader ul li [data-id=home]").trigger("click")
+        let showBirthMonths = () => {
+            let now = new Date
+            modal.show({
+                title: 'Aniversariantes do Mês',
+                content: 'membership/birthmonth',
+                params: { month: now.getMonth() + 1 }
+            })
+        }
+        setTimeout(function() {
+            showBirthMonths()
+        }, 1000)
     }
-    setTimeout(function() {
-        showBirthMonths()
-    }, 1000)
 });
