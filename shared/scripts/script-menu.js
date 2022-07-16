@@ -63,12 +63,12 @@ $(function() {
         li.addClass("active");
         if($(this).attr("data-toggle") !== "dropdown") {
             $("#upArrow").css("display","none");
-            $(".loading").show();
+            $(".loading, #mask_main").show();
             $(".identification").html(identif(name, logged));
 
             $(".content").load(name, function() {
                 callScript(name);
-                $(".loading").hide();
+                $(".loading, #mask_main").hide();
                 let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
                 if(hasButton == "true") {
                     $(".navbar-toggler-icon").trigger("click")
@@ -76,8 +76,9 @@ $(function() {
             });
         }
     });
-    if(typeof logged !== "undefined") {
-        $("#topHeader ul li [data-id=home]").trigger("click")
+
+    $("#topHeader ul li [data-id=home]").trigger("click")
+    let showBirthMonths = () => {
         let now = new Date
         modal.show({
             title: 'Aniversariantes do Mês',
@@ -85,4 +86,7 @@ $(function() {
             params: { month: now.getMonth() + 1 }
         })
     }
+    setTimeout(function() {
+        showBirthMonths()
+    }, 1000)
 });
