@@ -63,12 +63,12 @@ $(function() {
         li.addClass("active");
         if($(this).attr("data-toggle") !== "dropdown") {
             $("#upArrow").css("display","none");
-            $(".loading, #mask_main").show();
+            $(".loading").show();
             $(".identification").html(identif(name, logged));
 
             $(".content").load(name, function() {
                 callScript(name);
-                $(".loading, #mask_main").hide();
+                $(".loading").hide();
                 let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
                 if(hasButton == "true") {
                     $(".navbar-toggler-icon").trigger("click")
@@ -76,5 +76,13 @@ $(function() {
             });
         }
     });
-    $("#topHeader ul li [data-id=home]").trigger("click");
+    if(typeof logged !== "undefined") {
+        $("#topHeader ul li [data-id=home]").trigger("click")
+        let now = new Date
+        modal.show({
+            title: 'Aniversariantes do Mês',
+            content: 'membership/birthmonth',
+            params: { month: now.getMonth() + 1 }
+        })
+    }
 });

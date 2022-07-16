@@ -64,5 +64,14 @@
 
         <script>var page = "<?= ($page ?? null) ?>";</script>
         <script type="text/javascript" src="<?= theme("assets/scripts.js") ?>" ></script>
+
+        <script>
+            // var now = new Date
+            // modal.show({
+            //     title: 'Aniversariantes do Mês',
+            //     content: 'membership/birthmonth',
+            //     params: { month: now.getMonth() + 1 }
+            // })
+        </script>
     </body>
 </html>

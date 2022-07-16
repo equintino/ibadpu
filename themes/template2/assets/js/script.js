@@ -57,9 +57,9 @@ $(function($) {
             data: data,
             dataType: "json",
             success: function(response) {
-                if(response === 1) {
+                if(response === 1) {/** Login accepted */
                     $(location).attr("href","");
-                } else if(response === 2) {
+                } else if(response === 2) {/** Reset password */
                     var link = "src/Support/Ajax/save.php";
                     var login = $("form [name=login]").val();
                     var lkToken = "token";
@@ -88,7 +88,7 @@ $(function($) {
                         top: "20%",
                         "padding": "30px"
                     });
-                } else {
+                } else {/** error login */
                     alertLatch(response, "var(--cor-warning)");
                 }
             },
