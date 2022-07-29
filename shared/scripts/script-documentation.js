@@ -1,15 +1,49 @@
 const scriptDocumentation = () => {
+    let validateFile = () => {
+        let filesAdd = documentation.querySelectorAll("[type=file]")
+        for(i of filesAdd) {
+            if(i.files.length > 0) {
+                if(i.files[0].size > 2000000) {
+                    alertLatch("Document size above 2Mb", "var(--cor-warning)")
+                    i.value = ""
+                    return false
+                }
+                if(
+                    i.files[0].type !== "image/jpeg" &&
+                    i.files[0].type !== "image/png" &&
+                    i.files[0].type !== "application/pdf"
+                    ) {
+                    alertLatch("Not allowed document type", "var(--cor-warning)")
+                    i.value = ""
+                    return false
+                }
+            }
+        }
+    }
     let btnName
     $("#documentation #form-documentation [type='file']").on("change", function() {
+        validateFile()
         $("#documentation button").attr("disabled",false)
     })
     $("#documentation button").on("click", function() {
         btnName = $(this).val();
         if(btnName === "new") {
-            $("#documentation table").append("<tr><td><input type='text' name='names[]' /></td><td><input type='text' name='descriptions[]' /></td><td><input type='file' name='files[]' /></td></tr>");
+            $("#documentation table").append("<tr><td><input type='text' name='names[]' required/></td><td><input type='text' name='descriptions[]' required/></td><td><input type='file' name='files[]' required/></td></tr>").one("change", function() {
+                validateFile()
+            })
         } else if(btnName === "reset") {
             $("#documentation #form-documentation").trigger("reset")
         } else {
+            let fields = documentation.querySelectorAll("[required]")
+            for(i of fields) {
+                i.style.background = "white"
+                if(i.value === "") {
+                    i.focus()
+                    i.style.background = "pink"
+                    alertLatch("The field required", "var(--cor-warning)")
+                    return false
+                }
+            }
             $("#documentation #form-documentation").trigger("submit")
         }
     })

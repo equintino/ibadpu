@@ -4,10 +4,13 @@ namespace Models;
 
 use Core\Model;
 use Database\Migrations\CreateDocumentationsTable;
+use Traits\CropTrait;
 
 class Documentation extends Model implements Models
 {
+    use CropTrait;
     public static $entity = "documentations";
+    public $file;
 
     /** @var array */
     private $required = [];
@@ -77,17 +80,77 @@ class Documentation extends Model implements Models
 
     public function fileSave(array $file, int $documentation_id = null)
     {
+        $this->file = $file;
         $dataDb = ($documentation_id ? $this->load($documentation_id) : null);
         if($dataDb) {
             $data["id"] = $dataDb->id;
         }
-        $data["name"] = $file["name"];
-        $data["description"] = $file["description"];
-        $data["type"] = $this->indType($file["type"]);
-        $data["size"] = $file["size"];
-        $data["image"] = file_get_contents($file["tmp_name"]);
+        $data["name"] = $this->file["name"];
+        $data["description"] = $this->file["description"];
+        $data["type"] = $this->indType($this->file["type"]);
+        $data["size"] = $this->file["size"];
+
+        /** converter pdf em jpg */
+        if($data["type"] === 5 && $this->is_pdf($this->file["tmp_name"])) {
+            if($this->create_preview($this->file["tmp_name"])) {
+                // $file["tmp_name"] = "src/public/preview/preview.jpg";
+                $this->file["tmp_name"] = __DIR__ . "/../public/preview/preview.jpg";
+            }
+            $this->im = $this->imageCreateFromAny($this->file["tmp_name"]);
+            $this->resize($this->file["tmp_name"]);
+        }
+
+        $data["image"] = file_get_contents($this->file["tmp_name"]);
         $this->bootstrap($data);
         return ($this->save() ?? $this->message());
+    }
+
+    private function is_pdf ( $file ) {
+        $file_content = file_get_contents( $file );
+
+        if ( preg_match( "/^%PDF-[0-1]\.[\d]+/", $file_content ) ) {
+            return true;
+        }
+        return false;
+    }
+
+    private function create_preview ( $file ) {
+        $output_format = "jpeg";
+        $antialiasing = "4";
+        $preview_page = "1";
+        $resolution = "300";
+        $output_file = "src/public/preview/preview.jpg";
+
+        $exec_command  = "gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=" . $output_format . " ";
+        $exec_command .= "-dTextAlphaBits=". $antialiasing . " -dGraphicsAlphaBits=" . $antialiasing . " ";
+        $exec_command .= "-dFirstPage=" . $preview_page . " -dLastPage=" . $preview_page . " ";
+        $exec_command .= "-r" . $resolution . " ";
+        $exec_command .= "-sOutputFile=" . $output_file . " '" . $file . "'";
+
+        /** Executing command */
+        exec( $exec_command, $command_output, $return_val );
+
+        foreach( $command_output as $line ) {
+            // echo $line . "\n";
+        }
+
+        if ( !$return_val ) {
+            return true;
+        }
+        return false;
+    }
+
+    private function resize($fileName, int $percent=null)
+    {
+        // header('Content-type: ' . $this->getMime($fileName));
+        list($width, $height) = getimagesize($fileName);
+        $p = ($percent ?? 60000/$width);
+        $this->resize_width = $width * ($p/100);
+        $this->resize_height = $height * ($p/100);
+        $this->cut = 1;
+        $this->default();
+        $this->dstimg = $this->file["tmp_name"];
+        $this->newimg();
     }
 
     public function save()
@@ -148,7 +211,7 @@ class Documentation extends Model implements Models
                 $params[":{$key}"] = $value;
             }
 
-            //$stmt->bindParam(":image", $image, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
+            // $stmt->bindParam(":image", $image, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
             $stmt->bindParam(":image", $image, \PDO::PARAM_LOB);
             $stmt->bindParam(':size', $size, \PDO::PARAM_INT);
             $stmt->bindParam(':name', $name, \PDO::PARAM_STR);

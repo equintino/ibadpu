@@ -27,13 +27,7 @@ class Documentation extends Controller
     public function edit(array $data): void
     {
         $id = $data["id"];
-        $documentation = (new \Models\Documentation())-> load($id);
-        // $document = [
-        //     "id" => $documentation->id,
-        //     "name" => $documentation->name,
-        //     "description" => $documentation->description
-        // ];
-        // return print(json_encode($document));
+        $documentation = (new \Models\Documentation())->load($id);
         $this->view->setPath("Modals")->render("documentation", [ compact("documentation") ]);
     }
 

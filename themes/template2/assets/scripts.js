@@ -692,9 +692,23 @@ members_ids.push(id);$(this).find("img").on("load",function(){$(".loading").hide
 $("#selected").text(members_ids.length)});$("#membership section button").on("click",function(){if($(this).text().indexOf("CARTEIRINHA")!==-1){$("#loading").show();if(members_ids.length<1){return alertLatch("No Member was selected","var(--cor-warning)")}else{modal.show({title:"EMISSÃO DE CARTEIRINHA",content:"wallet",params:{members_ids}}).styles({element:"#boxe_main #content",css:{height:"450px"}}).complete({buttons:"<button class='button btn-secondary'>Fechar</button><button class='button btn-danger'>Imprimir</button>",callback:function(){$(buttons).find("button").on("click",function(){if($(this).text()==="Fechar"){$("#boxe_main, #mask_main").hide()}else{window.print()}})}})}}});$("#membership #tab-membership").on("scroll",function(){let scrollTop=$(this).scrollTop();if(scrollTop>0){$("#upArrow").fadeIn()}else{$("#upArrow").fadeOut()}});$("#upArrow").on("click",function(){$("#membership #tab-membership").scrollTop(0)});$("#membership").on("keyup",function(){$(this).find("i").removeClass("fa-search").addClass("fa-times");searchMember()});$("#membership button#search").on("click",function(){$(this).parent("section").find("input").val("").focus();$(this).find("i").removeClass("fa-times").addClass("fa-search");searchMember()});$("#membership .certificate").on("click",function(){let id=$(this).parent().attr("data-id");if(typeof ids==="undefined"){ids=[id]}else{ids.push(id)}
 if(ids.length===1){modal.confirm({title:"Você pode selecionar até dois certificados",message:"Deseja selecionar mais um certificado?",buttons:"<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"}).on("click",function(){if($(this).val()==0){certificatePrinting(ids);ids=[]}else{return null}})}else{certificatePrinting(ids);ids=[]}})};const occupationAction=()=>{$("#registerOccupation #occupation-register").on("submit",function(e){e.preventDefault();let that=$(this);let formData=new FormData($(this)[0]);if(saveData("occupation/save",formData)){that.find("[type=reset]").trigger("click")}})}
 const scriptOccupation=()=>{$("#registerOccupation button").on("click",function(){let act=$(this).attr("id");$(".loading").show();if(act==="list"){$("#exhibition").load("occupation/list",function(){$(".loading").hide();$("#registerOccupation #edit, #registerOccupation #delete").on("click",function(){let action=$(this).attr("id");let id=$(this).attr("data-id");let name=$(this).closest("tr").find("td:eq(0)").text();if(action==="edit"){$.ajax({url:"occupation/edit",type:"POST",dataType:"html",data:{id},beforeSend:function(){$(".loading").show()},success:function(response){$("#exhibition").html(response);occupationAction()},error:function(error){console.log(error)},complete:function(){$(".loading").hide()}})}else if(action==="delete"){const conf=modal.confirm({title:"Exclusão de Função",message:"Deseja realmente excluir a função <strong>"+name+"</strong>?"});conf.on("click",function(){if($(this).val()==0){return!1}
-if(saveData("occupation/delete/id/"+id,[])){$("#registerOccupation #list").trigger("click")}})}})})}else{$("#exhibition").load("occupation/register",function(){$(".loading").hide();occupationAction()})}});$("#registerOccupation #list").trigger("click")};const scriptDocumentation=()=>{let btnName
-$("#documentation #form-documentation [type='file']").on("change",function(){$("#documentation button").attr("disabled",!1)})
-$("#documentation button").on("click",function(){btnName=$(this).val();if(btnName==="new"){$("#documentation table").append("<tr><td><input type='text' name='names[]' /></td><td><input type='text' name='descriptions[]' /></td><td><input type='file' name='files[]' /></td></tr>")}else if(btnName==="reset"){$("#documentation #form-documentation").trigger("reset")}else{$("#documentation #form-documentation").trigger("submit")}})
+if(saveData("occupation/delete/id/"+id,[])){$("#registerOccupation #list").trigger("click")}})}})})}else{$("#exhibition").load("occupation/register",function(){$(".loading").hide();occupationAction()})}});$("#registerOccupation #list").trigger("click")};const scriptDocumentation=()=>{let validateFile=()=>{let filesAdd=documentation.querySelectorAll("[type=file]")
+for(i of filesAdd){if(i.files.length>0){if(i.files[0].size>2000000){alertLatch("Document size above 2Mb","var(--cor-warning)")
+i.value=""
+return!1}
+if(i.files[0].type!=="image/jpeg"&&i.files[0].type!=="image/png"&&i.files[0].type!=="application/pdf"){alertLatch("Not allowed document type","var(--cor-warning)")
+i.value=""
+return!1}}}}
+let btnName
+$("#documentation #form-documentation [type='file']").on("change",function(){validateFile()
+$("#documentation button").attr("disabled",!1)})
+$("#documentation button").on("click",function(){btnName=$(this).val();if(btnName==="new"){$("#documentation table").append("<tr><td><input type='text' name='names[]' required/></td><td><input type='text' name='descriptions[]' required/></td><td><input type='file' name='files[]' required/></td></tr>").one("change",function(){validateFile()})}else if(btnName==="reset"){$("#documentation #form-documentation").trigger("reset")}else{let fields=documentation.querySelectorAll("[required]")
+for(i of fields){i.style.background="white"
+if(i.value===""){i.focus()
+i.style.background="pink"
+alertLatch("The field required","var(--cor-warning)")
+return!1}}
+$("#documentation #form-documentation").trigger("submit")}})
 $("#documentation #form-documentation").on("submit",function(e){e.preventDefault()
 let documentation=$("#documentation #form-documentation")
 let link="documentation/save"
@@ -712,4 +726,4 @@ $(function(){$("#topHeader ul li a").on("click",function(e){e.preventDefault();v
 if(hasButton=="true"){$(".navbar-toggler-icon").trigger("click")}})}});if(typeof logged!=="undefined"){$("#topHeader ul li [data-id=home]").trigger("click")
 let showBirthMonths=()=>{let now=new Date
 modal.show({title:'Aniversariantes do Mês',content:'membership/birthmonth',params:{month:now.getMonth()+1}})}
-setTimeout(function(){showBirthMonths()},1000)}})
+setTimeout(function(){showBirthMonths()},2000)}})
