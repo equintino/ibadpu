@@ -92,6 +92,11 @@ class Documentation extends Model implements Models
 
         /** converter pdf em jpg */
         if($data["type"] === 5 && $this->is_pdf($this->file["tmp_name"])) {
+            $directory = "src/public/preview";
+
+            if(!is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
             if($this->create_preview($this->file["tmp_name"])) {
                 // $file["tmp_name"] = "src/public/preview/preview.jpg";
                 $this->file["tmp_name"] = __DIR__ . "/../public/preview/preview.jpg";
