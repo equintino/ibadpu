@@ -1,10 +1,11 @@
 const scriptMoviment = () => {
     /** Functions */
+    var memberList;
     const listMembers = (selected) => {
         let list = "<select class='select' name='description' >";
-        let data = loadData("membership/list");
-        if(data !== null) {
-            for(let member of data) {
+        memberList = (typeof memberList === "undefined" ? loadData("membership/list") : memberList);
+        if(memberList !== null) {
+            for(let member of memberList) {
                 list += "<option value='" + member + "' " + (member === selected ? 'selected' : '') + " >" + member + "</option>";
             }
             list += "</select>";
