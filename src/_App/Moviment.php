@@ -225,7 +225,7 @@ class Moviment extends Controller
 
     private function numberMonth(string $name, bool $key=false)
     {
-        $name = strToLower($name);
+        $name = mb_strToLower($name);
         $months = [
             "janeiro" => "01",
             "fevereiro" => "02",

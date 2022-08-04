@@ -133,7 +133,7 @@ function monthToNumber(string $month, bool $name=false)
     if($name) {
         return array_search($month, $convertion);
     }
-    return $convertion[strToLower($month)];
+    return $convertion[mb_strToLower($month)];
 }
 
 function alertLatch($msg, $background = "var(--cor-warning)") {
