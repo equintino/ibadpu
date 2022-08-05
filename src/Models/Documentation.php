@@ -348,7 +348,8 @@ class Documentation extends Model implements Models
         return $this->dropTable($sql);
     }
 
-    private function teste() {
+    private function teste()
+    {
         $params = array('level' => 6, 'window' => 15, 'memory' => 9);
 
         $original_text = "Isto é um teste.\nIsto é apenas um teste.\nEsta não é uma string importante.\n";
