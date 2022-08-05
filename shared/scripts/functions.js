@@ -248,13 +248,13 @@
 }));
 
 /** loading */
-var loading = {
+const loading = {
     source: "../themes/img/loading.png",
     height: "100%",
     width: "100%",
     show: function(params) {
-        var text = (params.text ?? "") ;
-        var source = (params.source ? params.source : this.source);
+        let text = (params.text ?? "") ;
+        let source = (params.source ? params.source : this.source);
         $(".loading").show();
         $(".text-loading").html(text).show();
         return this;
@@ -265,10 +265,10 @@ var loading = {
 };
 
 /** alert message */
-var alertLatch = function(text, background) {
-    var box = $("#alert").html(text).css("display","none");
-    var marginRight = box.width() + 40;
-    var css = box.css({
+const alertLatch = function(text, background) {
+    let box = $("#alert").html(text).css("display","none");
+    let marginRight = box.width() + 40;
+    let css = box.css({
                 display: "block",
                 overflow: "hidden",
                 background: background,
@@ -297,7 +297,7 @@ var alertLatch = function(text, background) {
 };
 
 /** save configuration */
-var saveForm = function(act, action, connectionName = null, url = "../Suporte/Ajax/save.php") {
+const saveForm = function(act, action, connectionName = null, url = "../Suporte/Ajax/save.php") {
     let success
     let form = $("#boxe_main form")
     let data = $("#boxe_main form").serialize()
@@ -354,7 +354,7 @@ var saveForm = function(act, action, connectionName = null, url = "../Suporte/Aj
 };
 
 /** @params array screens(access), element, icon One, icon two */
-var insertCheck = function(screens, element, optionGreen, optionRed) {
+const insertCheck = function(screens, element, optionGreen, optionRed) {
     element.find("i").removeClass();
     element.each(function() {
         if(screens == " *" || screens.indexOf($(this).text().trim()) !== -1) {
@@ -368,7 +368,7 @@ var insertCheck = function(screens, element, optionGreen, optionRed) {
 };
 
 /** @return object */
-var getScreenAccess = function(element, check, groupName) {
+const getScreenAccess = function(element, check, groupName) {
     var access = "";
     element.each(function() {
         if($(this).find("i").hasClass(check)) {
@@ -385,8 +385,8 @@ var getScreenAccess = function(element, check, groupName) {
 * @return bool
 * @params element, icon One, icon Two
 */
-var changeCheck = function(element, optionGreen, optionRed) {
-    var currentOption = element.attr("class");
+const changeCheck = function(element, optionGreen, optionRed) {
+    let currentOption = element.attr("class");
     element.removeClass();
     if(currentOption === optionRed) {
         element.addClass(optionGreen)
@@ -400,7 +400,7 @@ var changeCheck = function(element, optionGreen, optionRed) {
 
 /** @return resp */
 const loadData = function(link, data = null, dataType = "JSON", msg = "Loading...") {
-    var resp = null;
+    let resp = null;
     $.ajax({
         url: link,
         type: "POST",
@@ -433,8 +433,8 @@ const loadData = function(link, data = null, dataType = "JSON", msg = "Loading..
 };
 
 /** @return bool with file data */
-var saveData = function(link, data, msg = "Saving") {
-    var success = false;
+const saveData = function(link, data, msg = "Saving") {
+    let success = false;
     $.ajax({
         url: link,
         type: "POST",
@@ -451,7 +451,7 @@ var saveData = function(link, data, msg = "Saving") {
             });
         },
         success: function(response) {
-            var background;
+            let background;
             if(response.indexOf("success") !== -1) {
                 background = "var(--cor-success)";
                 success = true;
@@ -475,8 +475,8 @@ var saveData = function(link, data, msg = "Saving") {
 };
 
 /** @return bool */
-var saveAjax = function(link, data, msg = "Saving") {
-    var success = false;
+const saveAjax = function(link, data, msg = "Saving") {
+    let success = false;
     $.ajax({
         url: link,
         type: "POST",
@@ -491,7 +491,7 @@ var saveAjax = function(link, data, msg = "Saving") {
             });
         },
         success: function(response) {
-            var background;
+            let background;
             if(response.indexOf("success") !== -1) {
                 background = "var(--cor-success)";
                 success = true;
@@ -516,31 +516,31 @@ var saveAjax = function(link, data, msg = "Saving") {
     return success;
 };
 
-var sleep = function(ms) {
+const sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-var valReal = function(val) {
+const valReal = function(val) {
     var val = (val != null ? val : "0,00");
     return parseFloat(val.replace(".","").replace(",","."));
 };
 
-var moeda = function(val) {
+const moeda = function(val) {
     return parseFloat(val).toLocaleString('pt-br', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 };
 
 function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
     for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
+        let c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1);
         if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
     }
     return "";
 }
 
-let getYearMonthDay = function(date, index, name=null) {
+const getYearMonthDay = function(date, index, name=null) {
     date = date.split("-");
     if(!name || index !== 1) {
         return date[index];

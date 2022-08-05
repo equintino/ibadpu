@@ -1,6 +1,6 @@
 const scriptMoviment = () => {
     /** Functions */
-    var memberList;
+    let memberList;
     const listMembers = (selected) => {
         let list = "<select class='select' name='description' >";
         memberList = (typeof memberList === "undefined" ? loadData("membership/list") : memberList);
@@ -170,7 +170,7 @@ const scriptMoviment = () => {
         }
     })
     $('#moviment #type').on("click", function(){
-        var checked=$("input:checked").val();
+        var checked = $("input:checked").val();
         if(checked == 'ofe'){
             $('#description').text('OFERTA').val('offer');
         }else if(checked == 'diz'){
@@ -179,7 +179,7 @@ const scriptMoviment = () => {
         }
     });
     $('#moviment :file').on("change", function(){
-        var ext=$(this).val().split('.');
+        var ext = $(this).val().split('.');
         if(ext[1] != 'jpg' && ext[1] != 'jpeg' && ext[1] != 'png' && ext[1] != 'pdf'){
             alertLatch('This file is not allowed',"var(--cor-warning)");
             $(this).val(null);
@@ -201,13 +201,15 @@ const scriptMoviment = () => {
         let abort = 0
         let save = () => {
             if(saveData("moviment/add", formData)) {
-                $(this).find("button[type=reset]").trigger("click");
+                $(moviment).find("button[type=reset]").trigger("click");
             }
             $(this).find("[name=day]").trigger("focus");
         }
         e.preventDefault();
         let formData = new FormData($(this)[0]);
         $("#moviment form").find("[required]").css("background", "white")
+
+        /** required fields */
         $("#moviment form [required]").each(function(i,elem) {
             if($(elem).attr("required") !== null && $(elem).val() === "") {
                 $(elem).on("focus").css("background", "pink")
@@ -304,9 +306,6 @@ const scriptMoviment = () => {
                                 modal.hideContent();
                             }
                         } else if(btnName === "Resumo") {
-                            console.log(
-                                data
-                            )
                             let html = loadData("moviment/summarie", { data: moviment }, "html");
                             if(html !== null) {
                                 modal.modal({
