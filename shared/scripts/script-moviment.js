@@ -152,21 +152,21 @@ const scriptMoviment = () => {
 
     /** Page new_moviment */
     /** Mask */
-    $("#moviment form [name=day]").mask("#0");
-    $("#moviment form [name=value]").mask("#.##0,00", { reverse: true });
+    $("#moviment form [name=day]").mask("#0").focus()
+    $("#moviment form [name=value]").mask("#.##0,00", { reverse: true })
 
-    $('#moviment #type').hide();
-    $('#moviment #proof').hide();
+    $('#moviment #type').hide()
+    $('#moviment #proof').hide()
     $('#moviment select[name=in_out]').on("change", function(){
         if($(this).val() == 'deposit'){
-            $('#type').show();
-            $('#proof').hide();
+            $('#type').show()
+            $('#proof').hide()
         }else if($(this).val() == 'output'){
-            $('#type').hide();
-            $('#proof').show();
-            $('#description :input').remove();
-            $('#description').text('');
-            $('#description').append('<input required type="text" name="description" />');
+            $('#type').hide()
+            $('#proof').show()
+            $('#description :input').remove()
+            $('#description').text('')
+            $('#description').append('<input required type="text" name="description" />')
         }
     })
     $('#moviment #type').on("click", function(){
@@ -197,6 +197,7 @@ const scriptMoviment = () => {
             }
         }
     }
+    /** submiting */
     $("#moviment form").on("submit", function(e) {
         let abort = 0
         let save = () => {
