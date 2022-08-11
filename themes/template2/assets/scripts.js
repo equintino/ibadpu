@@ -671,7 +671,9 @@ $('#proof').show()
 $('#description :input').remove()
 $('#description').text('')
 $('#description').append('<input required type="text" name="description" />')}})
-$('#moviment #type').on("click",function(){var checked=$("input:checked").val();if(checked=='ofe'){$('#description').text('OFERTA').val('offer')}else if(checked=='diz'){let list=listMembers();$("#description").html(list)}});$('#moviment :file').on("change",function(){var ext=$(this).val().split('.');if(ext[1]!='jpg'&&ext[1]!='jpeg'&&ext[1]!='png'&&ext[1]!='pdf'){alertLatch('This file is not allowed',"var(--cor-warning)");$(this).val(null)}});if(typeof(moviment)!=="undefined"&&moviment.querySelector(".new")!==null){moviment.querySelector(".buttons").onclick=(e)=>{let btnName=e.target.value
+$('#moviment #type').on("click",function(){var checked=$("input:checked").val();if(checked=='ofe'){$('#description').text('OFERTA').val('offer')}else if(checked=='diz'){let list=listMembers();$("#description").html(list)}});$('#moviment :file').on("change",function(){var ext=$(this).val().split('.');if(ext[1]!='jpg'&&ext[1]!='jpeg'&&ext[1]!='png'&&ext[1]!='pdf'){alertLatch('This file is not allowed',"var(--cor-warning)");$(this).val(null)}});if(typeof(moviment)!=="undefined"&&moviment.querySelector(".new")!==null){let form=moviment.querySelector("#cadastro")
+form.onkeyup=(e)=>{if(e.keyCode===13){moviment.querySelector(".buttons [type=submit]").click()}}
+moviment.querySelector(".buttons").onclick=(e)=>{let btnName=e.target.value
 let form=$("#moviment form")
 if(btnName==="clear"){form.trigger("reset")
 form.find("[required]").css("background","white")}else{form.trigger("submit")}}}

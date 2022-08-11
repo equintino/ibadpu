@@ -186,6 +186,12 @@ const scriptMoviment = () => {
         }
     });
     if(typeof(moviment) !== "undefined" && moviment.querySelector(".new") !== null) {
+        let form = moviment.querySelector("#cadastro")
+        form.onkeyup = (e) => {
+            if(e.keyCode === 13) {
+                moviment.querySelector(".buttons [type=submit]").click()
+            }
+        }
         moviment.querySelector(".buttons").onclick = (e) => {
             let btnName = e.target.value
             let form = $("#moviment form")
