@@ -91,21 +91,20 @@ class Documentation extends Model implements Models
         $data["size"] = $this->file["size"];
 
         /** converter pdf em jpg */
-        if($data["type"] === 5 && $this->is_pdf($this->file["tmp_name"])) {
-            $directory = __DIR__ . "/../public/preview";
+        // if($data["type"] === 5 && $this->is_pdf($this->file["tmp_name"])) {
+        //     $directory = __DIR__ . "/../public/preview";
 
-            if(!is_dir($directory)) {
-                mkdir($directory, 0755, true);
-            }
-            $this->teste();die;
-            // exec("ps2pdf " . $this->file['tmp_name'] . " " . $directory . "/preview.pdf");
-            // die;
-            if($this->create_preview($this->file["tmp_name"])) {
-                $this->file["tmp_name"] = $directory . "/preview.jpg";
-            }
-            $this->im = $this->imageCreateFromAny($this->file["tmp_name"]);
-            $this->resize($this->file["tmp_name"]);
-        }
+        //     if(!is_dir($directory)) {
+        //         mkdir($directory, 0755, true);
+        //     }
+        //     // exec("ps2pdf " . $this->file['tmp_name'] . " " . $directory . "/preview.pdf");
+        //     // die;
+        //     if($this->create_preview($this->file["tmp_name"])) {
+        //         $this->file["tmp_name"] = $directory . "/preview.jpg";
+        //     }
+        //     $this->im = $this->imageCreateFromAny($this->file["tmp_name"]);
+        //     $this->resize($this->file["tmp_name"]);
+        // }
 
         $data["image"] = file_get_contents($this->file["tmp_name"]);
         $this->bootstrap($data);
@@ -346,34 +345,5 @@ class Documentation extends Model implements Models
     {
         $sql = (new CreateDocumentationsTable())->down(self::$entity);
         return $this->dropTable($sql);
-    }
-
-    private function teste()
-    {
-        $params = array('level' => 6, 'window' => 15, 'memory' => 9);
-
-        $original_text = "Isto é um teste.\nIsto é apenas um teste.\nEsta não é uma string importante.\n";
-        echo "O texto original tem " . strlen($original_text) . " caracteres.\n";
-
-        $fp = fopen('test.deflated', 'w');
-        stream_filter_append($fp, 'zlib.deflate', STREAM_FILTER_WRITE, $params);
-        fwrite($fp, $original_text);
-        fclose($fp);
-
-        echo "O arquivo comprimido tem " . filesize('test.deflated') . " bytes.\n";
-        echo "O texto original era:\n";
-        /* Use readfile e zlib.inflate para descomprimir de forma improvisada */
-        readfile('php://filter/zlib.inflate/resource=test.deflated');
-
-        /* Gera a saída:
-
-        O texto original tem 79 caracteres.
-        O arquivo comprimido tem 61 bytes.
-        O texto original era:
-        Isto é um teste.
-        Isto é apenas um teste.
-        Esta não é uma string importante.
-
-        */
     }
 }
