@@ -42,8 +42,8 @@ class Certificate extends Controller
     /** disabled button */
     public function validateCertificate($church_baptism, $membershipId = null): ?string
     {
-        $patern = "/^i.{1,5} b.{1,6} do amor de deus$/";
-        $church_baptism = mb_strtolower($church_baptism, "UTF-8");
+        $patern = "/^i.{1,6}b.{1,7}do amor de deus$/";
+        $church_baptism = mb_strtolower(trim($church_baptism), "UTF-8");
         $membership = (new Membership())->load($membershipId);
         if(!preg_match($patern, $church_baptism) && !$membership->certificate_id) {
             $disabled = "disabled";
