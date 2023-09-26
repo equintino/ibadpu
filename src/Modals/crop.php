@@ -44,7 +44,7 @@
 </style>
 <div id="crop">
     <div id="frame">
-        <img src="#" id="imgCrop" alt="" />
+        <img src="#" id="imgCrop" alt="" width="180"/>
     </div>
     <form id="form_crop" class="ml-4 pb-2" action="image/cropped" method="post" enctype="multipart/form-data">
         <input type="hidden" name="x" />
