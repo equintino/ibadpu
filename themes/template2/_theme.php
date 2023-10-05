@@ -64,5 +64,6 @@
 
         <script>var page = "<?= ($page ?? null) ?>";</script>
         <script type="text/javascript" src="<?= theme("assets/scripts.js") ?>" ></script>
+        <script type="module" src="./shared/scripts/src/index.js" ></script>
     </body>
 </html>
