@@ -9,77 +9,47 @@ export default class Menu extends AbstractController{
     initializer = () => {
         this.#view = new View()
         this.#service = new Service()
+        this.#view.showBirthday()
 
         this.#view.initializer(({ pageName: page, element }) => {
             this.#view.active(element)
-            this.#view.showPage(this.#getPage(page))
+            this.#view.showPage(this.#getPage(page), () => {
+                this.#callScript(page)
+            })
         })
+        this.#view.showPage(this.#getPage('home'), () => {
+            this.#callScript(page)
+        })
+        this.#view.identif('home', logged)
     }
 
     #getPage = (page) => {
         return this.#service.openFile({ method: 'GET', url: page})
-        // document.querySelector('.content').innerHTML = this.#service.openFile({ method:'GET', url:btnName }, async (status) => {
-        //     alert(status)
-        //     document.querySelector(".loading").style = 'display=none'
-        //     document.querySelector("#mask_main").style = 'display=none'
-        // })
-        // if (page.status === 200) {
-        //     alert('entrei')
-        //     document.querySelector(".loading").style = 'display=none'
-        //     document.querySelector("#mask_main").style = 'display=none'
-        // }
-        return
-        $(".content").load(btnName, function() {
-            callScript(btnName)
-            document.querySelector(".loading").style = 'display=none'
-            document.querySelector("#mask_main").style = 'display=none'
-            // let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
-            // if(hasButton == "true") {
-            //     $(".navbar-toggler-icon").trigger("click")
-            // }
-        })
-        return
-        switch(btnName) {
-            case 'home':
-                $(".content").load(btnName, function() {
-                    callScript(btnName)
-                    document.querySelector(".loading").style = 'display=none'
-                    document.querySelector("#mask_main").style = 'display=none'
-                    // let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
-                    // if(hasButton == "true") {
-                    //     $(".navbar-toggler-icon").trigger("click")
-                    // }
-                });
-                // let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
-                // if(hasButton == "true") {
-                //     $(".navbar-toggler-icon").trigger("click")
-                // }
+    }
+
+    #callScript = (page) => {
+        switch(page) {
+            case "user":
+                scriptUser()
                 break
-            case 'documentation/init':
-                $(".content").load(btnName, function() {
-                    callScript(btnName)
-                    document.querySelector(".loading").style = 'display=none'
-                    document.querySelector("#mask_main").style = 'display=none'
-                    // let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
-                    // if(hasButton == "true") {
-                    //     $(".navbar-toggler-icon").trigger("click")
-                    // }
-                });
-                console.log(btnName)
+            case "shield":
+                scriptSecurity()
                 break
-            case 'documentation/add':
-                $(".content").load(btnName, function() {
-                    callScript(btnName)
-                    document.querySelector(".loading").style = 'display=none'
-                    document.querySelector("#mask_main").style = 'display=none'
-                    // let hasButton = topHeader.querySelector("[aria-expanded]").attributes["aria-expanded"].value
-                    // if(hasButton == "true") {
-                    //     $(".navbar-toggler-icon").trigger("click")
-                    // }
-                });
-                console.log(btnName)
+            case "config":
+                scriptConfig()
                 break
-            default:
+            case "moviment": case "moviment/new": case "proof/init":
+                scriptMoviment()
+                break
+            case "membership/init":
+                scriptMembership()
+                break
+            case "occupation/init":
+                scriptOccupation()
+                break
+            case "documentation/add": case "documentation/init":
+                scriptDocumentation()
+                break
         }
     }
 }

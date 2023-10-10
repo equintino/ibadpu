@@ -13,13 +13,14 @@ export default class View extends AbstractView {
                 if (!pageName) return
                 this.#loading.show()
                 fn({ pageName, element })
-                document.querySelector('.identification').innerHTML = this.#identif(pageName, logged)
+                this.identif(pageName, logged)
             }
         })
     }
 
-    showPage = (page) => {
+    showPage = (page, fn) => {
         document.querySelector('.content').innerHTML = page
+        if (typeof(fn) === 'function') fn()
         setTimeout(() => {
             this.#loading.hide()
         }, 100)
@@ -51,32 +52,54 @@ export default class View extends AbstractView {
         }
     }
 
-    #identif = (page, logged="Nenhum usuário logado") => {
+    identif = (page, logged="Nenhum usuário logado") => {
+        let ident
         switch(page) {
             case "home":
-                return "<i>Usuário:</i> " + logged;
+                ident = "<i>Usuário:</i> " + logged
+                break
             case "user":
-                return "GERENCIAMENTO DE LOGINS";
+                ident = "GERENCIAMENTO DE LOGINS"
+                break
             case "shield":
-                return "TELAS DE ACESSO";
+                ident = "TELAS DE ACESSO"
+                break
             case "config":
-                return "CONFIGURAÇÃO DO ACESSO AO BANCO DE DADOS";
+                ident = "CONFIGURAÇÃO DO ACESSO AO BANCO DE DADOS"
+                break
             case "membership/init":
-                return "LISTA DE MEMBROS";
+                ident = "LISTA DE MEMBROS"
+                break
             case "occupation/init":
-                return "FUNÇÕES";
+                ident = "FUNÇÕES"
+                break
             case "membership/birthday":
-                return "ANIVERSARIANTES";
+                ident = "ANIVERSARIANTES"
+                break
             case "moviment": case "moviment/new":
-                return "MOVIMENTAÇÃO FINANCEIRA";
+                ident = "MOVIMENTAÇÃO FINANCEIRA"
+                break
             case "documentation/init":
-                return "DOCUMENTAÇÃO";
+                ident = "DOCUMENTAÇÃO"
+                break
             case "documentation/add":
-                return "CADASTRO DE DOCUMENTAÇÃO";
+                ident = "CADASTRO DE DOCUMENTAÇÃO"
+                break
             case "proof/init":
-                return "CADASTRO DE COMPROVANTES";
+                ident = "CADASTRO DE COMPROVANTES"
+                break
             default:
-                return "CADASTRO DE " + page.toUpperCase();
+                ident = "CADASTRO DE " + page.toUpperCase()
         }
+        document.querySelector('.identification').innerHTML = ident
+    }
+
+    showBirthday = () => {
+        let now = new Date
+        modal.show({
+            title: 'Aniversariantes do Mês',
+            content: 'membership/birthmonth',
+            params: { month: now.getMonth() + 1 }
+        })
     }
 }

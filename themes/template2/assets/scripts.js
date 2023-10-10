@@ -650,8 +650,29 @@ $("#mask_main").hide()})}
 $(".loading").hide()})}
 function disabledTableLine(dom){$(dom).each(function(){var that=$(this);var disabledItens=$(this).find("td:eq(4)").text();if(disabledItens!=="SIM"){that.find("td").each(function(){if($(this).index()>0&&$(this).index()<5){var text=$(this).text();$(this).html("<strike>"+text+"</sctrike>").css("color","var(--cor-secondary-light)")}})}})}
 function scriptUser(){if(typeof(company_id)!=="undefined"){disabledTableLine("#exhibition table tbody tr")}
-$("select[name=NomeFantasia]").on("change",function(){var company_id=$(this).val();var url="user/list/company/"+company_id;if(company_id!=""){$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td");disabledTableLine("#exhibition table tbody tr")})}});$(".header button").on("click",function(){$(".loading").show();var btnAction=$(this).text();var company_id=$("select[name=NomeFantasia]").val();if(company_id==""){alertLatch("Selecione a EMPRESA","var(--cor-warning)");$(this).closest(".header").find("select").focus();return!1}
-if(btnAction==="Adicionar"){let url="user/register";$("#exhibition").load(url,function(){$(this).find("[name=Nome]").focus();$(".loading").hide()}).on("submit",function(e){e.preventDefault();const formData=new FormData($(this).find("form")[0]);formData.append("company_id",company_id);var link="user/save";var result=saveData(link,formData);if(result)$("#exhibition form#login-register").find("button[type=reset]").trigger("click")})}else{let url="user/list/company/"+company_id;$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td");disabledTableLine("#exhibition table tbody tr");$(".loading").hide()})}});exhibition("#exhibition #tabList tbody td");$(".header button").each(function(){if($(this).text()==="Listar")$(this).trigger("click")})};const scriptMoviment=()=>{let memberList;const listMembers=(selected)=>{let list="<select class='select' name='description' >";memberList=(typeof memberList==="undefined"?loadData("membership/list"):memberList);if(memberList!==null){for(let member of memberList){list+="<option value='"+member+"' "+(member===selected?'selected':'')+" >"+member+"</option>"}
+$("select[name=NomeFantasia]").on("change",function(){var company_id=$(this).val()
+var url="user/list/company/"+company_id
+if(company_id!=""){$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td")
+disabledTableLine("#exhibition table tbody tr")})}})
+$(".header button").on("click",function(){$(".loading").show()
+var btnAction=$(this).text()
+var company_id=$("select[name=NomeFantasia]").val()
+if(company_id==""){alertLatch("Selecione a EMPRESA","var(--cor-warning)")
+$(this).closest(".header").find("select").focus()
+return!1}
+if(btnAction==="Adicionar"){let url="user/register"
+$("#exhibition").load(url,function(){$(this).find("[name=Nome]").focus()
+$(".loading").hide()}).on("submit",function(e){e.preventDefault()
+const formData=new FormData($(this).find("form")[0])
+formData.append("company_id",company_id)
+var link="user/save"
+var result=saveData(link,formData)
+if(result)$("#exhibition form#login-register").find("button[type=reset]").trigger("click")})}else{let url="user/list/company/"+company_id
+$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td")
+disabledTableLine("#exhibition table tbody tr")
+$(".loading").hide()})}})
+exhibition("#exhibition #tabList tbody td")
+$(".header button").each(function(){if($(this).text()==="Listar")$(this).trigger("click")})};const scriptMoviment=()=>{let memberList;const listMembers=(selected)=>{let list="<select class='select' name='description' >";memberList=(typeof memberList==="undefined"?loadData("membership/list"):memberList);if(memberList!==null){for(let member of memberList){list+="<option value='"+member+"' "+(member===selected?'selected':'')+" >"+member+"</option>"}
 list+="</select>"}
 return list}
 const mountingTableBalance=(data,edit=!1)=>{let table="<table class='my-table'><thead align='center'><th>DIA</th><th style='text-align:left'>DESCRIÇÃO</th><th>DÍZIMO/OFERTA</th><th>ENTRADA</th><th>SAÍDA</th><th>SALDO</th></thead><tbody>";let subtotal=0;for(let i in data){if(i==0){subtotal+=parseFloat(data[i].previousMonthBalance);table+="<tr><td align='center'>01</td><td>SALDO DO MÊS ANTERIOR</td><td></td><td></td><td></td><td align='right'>"+moeda(subtotal)+"</td></tr>"}else{subtotal+=valReal(data[i].deposit)-valReal(data[i].output);let day=(edit?"<input class='input' type='text' size='1' value="+getYearMonthDay(data[i].date,2)+" name='day' style='text-align: center' />":getYearMonthDay(data[i].date,2));let description=(edit?listMembers(data[i].description):data[i].description);let diz="";let ofe="";if(data[i].tithe_offer==="diz"){diz="selected"}else if(data[i].tithe_offer==="ofe"){ofe="selected";description="OFERTA"}else{description=(edit?"<input class='input' type='text' value='"+data[i].description+"' name='description' />":data[i].description)}
@@ -733,9 +754,4 @@ let description=e.target.parentElement.parentElement.children[1].textContent
 if(action==="delete"){modal.confirm({title:"Deseja realmente excluir este documento?",message:description,buttons:"<button class='button cancel' value='close'>NÃO</button><button class='button save' value='delete'>SIM</button>"}).on("click",function(e){if(e.target.value==="delete"){if(saveData("documentation/delete/id/"+id,id)){$(".content").load("documentation/init",function(){scriptDocumentation()})}}})}else{modal.show({title:"Modo de Edição",content:"documentation/edit/"+id,buttons:"<button class='button save' value='save'>Alterar</button>"}).callback(function(){$(buttons).find("button").on("click",function(){let btnName=this.value
 if(btnName==="save"){let formData=new FormData(modal.content.find("#form-documentation")[0])
 if(saveData("documentation/update",formData)){$(".content").load("documentation/init",function(){modal.close()
-scriptDocumentation()})}}})})}}else{window.open("documentation/show/id/"+id)}})};const identif=(page,logged="Nenhum usuário logado")=>{switch(page){case "home":return"<i>Usuário:</i> "+logged;case "user":return"GERENCIAMENTO DE LOGINS";case "shield":return"TELAS DE ACESSO";case "config":return"CONFIGURAÇÃO DO ACESSO AO BANCO DE DADOS";case "membership/init":return"LISTA DE MEMBROS";case "occupation/init":return"FUNÇÕES";case "membership/birthday":return"ANIVERSARIANTES";case "moviment":case "moviment/new":return"MOVIMENTAÇÃO FINANCEIRA";case "documentation/init":return"DOCUMENTAÇÃO";case "documentation/add":return"CADASTRO DE DOCUMENTAÇÃO";case "proof/init":return"CADASTRO DE COMPROVANTES";default:return"CADASTRO DE "+page.toUpperCase()}}
-const callScript=(name)=>{switch(name){case "user":scriptUser();break;case "shield":scriptSecurity();break;case "config":scriptConfig();break;case "moviment":case "moviment/new":case "proof/init":scriptMoviment();break;case "membership/init":scriptMembership();break;case "occupation/init":scriptOccupation();break;case "documentation/add":case "documentation/init":scriptDocumentation();break}}
-$(function(){if(typeof logged!=="undefined"){$("#topHeader ul li [data-id=home]").trigger("click")
-let showBirthMonths=()=>{let now=new Date
-modal.show({title:'Aniversariantes do Mês',content:'membership/birthmonth',params:{month:now.getMonth()+1}})}
-setTimeout(function(){showBirthMonths()},2000)}})
+scriptDocumentation()})}}})})}}else{window.open("documentation/show/id/"+id)}})};

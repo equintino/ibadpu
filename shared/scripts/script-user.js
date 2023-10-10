@@ -77,54 +77,54 @@ function disabledTableLine(dom) {
 }
 function scriptUser() {
     if(typeof(company_id) !== "undefined") {
-        disabledTableLine("#exhibition table tbody tr");
+        disabledTableLine("#exhibition table tbody tr")
     }
     $("select[name=NomeFantasia]").on("change", function() {
-        var company_id = $(this).val();
-        var url = "user/list/company/" + company_id;
+        var company_id = $(this).val()
+        var url = "user/list/company/" + company_id
         if(company_id != "") {
             $("#exhibition").load(url, function() {
-                exhibition("#exhibition table#tabList tbody td");
-                disabledTableLine("#exhibition table tbody tr");
-            });
+                exhibition("#exhibition table#tabList tbody td")
+                disabledTableLine("#exhibition table tbody tr")
+            })
         }
-    });
+    })
     $(".header button").on("click", function() {
-        $(".loading").show();
-        var btnAction = $(this).text();
-        var company_id = $("select[name=NomeFantasia]").val();
+        $(".loading").show()
+        var btnAction = $(this).text()
+        var company_id = $("select[name=NomeFantasia]").val()
         if(company_id == "") {
-            alertLatch("Selecione a EMPRESA", "var(--cor-warning)");
+            alertLatch("Selecione a EMPRESA", "var(--cor-warning)")
             $(this).closest(".header")
                 .find("select")
-                .focus();
-            return false;
+                .focus()
+            return false
         }
         if(btnAction === "Adicionar") {
-            let url = "user/register";
+            let url = "user/register"
             $("#exhibition").load(url, function() {
-                    $(this).find("[name=Nome]").focus();
-                    $(".loading").hide();
+                    $(this).find("[name=Nome]").focus()
+                    $(".loading").hide()
                 })
                 .on("submit", function(e) {
-                    e.preventDefault();
-                    const formData = new FormData($(this).find("form")[0]);
-                    formData.append("company_id", company_id);
-                    var link = "user/save";
-                    var result = saveData(link, formData);
-                    if(result) $("#exhibition form#login-register").find("button[type=reset]").trigger("click");
-            });
+                    e.preventDefault()
+                    const formData = new FormData($(this).find("form")[0])
+                    formData.append("company_id", company_id)
+                    var link = "user/save"
+                    var result = saveData(link, formData)
+                    if(result) $("#exhibition form#login-register").find("button[type=reset]").trigger("click")
+            })
         } else {
-            let url = "user/list/company/" + company_id;
+            let url = "user/list/company/" + company_id
             $("#exhibition").load(url, function() {
-                exhibition("#exhibition table#tabList tbody td");
-                disabledTableLine("#exhibition table tbody tr");
-                $(".loading").hide();
-            });
+                exhibition("#exhibition table#tabList tbody td")
+                disabledTableLine("#exhibition table tbody tr")
+                $(".loading").hide()
+            })
         }
-    });
-    exhibition("#exhibition #tabList tbody td");
+    })
+    exhibition("#exhibition #tabList tbody td")
     $(".header button").each(function() {
-        if($(this).text() === "Listar")$(this).trigger("click");
-    });
+        if($(this).text() === "Listar")$(this).trigger("click")
+    })
 }
