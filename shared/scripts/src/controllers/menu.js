@@ -10,7 +10,8 @@ export default class Menu extends AbstractController{
         this.#view = new View()
         this.#service = new Service()
 
-        this.#view.initializer((page) => {
+        this.#view.initializer(({ pageName: page, element }) => {
+            this.#view.active(element)
             this.#view.showPage(this.#getPage(page))
         })
     }
