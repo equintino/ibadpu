@@ -44,45 +44,45 @@
             }
         },
         clickMaskEnable: function() {
-            let that = this;
+            let that = this
             /** execute only once */
             if(typeof(closeMaskEnable) === "undefined") {
                 this.mask.on("click", function() {
-                    that.hideContent();
-                    closeMaskEnable = 1;
-                });
+                    that.hideContent()
+                    closeMaskEnable = 1
+                })
             }
         },
         /** @var title, message, content */
         show: function(params) {
             loading.show({
                 text: "loading..."
-            });
-            let that = this;
-            this.closeEnable();
-            this.escapeEnable();
-            this.clickMaskEnable();
-            if(params.title != null) this.title.html(params.title).show();
-            if(params.message != null) this.message.html(params.message).show().css({
+            })
+            let that = this
+            this.closeEnable()
+            this.escapeEnable()
+            this.clickMaskEnable()
+            if (params.title != null) this.title.html(params.title).show()
+            if (params.message != null) this.message.html(params.message).show().css({
                 "overflow-y": "scroll",
                 "max-height": "450px"
-            });
-            if(params.content != null) {
+            })
+            if (params.content != null) {
                 this.content.load(params.content, params.params, function() {
-                    if(params.callback != null) params.callback();
-                    that.complete();
-                    loading.hide();
-                }).show();
+                    if(params.callback != null) params.callback()
+                    that.complete()
+                    loading.hide()
+                }).show()
             } else {
-                loading.hide();
+                loading.hide()
             }
-            if(params.buttons != null) this.buttons.html(params.buttons).show();
-            this.mask.show();
+            if (params.buttons != null) this.buttons.html(params.buttons).show()
+            this.mask.show()
             this.nameModal.show().css({
                 display: "flex",
                 top: 0
-            });
-            return this;
+            })
+            return this
         },
         hideContent: function() {
             let that = this;
@@ -154,39 +154,39 @@
         modal: function(params) {
             loading.show({
                 text: "loading..."
-            });
-            let that = this;
-            if(params.title != null) this.dialogue.find("#title").html(params.title).show();
-            if(params.message != null) this.dialogue.find("#message").html(params.message).show();
-            if(params.content != null) {
+            })
+            let that = this
+            if (params.title != null) this.dialogue.find("#title").html(params.title).show()
+            if (params.message != null) this.dialogue.find("#message").html(params.message).show()
+            if (params.content != null) {
                 this.dialogue.find("#content").load(params.content, params.params, function() {
-                    loading.hide();
-                }).show();
+                    loading.hide()
+                }).show()
             } else {
-                loading.hide();
+                loading.hide()
             }
-            if(params.html != null) this.dialogue.find("#content").html(params.html).show();
-            if(params.buttons != null) this.dialogue.find("#buttons").html(params.buttons).show();
-            if(params.callback != null) params.callback();
+            if (params.html != null) this.dialogue.find("#content").html(params.html).show()
+            if (params.buttons != null) this.dialogue.find("#buttons").html(params.buttons).show()
+            if (params.callback != null) params.callback()
 
             this.dialogue.fadeIn().css({
                 display: "flex"
-            });
+            })
             this.dialogue.find("#content").css({
                 "overflow-y": "scroll",
                 "max-height": "490px"
-            });
+            })
             $("#mask_main").css({
                 "z-index": "4"
-            });
+            })
             this.styles({
                 element: this.dialogue.find("#buttons button"),
                 css: {
                    "border-radius": "0 0 5px 5px",
                 }
-            });
-            this.complete();
-            return this;
+            })
+            this.complete()
+            return this
         },
         new: function(params) {
             loading.show({
@@ -557,9 +557,6 @@ function monthNumber(month) {
 
 const thumbImage = (origin, destination) => {
     const [file] = origin.files
-    console.log(
-        file
-    )
     if (file) {
         destination.src = URL.createObjectURL(file)
     }

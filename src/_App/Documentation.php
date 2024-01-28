@@ -47,7 +47,7 @@ class Documentation extends Controller
         echo $documentation->image;
     }
 
-    public function save(array $data)
+    public function save(array $data): string
     {
         $files = $_FILES["files"];
         $names = $data["names"];
@@ -62,7 +62,7 @@ class Documentation extends Controller
             $file["tmp_name"] = $files["tmp_name"][$key];
             $ids[] = $documentation->fileSave($file);
         }
-        return print(json_encode($documentation->message()));
+        return print $documentation->message();
     }
 
     public function update(array $data)

@@ -19,9 +19,12 @@ trait CropTrait
     {
         if(!empty($this->resize_height)) {
             // $this->imageProcess();
+            $this->height = $this->height == "" ? 1 : (int) $this->height;
+            $resize_ratio = (float) $this->resize_width / (float) $this->resize_height;
+            $ratio = (float) $this->width / (float) $this->height;
+            $this->x = (int) $this->x;
+            $this->y = (int) $this->y;
 
-            $resize_ratio = $this->resize_width / $this->resize_height;
-            $ratio = $this->width / $this->height;
             if ($this->cut == "1") {
                 if ($ratio >= $resize_ratio) {
                     $newimg = imagecreatetruecolor($this->resize_width, $this->resize_height);

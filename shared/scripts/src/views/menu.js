@@ -95,6 +95,7 @@ export default class View extends AbstractView {
     }
 
     showBirthday = () => {
+        const modal = this.modal
         let now = new Date
         modal.show({
             title: 'Aniversariantes do Mês',

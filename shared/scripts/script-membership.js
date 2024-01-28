@@ -55,7 +55,7 @@ function searchMember() {
         }
     });
 }
-function scriptMembership() {
+function scriptMembership(modal) {
     $("#membership .photo, #membership [data-action='edit'], .add").on("click", function() {
         let name = $(this).attr("data-name");
         if(name === "markOff") {
@@ -85,13 +85,13 @@ function scriptMembership() {
             buttons: "<button  class='button btn-danger'>Save</button>",
             callback: function() {
                 $("#boxe_main button").on("click", function() {
-                    if($(this).text() === "Save") {
+                    if ($(this).text() === "Save") {
                         let form = $("#boxe_main form");
                         let required = form.find("[required]");
 
                         /** Require compulsory fields */
-                        for(var field of required) {
-                            if(field.value == "") {
+                        for (var field of required) {
+                            if (field.value == "") {
                                 let fieldName = field.previousElementSibling.textContent.trim()
                                 $(field).trigger("focus").css("background", "pink")
 
@@ -103,15 +103,71 @@ function scriptMembership() {
 
                         /** pick up attached files */
                         let file = $("#boxe_main form [type=file]")[0].files[0]
-                        if(file !== "undefined") {
+                        if (file !== "undefined") {
                             formData.append("file", file)
                         }
-                        if(saveData("membership/update", formData)) {
+                        if (saveData("membership/update", formData)) {
                             alertLatch("Is need reload for update to the photo", "var(--cor-warning)")
                             modal.close();
                         }
                     }
-                });
+                })
+                   /** Register Member */
+                // setTimeout(() => {
+                //     document.querySelector('#imgInp').onclick = evt => {
+                //         evt.preventDefault()
+                //         let conf = modal.modal({
+                //             title: "SELECIONE UMA FOTO",
+                //             message: "Você pode ajustar a foto dentro da moldura",
+                //             content: "image/crop",
+                //             buttons: "<button class='button' value='cancel'>Cancelar</button><button class='button save'            type='submit' value='crop' >Recortar Imagem</button>"
+                //         })
+                //         $(modal.dialogue).find("button").on("click", function(e) {
+                //             if(e.target.value === "crop") {
+                //                 let hasFile = document.querySelector('#imgCrop').src.split("/").pop()
+                //                 if(hasFile !== "#") {
+                //                     let formData = new FormData(form_crop)
+                //                     formData.append("id", photo_id)
+                //                     $.ajax({
+                //                         url: "image/cropped",
+                //                         type: "POST",
+                //                         data: formData,
+                //                         processData: false,
+                //                         contentType: false,
+                //                         xhrFields:{
+                //                             responseType: 'blob'
+                //                         },
+                //                         beforeSend: function() {
+                //                             $(".loading").show()
+                //                         },
+                //                         success: function(response) {
+                //                             let url = window.URL || window.webkitURL
+                //                             let src = url.createObjectURL(response)
+                //                             $("#thumb_image").attr("src", src)
+                //                             modal.mask.trigger("click")
+                //                         },
+                //                         error: function(error) {
+                //                             console.log(error)
+                //                         },
+                //                         complete: function() {
+                //                             $(".loading").hide()
+                //                         }
+                //                     })
+                //                 } else {
+                //                     alertLatch("There are't file selected", "var(--cor-warning)")
+                //                 }
+                //             } else {
+                //                 modal.mask.trigger("click")
+                //             }
+                //         })
+                //     }
+                //     let imgCert = document.querySelector('#imgCert')
+                //     if(typeof imgCert !== "undefined") {
+                //         imgCert.onchange = evt => {
+                //             thumbImage(imgCert, thumb_cert)
+                //         }
+                //     }
+                // }, 2500)
             }
         });
     });

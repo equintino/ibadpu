@@ -36,14 +36,14 @@ class Certificate extends Controller
     {
         $membership = (new Membership())->load($data["id"]);
         $patern = "/^i.{1,5} b.{1,6} do amor de deus$/";
-        return print(json_encode(preg_match($patern , mb_strtolower($membership->church_baptism, "UTF-8"))));
+        return print json_encode(preg_match($patern , mb_strtolower($membership->church_baptism, "UTF-8")));
     }
 
     /** disabled button */
-    public function validateCertificate($church_baptism, $membershipId = null): ?string
+    public function validateCertificate($church_baptism = "", $membershipId = null): ?string
     {
         $patern = "/^i.{1,6}b.{1,7}do amor de deus$/";
-        $church_baptism = mb_strtolower(trim($church_baptism), "UTF-8");
+        $church_baptism = $church_baptism ? mb_strtolower(trim($church_baptism), "UTF-8") : "";
         $membership = (new Membership())->load($membershipId);
         if(!preg_match($patern, $church_baptism) && !$membership->certificate_id) {
             $disabled = "disabled";
@@ -58,7 +58,7 @@ class Certificate extends Controller
     public function baptizedHere(int $id): bool
     {
         $patern = "/^i.{1,5} b.{1,6} do amor de deus$/";
-        $church_baptism = ((new Membership())->load($id)->church_baptism ?? null);
+        $church_baptism = ((new Membership())->load($id)->church_baptism ?? "");
         return preg_match($patern, mb_strtolower($church_baptism, "UTF-8"));
     }
 

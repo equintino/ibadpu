@@ -16,13 +16,13 @@ class Web extends Controller
 
     public function start(): void
     {
-        $route = filter_input(INPUT_GET, "route", FILTER_SANITIZE_STRIPPED);
+        $route = filter_input(INPUT_GET, "route", FILTER_UNSAFE_RAW);
         $version = $this->version();
         $config = new Config();
         $connectionList = array_keys($config->getFile());
-        $login = filter_input(INPUT_COOKIE, "login", FILTER_SANITIZE_STRIPPED);
-        $connectionName= filter_input(INPUT_COOKIE, "connectionName", FILTER_SANITIZE_STRIPPED);
-        $checked = filter_input(INPUT_COOKIE, "remember", FILTER_SANITIZE_STRIPPED);
+        $login = filter_input(INPUT_COOKIE, "login", FILTER_UNSAFE_RAW);
+        $connectionName= filter_input(INPUT_COOKIE, "connectionName", FILTER_UNSAFE_RAW);
+        $checked = filter_input(INPUT_COOKIE, "remember", FILTER_UNSAFE_RAW);
 
         if(empty($connectionList)) {
             $initializing = true;

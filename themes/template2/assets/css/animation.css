@@ -1,0 +1,13 @@
+.animate {
+    animation: slide-in 0.7s both;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}

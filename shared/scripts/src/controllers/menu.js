@@ -1,30 +1,27 @@
 import AbstractController from "./abstractController.js"
-import View from "../views/menu.js"
-import Service from "../services/menu.js"
+import Documentation from "./ddocumentation.js"
+import Membership from "./membership.js"
 
 export default class Menu extends AbstractController{
-    #view
-    #service
-
     initializer = () => {
-        this.#view = new View()
-        this.#service = new Service()
-        this.#view.showBirthday()
+        this.view.showBirthday()
 
-        this.#view.initializer(({ pageName: page, element }) => {
-            this.#view.active(element)
-            this.#view.showPage(this.#getPage(page), () => {
-                this.#callScript(page)
-            })
+        this.view.initializer(({ pageName: page, element }) => {
+            this.view.active(element)
+            this.showPage(page)
         })
-        this.#view.showPage(this.#getPage('home'), () => {
+        this.showPage('home')
+        this.view.identif('home', logged)
+    }
+
+    showPage(page) {
+        this.view.showPage(this.#getPage(page), () => {
             this.#callScript(page)
         })
-        this.#view.identif('home', logged)
     }
 
     #getPage = (page) => {
-        return this.#service.openFile({ method: 'GET', url: page})
+        return this.service.openFile({ method: 'GET', url: page})
     }
 
     #callScript = (page) => {
@@ -42,14 +39,17 @@ export default class Menu extends AbstractController{
                 scriptMoviment()
                 break
             case "membership/init":
-                scriptMembership()
+                Membership.initializer()
                 break
             case "occupation/init":
                 scriptOccupation()
                 break
             case "documentation/add": case "documentation/init":
-                scriptDocumentation()
+                const documentation = new Documentation()
+                documentation.initializer()
                 break
+            case "exit":
+                window.location.reload()
         }
     }
 }

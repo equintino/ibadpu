@@ -14,7 +14,7 @@
         </table>
         <?php else: ?>
         <legend>ADICIONAR DOCUMENTO</legend>
-        <form id="form-documentation" method="POST" action="#" enctype="multipart/form-data" >
+        <form id="form-documentation" method="POST" action="documentation/save" enctype="multipart/form-data" >
             <table class="my-table">
                 <thead>
                     <tr><th>Nome</th><th>Descrição</th><th>Arquivo</th></tr>
@@ -32,7 +32,7 @@
     </fieldset>
     <?php if($act === "add"): ?>
     <section>
-        <button class="button btn-info" value="new" >Adicionar Novo</button>
+        <!-- <button class="button btn-info" value="new" >Adicionar Novo</button> -->
         <button class="button btn-default" type="reset" value="reset" >Limpar</button>
         <button class="button btn-danger" disabled value="save" >Salvar</button>
     </section>

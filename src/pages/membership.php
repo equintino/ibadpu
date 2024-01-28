@@ -5,7 +5,7 @@
 			<button class="button button-primary cart" data-name = "cart" >
 				CARTEIRINHA <span id="selected">0</span>/<?= count($membership) ?>
 			</button>
-			<button class="button btn-warning add" data-name = "markOff" >DESMARCAR</button>
+			<button class="button btn-warning badgesOff" data-name = "markOff" >DESMARCAR</button>
 			<button class="button btn-secondary no_members" data-name = "no_members" >NÃO MEMBROS</button>
 		</div>
 		<div class="col-2">

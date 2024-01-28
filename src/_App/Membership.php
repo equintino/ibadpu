@@ -58,22 +58,24 @@ class Membership extends Controller
         $newRegister = $this->newRegister();
         $occupations = (new \Models\Occupation())->activeAll(0);
         $act = "cad";
-        $this->view->setPath("Modals")->render("register", [ compact("act","membership","occupations","newRegister","certificate") ]);
+        $this->view->setPath("Modals")->render("register", [
+            compact("act","membership","occupations","newRegister","certificate")
+        ]);
     }
 
     public function list()
     {
-        $membership = (new \Models\Membership())->all(0,0,"id,name");
+        $membership = (new \Models\Membership())->activeAll(0,0,"id,name");
         foreach($membership as $member) {
             $list[] = $member->name;
         }
-        return print(json_encode($list));
+        return print json_encode($list);
     }
 
     public function update(array $data): ?string
     {
         $membership = new \Models\Membership();
-        if($_FILES["certificate"]["error"] === 0) {
+        if(!empty($_FILES['certificate']) && $_FILES['certificate']["error"] === 0) {
             $id = (!empty($data["certificate_id"]) ? $data["certificate_id"] : null);
             $certificate_id = $this->updateCertificate($id);
             if(!empty($certificate_id) && is_numeric($certificate_id)) {
@@ -83,12 +85,19 @@ class Membership extends Controller
                 return null;
             }
         } else {
-            unset($data["certificate_id"]);
+            unset($data["certificate_id"], $data['imgCert']);
         }
-        unset($data["file"]);
+
+        if (!empty($_FILES['imgInp']) && $_FILES['imgInp']['error'] === 0) {
+            $id = (!empty($data['photo_id']) ? $data['photo_id'] : null);
+            $photo_id = $this->updatePhoto($id);
+            $data['photo_id'] = $photo_id;
+        } else {
+            unset($data["file"], $data['imgInp']);
+        }
         $membership->bootstrap($this->validate($data));
         $membership->save();
-        return print(json_encode($membership->message()));
+        return print $membership->message();
     }
 
     public function validate(array $data)
@@ -110,9 +119,9 @@ class Membership extends Controller
 
     private function updatePhoto($photo_id = null)
     {
-        $_FILES["file"] = ($_FILES["file"] ?? []);
+        $_FILES["imgInp"] = ($_FILES["imgInp"] ?? []);
         $photo = new Photo();
-        return $photo->fileSave($_FILES["file"], $photo_id);
+        return $photo->fileSave($_FILES["imgInp"], $photo_id);
     }
 
     private function updateCertificate(?int $certificate_id)
@@ -122,8 +131,8 @@ class Membership extends Controller
 
     private function newRegister(): int
     {
-        $membershipDb = (new \Models\Membership())->all(0,0,"id,register","register desc");
-        $membership = ($membershipDb ? $membershipDb[0]->register : 0);
+        $membershipDb = (new \Models\Membership())->activeAll(0,0,"id,register","register desc");
+        $membership = ($membershipDb ? $membershipDb[0]->register : "0000000");
         return date("Y") . str_pad(substr($membership,4)+1, "3", "0", STR_PAD_LEFT);
     }
 

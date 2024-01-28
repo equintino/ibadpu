@@ -19,7 +19,7 @@ abstract class Controller
     protected function getPost($data)
     {
         foreach($data as $key => $value) {
-            $params[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRIPPED);
+            $params[$key] = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
         }
         return $params;
     }
@@ -27,7 +27,7 @@ abstract class Controller
     protected function getGet($data)
     {
         foreach($data as $key => $value) {
-            $params[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_STRIPPED);
+            $params[$key] = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
         }
         return $params;
     }

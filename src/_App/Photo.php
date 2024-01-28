@@ -59,7 +59,7 @@ class Photo extends Controller
     }
 
     private function resizeThumbnailImage($fileName, $width, $height, $start_width, $start_height)
- {
+    {
         $newWidth = ((15200 / $height) / 100) * $width;
         $newImage = imagecreatetruecolor(138, 152);
         $img_r = $this->imageCreateFromAny($fileName);

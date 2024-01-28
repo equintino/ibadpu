@@ -22,7 +22,9 @@ class Membership extends Model implements Models
         }
 
         if(!$load->rowCount()) {
-            $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>");
+            $this->message = (
+                $msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>"
+            );
             return null;
         }
 
@@ -45,7 +47,9 @@ class Membership extends Model implements Models
         }
 
         if(!$load->rowCount()) {
-            $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>");
+            $this->message = (
+                $msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>"
+            );
             return null;
         }
 
@@ -54,7 +58,7 @@ class Membership extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if(filter_var($search, FILTER_SANITIZE_STRIPPED)) {
+        if(filter_var($search, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
@@ -87,12 +91,12 @@ class Membership extends Model implements Models
         $sql .= ($limit !== 0 ? $this->limit() : null);
         $all = $this->read($sql, "limit={$limit}&offset={$offset}");
 
-        if($this->fail) {
-            $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
-            return $this->message;
+        if ($this->fail) {
+            $this->message = "<span class='error'>" . $this->fail->errorInfo[1] . "</span>";
+            return null;
         }
 
-        if(!$all->rowCount()) {
+        if (!$all->rowCount()) {
             $this->message = "<span class='warning'>Your inquiry has not returned data</span>";
             return null;
         }

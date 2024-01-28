@@ -44,7 +44,8 @@
 </style>
 <div id="crop">
     <div id="frame">
-        <img src="#" id="imgCrop" alt="" width="180"/>
+        <!-- <img src="#" id="imgCrop" alt="" width="138" /> -->
+        <img src="#" id="imgCrop" alt="" />
     </div>
     <form id="form_crop" class="ml-4 pb-2" action="image/cropped" method="post" enctype="multipart/form-data">
         <input type="hidden" name="x" />
@@ -66,13 +67,13 @@
     imgFile.onchange = evt => {
         thumbImage(imgFile, imgCrop)
         $(imgCrop).Jcrop({
-            aspectRatio: 138/152,
+            // aspectRatio: 138/152,
             onSelect: UpdateCrop,
             setSelect: [0,0,138,152],
             allowMove: true,
             touchSupport: true,
             allowSelect: true,
-            allowResize: true,
+            allowResize: false,
             fixedSupport: true
         })
         inputFile.style.display = "none"

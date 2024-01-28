@@ -14,10 +14,10 @@ $group = function() {
 };
 
 /** cookie */
-$cookie = filter_input(INPUT_COOKIE, "svlogin", FILTER_SANITIZE_STRIPPED);
-parse_str($cookie, $cookie);
+$cookie = filter_input(INPUT_COOKIE, "svlogin", FILTER_UNSAFE_RAW);
+// parse_str($_cookie, $cookie);
 
-$login = base64_decode(filter_input(INPUT_COOKIE, "login", FILTER_SANITIZE_STRIPPED));
+$login = base64_decode(filter_input(INPUT_COOKIE, "login", FILTER_UNSAFE_RAW) || "");
 
 /** set constants */
 $constText = "CONF_CONNECTION=local\r\nCONF_URL_BASE=initial-default-project\r\nCONF_URL_TEST=test/initial-default-project\r\nCONF_BASE_THEME=layout\r\nCONF_VIEW_THEME=template2\r\nCONF_SITE_NAME=Site-Address\r\nCONF_SITE_TITLE=System Name\r\nCONF_SITE_DESC=System Description";
@@ -26,7 +26,7 @@ $constText = "CONF_CONNECTION=local\r\nCONF_URL_BASE=initial-default-project\r\n
 /** url */
 function url(string $path=null): string
 {
-    $path = preg_replace("/^\//", "", $path);
+    $path = $path ? preg_replace("/^\//", "", $path) : "";
     return "../" . CONF_URL_BASE . "/" . $path;
 }
 
@@ -89,11 +89,9 @@ function filterNull($var)
 
 function filterNullException($array, $except)
 {
-    return (
-        array_filter($array, function($v, $k) use($except) {
-            return ($v !== null || in_array($k, $except));
-        },ARRAY_FILTER_USE_BOTH)
-    );
+    return array_filter($array, function($v, $k) use($except) {
+        return $v !== null || in_array($k, $except);
+    },ARRAY_FILTER_USE_BOTH);
 }
 
 function formatReal(string $value): float
@@ -109,7 +107,7 @@ function formatCurrency($val): string
 function getPost(array $post)
 {
     foreach($post as $k => $v) {
-        $requestData[$k] = filter_input(INPUT_POST, $k, FILTER_SANITIZE_STRIPPED);
+        $requestData[$k] = filter_input(INPUT_POST, $k, FILTER_UNSAFE_RAW);
     }
     return $requestData;
 }
@@ -190,5 +188,5 @@ function abbreviationPlace(string $string) {
         "casa" => "Cs.",
         "fundos" => "Fds."
     ];
-    return ($abbreviation[$key] ?? $key);
+    return $abbreviation[$key] ?? $key;
 }
