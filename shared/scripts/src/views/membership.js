@@ -200,6 +200,37 @@ export default class Mmembership extends AbstractView {
         }
     }
 
+    certificate(fn) {
+        let ids = []
+        document.querySelectorAll('.certificate').forEach((btn) => {
+            btn.onclick = (e) => {
+                let id = (e.target.parentElement.attributes['data-id'].value ?? null)
+                if (ids.length === 0) {
+                    modal.confirm({
+                        title: "Você pode selecionar até dois certificados",
+                        message: "Deseja selecionar mais um certificado?",
+                        buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
+                    })
+                    .on("click", function(e) {
+                        let btnValue = e.target.value
+                        if (btnValue == 0) {
+                            ids.push(id)
+                            fn({ ids })
+                            ids = []
+                        }
+                        if (btnValue == 1) {
+                            ids.push(id)
+                        }
+                    })
+                } else {
+                    ids.push(id)
+                    fn({ ids })
+                    ids = []
+                }
+            }
+        })
+    }
+
     response(response, fn) {
         let background
         if (response.indexOf("success") !== -1) {

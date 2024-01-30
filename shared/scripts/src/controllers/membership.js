@@ -1,3 +1,4 @@
+import CertificatePrinting from "../../lib/certificateprintiing.js"
 import Service from "../services/membership.js"
 import View from "../views/membership.js"
 import AbstractController from "./abstractController.js"
@@ -11,7 +12,9 @@ export default class Membership extends AbstractController {
         membership.#view = new View()
         membership.#service = new Service()
         membership.#edition()
-        membership.#certificate()
+        membership.#view.certificate(({ ids }) => {
+            CertificatePrinting.print(ids)
+        })
 
         // let members_ids = [];
         // $("#membership .badge").on("click", function() {
@@ -149,36 +152,34 @@ export default class Membership extends AbstractController {
         return { data: formData, reload }
     }
 
-    #certificate() {
-        let ids = []
-        document.querySelectorAll('.certificate').forEach((btn) => {
-            btn.onclick = (e) => {
-                let id = e.target.parentElement.attributes['data-id'].value
+    // #certificate() {
+    //     let ids = []
+    //     document.querySelectorAll('.certificate').forEach((btn) => {
+    //         btn.onclick = (e) => {
+    //             let id = (e.target.parentElement.attributes['data-id'].value ?? null)
 
-                if ( ids.length === 0 ) {
-                    ids = [ id ]
-                } else {
-                    ids.push(id)
-                }
-
-                if (ids.length === 1) {
-                    this.modal.confirm({
-                        title: "Você pode selecionar até dois certificados",
-                        message: "Deseja selecionar mais um certificado?",
-                        buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
-                    })
-                    .on("click", function() {
-                        if (this.value != 0) {
-                            return null
-                        }
-                        certificatePrinting(ids)
-                        ids = []
-                    })
-                } else {
-                    certificatePrinting(ids)
-                    ids = []
-                }
-            }
-        })
-    }
+    //             if (ids.length === 0) {
+    //                 this.modal.confirm({
+    //                     title: "Você pode selecionar até dois certificados",
+    //                     message: "Deseja selecionar mais um certificado?",
+    //                     buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
+    //                 })
+    //                 .on("click", function(e) {
+    //                     let btnValue = e.target.value
+    //                     if (btnValue == 0) {
+    //                         certificatePrinting(ids)
+    //                         ids = []
+    //                     }
+    //                     if (btnValue == 1) {
+    //                         ids.push(id)
+    //                     }
+    //                 })
+    //             } else {
+    //                 ids.push(id)
+    //                 certificatePrinting(ids)
+    //                 ids = []
+    //             }
+    //         }
+    //     })
+    // }
 }
