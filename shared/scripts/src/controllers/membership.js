@@ -11,7 +11,7 @@ export default class Membership extends AbstractController {
         membership.#view = new View()
         membership.#service = new Service()
         membership.#edition()
-        membership.#markBadge()
+        membership.#certificate()
 
         // let members_ids = [];
         // $("#membership .badge").on("click", function() {
@@ -40,40 +40,40 @@ export default class Membership extends AbstractController {
         //     }
         //     $("#selected").text(members_ids.length);
         // });
-        $("#membership section button").on("click", function() {
-            if($(this).text().indexOf("CARTEIRINHA") !== -1) {
-                $("#loading").show();
-                if(members_ids.length < 1) {
-                    return alertLatch("No Member was selected","var(--cor-warning)");
-                } else {
-                    modal.show({
-                        title: "EMISSÃO DE CARTEIRINHA",
-                        content: "wallet",
-                        params: {
-                            members_ids
-                        }
-                    })
-                    .styles({
-                        element: "#boxe_main #content",
-                        css: {
-                            height: "450px"
-                        }
-                    })
-                    .complete({
-                        buttons: "<button class='button btn-secondary'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
-                        callback: function() {
-                            $(buttons).find("button").on("click", function() {
-                                if($(this).text() === "Fechar") {
-                                    $("#boxe_main, #mask_main").hide();
-                                } else {
-                                    window.print();
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
+        // $("#membership section button").on("click", function() {
+        //     if($(this).text().indexOf("CARTEIRINHA") !== -1) {
+        //         $("#loading").show();
+        //         if(members_ids.length < 1) {
+        //             return alertLatch("No Member was selected","var(--cor-warning)");
+        //         } else {
+        //             modal.show({
+        //                 title: "EMISSÃO DE CARTEIRINHA",
+        //                 content: "wallet",
+        //                 params: {
+        //                     members_ids
+        //                 }
+        //             })
+        //             .styles({
+        //                 element: "#boxe_main #content",
+        //                 css: {
+        //                     height: "450px"
+        //                 }
+        //             })
+        //             .complete({
+        //                 buttons: "<button class='button btn-secondary'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
+        //                 callback: function() {
+        //                     $(buttons).find("button").on("click", function() {
+        //                         if($(this).text() === "Fechar") {
+        //                             $("#boxe_main, #mask_main").hide();
+        //                         } else {
+        //                             window.print();
+        //                         }
+        //                     });
+        //                 }
+        //             });
+        //         }
+        //     }
+        // });
         $("#membership #tab-membership").on("scroll", function() {
             let scrollTop = $(this).scrollTop();
             if(scrollTop > 0) {
@@ -94,81 +94,31 @@ export default class Membership extends AbstractController {
             $(this).find("i").removeClass("fa-times").addClass("fa-search");
             searchMember();
         });
-        $("#membership .certificate").on("click", function() {
-            let id = $(this).parent().attr("data-id");
-            if(typeof ids === "undefined") {
-                ids = [ id ];
-            } else {
-                ids.push(id);
-            }
-            if(ids.length === 1) {
-                modal.confirm({
-                    title: "Você pode selecionar até dois certificados",
-                    message: "Deseja selecionar mais um certificado?",
-                    buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
-                })
-                .on("click", function() {
-                    if($(this).val() == 0) {
-                        certificatePrinting(ids);
-                        ids = [];
-                    } else {
-                        return null;
-                    }
-                });
-            } else {
-                certificatePrinting(ids);
-                ids = [];
-            }
-        });
-    }
-
-    #markBadge() {
-        const membersIds = []
-        const btnOnOff = document.querySelectorAll('#membership .badge')
-        for (let i of btnOnOff) {
-            i.onclick = (e) => {
-                document.querySelector('.loading').style.display = 'block'
-                let src = i.querySelector('img').attributes['src'].value
-                let id = i.parentElement.children[0].attributes['data-id'].value
-                let onOffs = src.split('/')
-                if (onOffs.indexOf('off.png') !== -1) {
-                    membersIds.push(id)
-                    i.querySelector('img').attributes['src'].value = onOffs.splice(0, 4).join('/') + '/on.png'
-                    i.querySelector('img').attributes['alt'].value = 'on'
-                } else {
-                    membersIds.splice(membersIds.indexOf(id), 1)
-                    i.querySelector('img').attributes['src'].value = onOffs.splice(0, 4).join('/') + '/off.png'
-                    i.querySelector('img').attributes['alt'].value = 'off'
-                }
-                document.querySelector('.loading').style.display = 'none'
-            }
-        }
-
-        // $("#membership .badge").on("click", function() {
-        //     $(".loading").show();
-        //     let id = $(this).closest("td").find("span").attr("data-id");
-        //     let onOff = $(this).find("img").attr("alt");
-        //     let src = $(this).find("img").attr("src").split("/");
-        //     src.pop();
-        //     if(onOff === "off") {
-        //         if(members_ids.length >= 4) {
-        //             $(".loading").hide();
-        //             return alertLatch("Only four cards per sheet", "var(--cor-warning)");
-        //         }
-        //         members_ids.push(id);
-        //         $(this).find("img").on("load", function() {
-        //             $(".loading").hide();
-        //         }).attr("src", src.join("/") + "/on.png");
-        //         $(this).find("img").attr("alt","on");
+        // $("#membership .certificate").on("click", function() {
+        //     let id = $(this).parent().attr("data-id");
+        //     if(typeof ids === "undefined") {
+        //         ids = [ id ];
         //     } else {
-        //         let index = members_ids.indexOf(id);
-        //         members_ids.splice(index,1);
-        //         $(this).find("img").on("load", function() {
-        //             $(".loading").hide();
-        //         }).attr("src", src.join("/") + "/off.png");
-        //         $(this).find("img").attr("alt","off");
+        //         ids.push(id);
         //     }
-        //     $("#selected").text(members_ids.length);
+        //     if(ids.length === 1) {
+        //         modal.confirm({
+        //             title: "Você pode selecionar até dois certificados",
+        //             message: "Deseja selecionar mais um certificado?",
+        //             buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
+        //         })
+        //         .on("click", function() {
+        //             if($(this).val() == 0) {
+        //                 certificatePrinting(ids);
+        //                 ids = [];
+        //             } else {
+        //                 return null;
+        //             }
+        //         });
+        //     } else {
+        //         certificatePrinting(ids);
+        //         ids = [];
+        //     }
         // });
     }
 
@@ -199,65 +149,36 @@ export default class Membership extends AbstractController {
         return { data: formData, reload }
     }
 
-    // onClick() {
-    //     $("#membership .photo, #membership [data-action='edit'], .add").on("click", function() {
-    //         let name = $(this).attr("data-name");
-    //         if(name === "markOff") {
-    //             let src = $("#membership .badge").find("img").attr("src").split("/");
-    //             src.pop();
-    //             $("#membership .badge").find("img").on("load", function() {
-    //                 $(".loading").hide();
-    //             }).attr("src", src.join("/") + "/off.png").attr("alt","off");
-    //             members_ids = [];
-    //             $("#selected").text(members_ids.length);
-    //             return null;
-    //         }
-    //         let id = ($(this).attr("data-id") ?? 0);
-    //         let add_edit = $(this).hasClass("add");
-    //         let way = (add_edit ? "Novo Membro": name);
-    //         modal.show({
-    //             title: way,
-    //             content: "membership/register/" + id
-    //         })
-    //         .styles({
-    //             element: "#boxe_main #content",
-    //             css: {
-    //                 height: "450px"
-    //             }
-    //         })
-    //         .complete({
-    //             buttons: "<button  class='button btn-danger'>Save</button>",
-    //             callback: function() {
-    //                 $("#boxe_main button").on("click", function() {
-    //                     if ($(this).text() === "Save") {
-    //                         let form = $("#boxe_main form");
-    //                         let required = form.find("[required]");
+    #certificate() {
+        let ids = []
+        document.querySelectorAll('.certificate').forEach((btn) => {
+            btn.onclick = (e) => {
+                let id = e.target.parentElement.attributes['data-id'].value
 
-    //                         /** Require compulsory fields */
-    //                         for (var field of required) {
-    //                             if (field.value == "") {
-    //                                 let fieldName = field.previousElementSibling.textContent.trim()
-    //                                 $(field).trigger("focus").css("background", "pink")
+                if ( ids.length === 0 ) {
+                    ids = [ id ]
+                } else {
+                    ids.push(id)
+                }
 
-    //                                 return alertLatch("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)");
-    //                             }
-    //                         }
-
-    //                         let formData = new FormData(form[0]);
-
-    //                         /** pick up attached files */
-    //                         let file = $("#boxe_main form [type=file]")[0].files[0]
-    //                         if (file !== "undefined") {
-    //                             formData.append("file", file)
-    //                         }
-    //                         if (saveData("membership/update", formData)) {
-    //                             alertLatch("Is need reload for update to the photo", "var(--cor-warning)")
-    //                             modal.close();
-    //                         }
-    //                     }
-    //                 })
-    //             }
-    //         });
-    //     });
-    // }
+                if (ids.length === 1) {
+                    this.modal.confirm({
+                        title: "Você pode selecionar até dois certificados",
+                        message: "Deseja selecionar mais um certificado?",
+                        buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
+                    })
+                    .on("click", function() {
+                        if (this.value != 0) {
+                            return null
+                        }
+                        certificatePrinting(ids)
+                        ids = []
+                    })
+                } else {
+                    certificatePrinting(ids)
+                    ids = []
+                }
+            }
+        })
+    }
 }
