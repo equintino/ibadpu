@@ -1,3 +1,4 @@
+import ScrollUp from "../../lib/scrollup.js"
 import AbstractView from "./abstractView.js"
 
 export default class Mmembership extends AbstractView {
@@ -14,6 +15,8 @@ export default class Mmembership extends AbstractView {
         this.#btnBadgeOff()
         this.#markBadge()
         this.#badge()
+        this.#scrollUp()
+        this.#searchMember()
     }
 
     #openModal(elements, fn) {
@@ -243,5 +246,35 @@ export default class Mmembership extends AbstractView {
             background = "var(--cor-warning"
         }
         this.message.text(response, background)
+    }
+
+    #scrollUp() {
+        ScrollUp.init('#tab-membership')
+    }
+
+    #searchMember() {
+        const search = document.querySelector('#membership [name=search]')
+        search.onkeyup = str => {
+            this.#runSearch(search.value)
+        }
+
+        // $("#membership").on("keyup", function() {
+        //     $(this).find("i").removeClass("fa-search").addClass("fa-times");
+        //     searchMember();
+        // });
+        // $("#membership button#search").on("click", function() {
+        //     $(this).parent("section").find("input").val("").focus();
+        //     $(this).find("i").removeClass("fa-times").addClass("fa-search");
+        //     searchMember();
+        // });
+    }
+
+    #runSearch(str) {
+        str = str.toUpperCase()
+        document.querySelectorAll('#tab-membership table').forEach((e) => {
+            let member = e.id
+            e.style.display = (typeof(member) !== 'undefined' && member.indexOf(str) === -1) ?
+                'none' : 'block'
+        })
     }
 }

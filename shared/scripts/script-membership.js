@@ -41,20 +41,20 @@
 // 			});
 // 		}
 // 	});
+// // }
+// function searchMember() {
+//     let search = $("#membership input[name=search]").val().toUpperCase();
+//     $("#tab-membership table").each(function() {
+//         let member = $(this).attr("id");
+//         if(typeof(member) !== "undefined") {
+//             if($(this).attr("id").indexOf(search) === -1) {
+//                 $(this).hide();
+//             } else {
+//                 $(this).show();
+//             }
+//         }
+//     });
 // }
-function searchMember() {
-    let search = $("#membership input[name=search]").val().toUpperCase();
-    $("#tab-membership table").each(function() {
-        let member = $(this).attr("id");
-        if(typeof(member) !== "undefined") {
-            if($(this).attr("id").indexOf(search) === -1) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
-        }
-    });
-}
 // function scriptMembership(modal) {
 //     $("#membership .photo, #membership [data-action='edit'], .add").on("click", function() {
 //         let name = $(this).attr("data-name");
