@@ -255,23 +255,23 @@ export default class Mmembership extends AbstractView {
 
     #searchMember() {
         const search = document.querySelector('#membership [name=search]')
-        search.onkeyup = str => {
-            this.#runSearch(search.value)
-        }
+        search.focus()
+        search.onkeyup = str => this.#runSearch(search.value)
 
-        // $("#membership").on("keyup", function() {
-        //     $(this).find("i").removeClass("fa-search").addClass("fa-times");
-        //     searchMember();
-        // });
-        // $("#membership button#search").on("click", function() {
-        //     $(this).parent("section").find("input").val("").focus();
-        //     $(this).find("i").removeClass("fa-times").addClass("fa-search");
-        //     searchMember();
-        // });
+        document.querySelector('#membership i').onclick = icon => {
+            search.value = ''
+            this.#runSearch(search.value)
+            search.focus()
+        }
     }
 
     #runSearch(str) {
         str = str.toUpperCase()
+        const icon = document.querySelector('#membership i').classList
+        str.length === 0 ?
+            icon.replace('fa-times', 'fa-search')
+            : icon.replace('fa-search', 'fa-times')
+
         document.querySelectorAll('#tab-membership table').forEach((e) => {
             let member = e.id
             e.style.display = (typeof(member) !== 'undefined' && member.indexOf(str) === -1) ?

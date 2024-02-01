@@ -8,8 +8,8 @@
 			<button class="button btn-warning badgesOff" data-name = "markOff" >DESMARCAR</button>
 			<button class="button btn-secondary no_members" data-name = "no_members" >NÃO MEMBROS</button>
 		</div>
-		<div class="col-2">
-			<input style="padding-left: 8px" type="text" name="search" placeholder="pesquisa de membros" autofocus />
+		<div class="col-4">
+			<input style="padding-left: 8px" type="text" name="search" placeholder="pesquisa de membros" autofocus /><i class='fa fa-search ml-2' style='cursor: pointer'></i>
 		</div>
 	</section>
 	<section id="tab-membership">
