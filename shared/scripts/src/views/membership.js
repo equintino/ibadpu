@@ -134,6 +134,7 @@ export default class Mmembership extends AbstractView {
                 e.attributes['src'].value = arr.join('/') + '/off.png'
             })
             document.querySelector('#selected').innerHTML = 0
+            this.membersIds = []
         }
     }
 
@@ -159,7 +160,7 @@ export default class Mmembership extends AbstractView {
                     i.querySelector('img').attributes['src'].value = onOffs.splice(0, 4).join('/') + '/on.png'
                     i.querySelector('img').attributes['alt'].value = 'on'
                 } else {
-                    this.membersIds.splice(membersIds.indexOf(id), 1)
+                    this.membersIds.splice(this.membersIds.indexOf(id), 1)
                     i.querySelector('img').attributes['src'].value = onOffs.splice(0, 4).join('/') + '/off.png'
                     i.querySelector('img').attributes['alt'].value = 'off'
                     selected.innerHTML = parseInt(selected.innerText) - 1
