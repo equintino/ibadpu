@@ -1,21 +1,21 @@
 export default class Modal {
-    nameModal = $("#boxe_main")
-    mask = $("#mask_main")
-    title = $("#boxe_main #title")
-    message = $("#boxe_main #message")
-    content = $("#boxe_main #content")
-    buttons = $("#boxe_main #buttons")
-    dialogue = $("#div_dialogue")
+    nameModal = document.querySelector("#boxe_main")
+    mask = document.querySelector("#mask_main")
+    title = document.querySelector("#boxe_main #title")
+    message = document.querySelector("#boxe_main #message")
+    content = document.querySelector("#boxe_main #content")
+    buttons = document.querySelector("#boxe_main #buttons")
+    dialogue = document.querySelector("#div_dialogue")
 
     closeEnable() {
         let closeEnable
         let that = this
         /** execute only once */
         if (typeof(closeEnable) === "undefined") {
-            that.nameModal.find(".close").on("click", function() {
+            document.querySelector('#boxe_main .close').onclick = evnt => {
                 that.hideContent()
                 closeEnable = 1
-            })
+            }
         }
     }
 
@@ -26,12 +26,12 @@ export default class Modal {
         let that = this
         /** execute only once */
         if (typeof(escapeEnable) === "undefined") {
-            $(document).on("keyup", function(e) {
+            document.onkeyup = e => {
                 if(e.keyCode === 27) {
                     that.hideContent()
                     escapeEnable = 1
                 }
-            })
+            }
         }
     }
 
@@ -40,10 +40,10 @@ export default class Modal {
         let that = this
         /** execute only once */
         if (typeof(closeMaskEnable) === "undefined") {
-            this.mask.on("click", function() {
+            this.mask.onclick = () => {
                 that.hideContent()
                 closeMaskEnable = 1
-            })
+            }
         }
     }
 
@@ -54,28 +54,44 @@ export default class Modal {
         this.escapeEnable()
         this.clickMaskEnable()
 
-        if (params.title != null) this.title.html(params.title).show()
-        if (params.message != null) this.message.html(params.message).show().css({
-            "overflow-y": "scroll",
-            "max-height": "450px"
-        })
+        if (params.title != null) {
+            this.title.innerHTML = params.title
+            this.title.style.display = 'block'
+        }
+        if (params.message != null) {
+            this.message.innerHTML = params.message
+            this.message.style.display = 'block'
+            this.message.style.overflowY = 'scroll'
+            this.message.style.maxHeight = '450px'
+        }
         if(params.content != null) {
-            this.content.load(params.content, params.params, function() {
-                if(params.callback != null) params.callback()
-                that.complete()
-                loading.hide()
-            }).show()
+            this.content.innerHTML = params.content
+            this.content.style.display = 'block'
+            if (params.callback != null) params.callback()
+            this.complete()
+            // this.content.onload = (e) => {
+            //     console.log(
+            //         e
+            //     )
+            // }
+
+            // this.content.load(params.content, params.params, function() {
+            //     if(params.callback != null) params.callback()
+            //     that.complete()
+            //     loading.hide()
+            // }).show()
         } else {
             loading.hide()
         }
 
-        if(params.buttons != null) this.buttons.html(params.buttons).show()
+        if (params.buttons != null) {
+            this.buttons.innerHTML = params.buttons
+            this.buttons.style.display = 'block'
+        }
 
-        this.mask.show()
-        this.nameModal.show().css({
-            display: "flex",
-            top: 0
-        })
+        this.mask.style.display = 'block'
+        this.nameModal.style.display = 'flex'
+        this.nameModal.top = 0
 
         return this
     }
@@ -144,7 +160,8 @@ export default class Modal {
 
     hideContent() {
         let that = this
-        let indexMask = that.mask.css("z-index")
+        let indexMask = that.mask.style.zIndex
+        // this.mask.style.zIndex = 2
         if (indexMask == 4) {
             that.dialogue.hide()
             that.dialogue.find("#title").hide().find("html").remove()
@@ -152,47 +169,55 @@ export default class Modal {
             that.dialogue.find("#content").hide().html("")
             that.dialogue.find("#buttons").hide().find("html").remove()
             that.mask.css("z-index","2")
-        } else if (indexMask == 2) {
-            that.title.hide().find("html").remove()
-            that.message.hide().find("html").remove()
-            that.content.hide().html("")
-            that.buttons.hide().find("html").remove()
-            that.nameModal.hide().find("html").remove()
-            that.dialogue.find("#title").hide().find("html").remove()
-            that.dialogue.find("#message").hide().find("html").remove()
-            that.dialogue.find("#content").hide().find("html").remove()
-            that.dialogue.find("#buttons").hide().find("html").remove()
-            that.mask.hide()
+        // } else if (indexMask == 2) {
+        } else {
+            this.title.style.display = 'none',
+            this.message.style.display = 'none',
+            this.content.style.display = 'none',
+            this.buttons.style.display = 'none',
+            this.nameModal.style.display = 'none',
+            this.dialogue.style.display = 'none',
+            // this.nameModal.style.display = 'none',
+            // this.nameModal.style.display = 'none',
+            // this.nameModal.style.display = 'none',
+            // this.nameModal.style.display = 'none',
+            this.mask.style.display= 'none'
+
+            // that.title.hide().find("html").remove()
+            // that.message.hide().find("html").remove()
+            // that.content.hide().html("")
+            // that.buttons.hide().find("html").remove()
+            // that.nameModal.hide().find("html").remove()
+            // that.dialogue.find("#title").hide().find("html").remove()
+            // that.dialogue.find("#message").hide().find("html").remove()
+            // that.dialogue.find("#content").hide().find("html").remove()
+            // that.dialogue.find("#buttons").hide().find("html").remove()
+            // that.mask.hide()
         }
     }
 
     confirm(params) {
-        this.dialogue.find("#title").html(params.title).show()
-        this.dialogue.find("#message").html(params.message).show()
+        this.dialogue.querySelector("#title").innerHTML = params.title
+        this.dialogue.querySelector("#title").style.display = 'block'
+        this.dialogue.querySelector("#message").innerHTML = params.message
+        this.dialogue.querySelector("#message").style.display = 'block'
 
-        if (typeof params.buttons !== "undefined") {
-            this.dialogue.find("#buttons").html(params.buttons).show()
+        if (typeof(params.buttons) !== "undefined") {
+            this.dialogue.querySelector("#buttons").innerHTML = params.buttons
         } else {
-            this.dialogue.find("#buttons").html("<div align='right'><button class='button cancel'value='0'>Cancela</button><button class='button error' style='margin-left: 3px'value='1'>Confirma</button></div>").show();
+            this.dialogue.querySelector("#buttons").innerHTML = "<div align='right'><button class='button cancel'value='0'>Cancela</button><button class='button error' style='margin-left: 3px'value='1'>Confirma</button></div>"
         }
+        this.dialogue.querySelector("#buttons").style.display = 'block'
 
-        this.dialogue.fadeIn().css({
-            display: "flex"
+        this.dialogue.style.display = "flex"
+
+        if (this.mask.style.zIndex === 2) this.mask.style.zIndex = 4
+
+        this.mask.style.display = 'block'
+        this.dialogue.querySelectorAll("button").forEach((e) => {
+            e.onclick = btn => this.hideContent()
         })
-
-        if (this.mask.css("z-index") === 2) {
-            this.mask.css({
-                "z-index": "4"
-            })
-        }
-
-        this.mask.show()
-        let that = this
-
-        return this.dialogue.find("button").on("click", function() {
-            that.hideContent()
-            return $(this).val()
-        })
+        return this.dialogue.querySelector('#buttons')
     }
 
     callback(func) {

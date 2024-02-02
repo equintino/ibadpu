@@ -15,7 +15,8 @@ class Certificate extends Controller
 
     public function init(?array $data): void
     {
-        $memberships = (new Membership())->loads($data["ids"]);
+        $ids = explode(',', $data['ids']);
+        $memberships = (new Membership())->loads($ids);
         $side = $data["side"];
 
         $this->view->setPath("Modals")->render("certificate", [ compact("memberships","side") ]);

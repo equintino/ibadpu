@@ -1,25 +1,25 @@
 import ScrollUp from "../../lib/scrollup.js"
 import AbstractView from "./abstractView.js"
 
-export default class Mmembership extends AbstractView {
+export default class Membership extends AbstractView {
     membersId
 
-    setBtns(fn) {
+    setBtns({ fn, getPage }) {
         const [ photos, btnEdits ] = [
             document.querySelectorAll('#membership .photo'),
             document.querySelectorAll('#membership [data-action="edit"]')
         ]
-        this.#openModal({ photos, btnEdits }, fn)
-        this.#add(fn)
-        this.#noMember(fn)
+        this.#openModal({ photos, btnEdits }, fn, getPage)
+        this.#add(fn, getPage)
+        this.#noMember(fn, getPage)
         this.#btnBadgeOff()
         this.#markBadge()
-        this.#badge()
+        this.#badge(getPage)
         this.#scrollUp()
         this.#searchMember()
     }
 
-    #openModal(elements, fn) {
+    #openModal(elements, fn, getPage) {
         for (let i in elements) {
             elements[i].forEach( (e) => {
                 e.onclick = () => {
@@ -27,7 +27,7 @@ export default class Mmembership extends AbstractView {
                     let name = e.attributes['data-name'].value
                     this.modal.show({
                         title: name,
-                        content: 'membership/register/' + memberId,
+                        content: getPage('membership/register/' + memberId),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
                     .styles({
@@ -36,8 +36,8 @@ export default class Mmembership extends AbstractView {
                             height: '450px'
                         }
                     })
-                    this.modal.buttons[0].children[0].onclick = () => {
-                        const form  = this.modal.content[0].querySelector('form')
+                    this.modal.buttons.onclick = () => {
+                        const form  = this.modal.content.querySelector('form')
                         const files = form.querySelectorAll('[type=file]')
                         const required = form.querySelectorAll('[required]')
                         const formData = new FormData(form)
@@ -56,19 +56,18 @@ export default class Mmembership extends AbstractView {
                                 return this.message.text("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)")
                             }
                         }
-
-                        fn(formData)
+                        fn({ formData })
                     }
                 }
             })
         }
     }
 
-    #add(fn) {
+    #add(fn, getPage) {
         document.querySelector('.add').onclick = () => {
             this.modal.show({
                 title: 'NOVO MEMBRO',
-                content: 'membership/register/0',
+                content: getPage('membership/register/0'),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
             .styles({
@@ -77,8 +76,8 @@ export default class Mmembership extends AbstractView {
                     height: '450px'
                 }
             })
-            this.modal.buttons[0].children[0].onclick = () => {
-                const form  = this.modal.content[0].querySelector('form')
+            this.modal.buttons.onclick = () => {
+                const form  = this.modal.content.querySelector('form')
                 const files = form.querySelectorAll('[type=file]')
                 const required = form.querySelectorAll('[required]')
                 const formData = new FormData(form)
@@ -97,23 +96,21 @@ export default class Mmembership extends AbstractView {
                         return this.message.text("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)")
                     }
                 }
-
-                fn(formData)
+                fn({ formData })
             }
         }
     }
 
-    #noMember(fn) {
+    #noMember(fn, getPage) {
         const noMembers = document.querySelector('#membership .no_members')
         noMembers.onclick = () => {
             this.modal.show({
                 title: "EX-MEMBROS OU VISITANTES",
-                content: "membership/no_member",
+                content: getPage("membership/no_member"),
                 callback: () => {
-                    let btnEdit = modal.content[0].querySelectorAll('button')
-                    this.#openModal({btnEdit}, (formData) => {
-                        fn(formData)
-                    })
+                    let btnEdit = this.modal.content.querySelectorAll('button')
+                    let form = this.modal.content.querySelector('form')
+                    this.#openModal({ btnEdit }, fn, getPage)
                 }
             })
             .styles({
@@ -170,28 +167,25 @@ export default class Mmembership extends AbstractView {
         }
     }
 
-    #badge() {
+    #badge(getPage) {
+        const formData = new FormData()
         document.querySelector('.cart').onclick = () => {
             this.loading.show()
             if (document.querySelector('#selected').innerText === '0') {
                 this.loading.hide()
                 return this.message.text('Select at least one cart', 'var(--cor-warning)')
             }
+            formData.append('members_ids', this.membersIds)
             this.modal.show({
                 title: 'EMISSÃO DE CARTEIRINHA',
-                content: 'wallet',
-                params: {
-                    members_ids: this.membersIds
-                },
+                content: getPage('wallet', formData, 'POST'),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
-                    this.modal.buttons[0].onclick = (e) => {
+                    this.loading.hide()
+                    this.modal.buttons.onclick = (e) => {
                         const btnName = e.target.value
-                        if (btnName === 'close') {
-                            this.modal.close()
-                        } else {
-                            window.print()
-                        }
+                        if (btnName === 'close') return this.modal.close()
+                        window.print()
                     }
                 }
             })
@@ -204,31 +198,65 @@ export default class Mmembership extends AbstractView {
         }
     }
 
-    certificate(fn) {
+    certificate({ fn, getPage, side = true }) {
         let ids = []
+        const print = (ids) => {
+            const formData = new FormData()
+            formData.append('ids', ids)
+            formData.append('side', side)
+            this.modal.show({
+                title: 'CERTIFICADO DE BATISMO',
+                content: getPage('certificate', formData),
+                buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
+                callback: () => {
+                    /** Shifting aside */
+                    const content = this.modal.content.querySelector('#certificate')
+                    content.onclick = () => {
+                        side = !side
+                        formData.delete('side')
+                        formData.append('side', side)
+                        content.querySelectorAll('[data-id]').forEach((e) => {
+                            ids.push(e.attributes['data-id'].value)
+                        })
+                        content.innerHTML = fn({ url: 'certificate', formData })
+                    }
+
+                    this.modal.buttons.onclick = btn => {
+                        const btnName = btn.target.value
+                        if (btnName === 'print') return window.print()
+
+                        document.querySelector('#boxe_main').style.display = 'none'
+                        document.querySelector('#mask_main').style.display = 'none'
+                    }
+                }
+            })
+            .styles({
+                element: "#boxe_main #content",
+                    css: {
+                        height: "450px",
+                        display: 'block'
+                    }
+            })
+        }
         document.querySelectorAll('.certificate').forEach((btn) => {
             btn.onclick = (e) => {
                 let id = (e.target.parentElement.attributes['data-id'].value ?? null)
                 if (ids.length === 0) {
-                    modal.confirm({
+                    const conf = this.modal.confirm({
                         title: "Você pode selecionar até dois certificados",
                         message: "Deseja selecionar mais um certificado?",
                         buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
                     })
-                    .on("click", function(e) {
-                        let btnValue = e.target.value
-                        if (btnValue == 0) {
-                            ids.push(id)
-                            fn({ ids })
-                            ids = []
+                    conf.onclick = btn => {
+                        ids.push(id)
+                        if (btn.target.value == 0) {
+                            print(ids)
+                            return ids = []
                         }
-                        if (btnValue == 1) {
-                            ids.push(id)
-                        }
-                    })
+                    }
                 } else {
                     ids.push(id)
-                    fn({ ids })
+                    print(ids)
                     ids = []
                 }
             }

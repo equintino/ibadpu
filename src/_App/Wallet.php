@@ -15,6 +15,7 @@ class Wallet extends Controller
     {
         $x = 0;
         $ids = ($data["members_ids"] ?? null);
+        $ids = explode(',', $ids);
         $memberships = [];
         $membershipDb = new \Models\Membership();
         $occupation = new \Models\Occupation();

@@ -1,4 +1,3 @@
-import CertificatePrinting from "../../lib/certificateprintiing.js"
 import Service from "../services/membership.js"
 import View from "../views/membership.js"
 import AbstractController from "./abstractController.js"
@@ -12,28 +11,33 @@ export default class Membership extends AbstractController {
         membership.#view = new View()
         membership.#service = new Service()
         membership.#edition()
-        membership.#view.certificate(({ ids }) => {
-            CertificatePrinting.print(ids)
-        })
+        membership.#certificatePrint()
     }
 
     #edition() {
-        this.#view.setBtns((formData) => {
-            const validate = this.#validate(formData)
-            const response = this.#service.save(validate.data)
-            this.#view.response(
-                response,
-                () => {
-                    this.#view.showPage({
-                        page: this.#service.openFile({
-                            method: 'GET',
-                            url: 'membership/init'
+        this.#view.setBtns({
+            fn: ({ formData }) => {
+                const validate = this.#validate(formData)
+                const response = this.#service.save(validate.data)
+                this.#view.response(
+                    response,
+                    () => {
+                        this.#view.showPage({
+                            page: this.#service.openFile({
+                                method: 'GET',
+                                url: 'membership/init'
+                            })
                         })
-                    })
-                    this.#edition()
-                }
-            )
-            if (response.indexOf('success') !== -1 && validate.reload) window.location.reload()
+                        this.#edition()
+                    }
+                )
+                if (response.indexOf('success') !== -1 && validate.reload) window.location.reload()
+            },
+            getPage: (url, formData, method = 'GET') => {
+                return this.#service.openFile({
+                    method, url, formData
+                })
+            }
         })
     }
 
@@ -42,5 +46,17 @@ export default class Membership extends AbstractController {
         if (formData.get('imgInp') !== 'undefined' || formData.get('imgCert') !== 'undefined') reload = true
         formData.delete('imgCert')
         return { data: formData, reload }
+    }
+
+    #certificatePrint() {
+        const getPage = (url, formData, method = 'POST') => {
+            return this.#service.openFile({
+                method, url, formData
+            })
+        }
+        const fn = ({ url, formData }) => {
+            return this.#service.openFile({ method: 'POST', url, formData })
+        }
+        this.#view.certificate({ fn, getPage })
     }
 }

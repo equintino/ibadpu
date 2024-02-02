@@ -463,7 +463,7 @@ main .form-signin {
     position: fixed;
     width: 70%;
     left: 15%;
-    margin-top: 75px;
+    /* margin-top: 75px; */
     display: -ms-flexbox;
     display: flex;
     -ms-flex-direction: column;
