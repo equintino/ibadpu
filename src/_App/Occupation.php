@@ -14,8 +14,8 @@ class Occupation extends Controller
     public function init(?array $data): void
     {
         $occupation = (new \Models\Occupation())->all(0);
-        if(!is_array($occupation) &&  preg_match("/doesn't exist/", $occupation)) {
-            if((new \Models\Occupation())->createThisTable()) {
+        if (!is_array($occupation) &&  preg_match("/doesn't exist/", $occupation)) {
+            if ((new \Models\Occupation())->createThisTable()) {
                 alertLatch("Created new table, try again");
             }
         } else {
@@ -36,7 +36,7 @@ class Occupation extends Controller
         $id = null;
         $name = null;
         $active = null;
-        if(!empty($data["id"])) {
+        if (!empty($data["id"])) {
             $occupationDb = (new \Models\Occupation())->load($data["id"]);
             $id = $occupationDb->id;
             $name = $occupationDb->name;
@@ -47,7 +47,7 @@ class Occupation extends Controller
 
     public function list()
     {
-        $occupations = (new \Models\Occupation())->all(0);
+        $occupations = (new \Models\Occupation())->activeAll(0);
         $act = "list";
         $this->view->setPath("Modals")->render("occupation", [ compact("occupations", "act") ] );
     }
@@ -57,12 +57,12 @@ class Occupation extends Controller
         $occupation = new \Models\Occupation();
         $occupation->bootstrap($data);
         $occupation->save();
-        return print(json_encode($occupation->message()));
+        return print json_encode($occupation->message());
     }
 
     public function delete(array $data): ?string
     {
         $occupation = (new \Models\Occupation())->load($data["id"])->destroy();
-        return print(json_encode($occupation->message()));
+        return print json_encode($occupation->message());
     }
 }

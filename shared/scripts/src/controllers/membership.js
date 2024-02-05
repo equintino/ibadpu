@@ -6,12 +6,12 @@ export default class Membership extends AbstractController {
     #view
     #service
 
-    static initializer() {
-        const membership = new Membership()
-        membership.#view = new View()
-        membership.#service = new Service()
-        membership.#edition()
-        membership.#certificatePrint()
+    initializer() {
+        // const membership = new Membership()
+        this.#view = new View()
+        this.#service = new Service()
+        this.#edition()
+        this.#certificatePrint()
     }
 
     #edition() {

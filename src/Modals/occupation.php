@@ -1,4 +1,4 @@
-<?php if(!empty($act) && $act === "list"): ?>
+<?php if (!empty($act) && $act === "list"): ?>
 <fieldset class="fieldset p-3" >
     <legend>FUNÇÕES</legend>
     <table id="tabList" class="my-table">
@@ -11,8 +11,8 @@
             </tr>
         </thead>
         <tbody>
-            <?php if(isset($occupations)):
-                foreach($occupations as $occupation): ?>
+            <?php if (is_array($occupations)):
+                foreach ($occupations as $occupation): ?>
                         <tr>
                             <td><?= $occupation->name ?></td>
                             <td><?= $occupation->active == 1 ? "SIM" : "NÃO"; ?></td>
@@ -42,7 +42,7 @@
             </div>
         </fieldset>
         <button type="submit" class="button save mr-1" style="float: right;"><?= (isset($name) ? "Gravar Alteração" : "Salvar") ?></button>
-        <?php if(!isset($name)): ?>
+        <?php if (!isset($name)): ?>
         <button type="reset" class="button cancel mr-1" style="float: right;">Limpar</button>
         <?php endif ?>
     </form>

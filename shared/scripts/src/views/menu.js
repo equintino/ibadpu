@@ -94,13 +94,10 @@ export default class View extends AbstractView {
         document.querySelector('.identification').innerHTML = ident
     }
 
-    showBirthday = () => {
-        const modal = this.modal
-        let now = new Date
-        modal.show({
+    showBirthmonth = (fn) => {
+        this.modal.show({
             title: 'Aniversariantes do Mês',
-            content: 'membership/birthmonth',
-            params: { month: now.getMonth() + 1 }
+            content: fn('membership/birthmonth')
         })
     }
 }

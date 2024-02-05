@@ -45,9 +45,7 @@
     $minJS->add(__DIR__ . "/../../shared/scripts/script-security.js");
     $minJS->add(__DIR__ . "/../../shared/scripts/script-user.js");
     $minJS->add(__DIR__ . "/../../shared/scripts/script-moviment.js");
-    $minJS->add(__DIR__ . "/../../shared/scripts/script-occupation.js");
-    $minJS->add(__DIR__ . "/../../shared/scripts/script-documentation.js");
-    $minJS->add(__DIR__ . "/../../shared/scripts/script-menu.js");
+    //$minJS->add(__DIR__ . "/../../shared/scripts/script-occupation.js");
 
     /** MinifyCss */
     $minJS->minify(__DIR__ . $themes . CONF_VIEW_THEME . "/assets/scripts.js");

@@ -16,12 +16,12 @@ class Occupation extends Model implements Models
     {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id=:id", "id={$id}", $msgDb);
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$load->rowCount()) {
+        if (!$load->rowCount()) {
             $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>");
             return null;
         }
@@ -32,19 +32,19 @@ class Occupation extends Model implements Models
     public function loads(array $ids, string $columns = "*", bool $msgDb = false)
     {
         $where = "";
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             $where .= "id={$id} OR ";
         }
         $where = substr($where, 0, -3);
         $sql = "SELECT {$columns} FROM " . self::$entity . " WHERE {$where} ";
         $load = $this->read($sql, $msgDb);
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$load->rowCount()) {
+        if (!$load->rowCount()) {
             $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>");
             return null;
         }
@@ -54,11 +54,11 @@ class Occupation extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if(filter_var($search, FILTER_SANITIZE_STRIPPED)) {
+        if (filter_var($search, FILTER_SANITIZE_STRIPPED)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
-        if($this->fail || !$find->rowCount()) {
+        if ($this->fail || !$find->rowCount()) {
             $this->message = "<span class='warning'>Not found occupation</span>";
             return null;
         }
@@ -87,12 +87,12 @@ class Occupation extends Model implements Models
         $sql .= ($limit !== 0 ? $this->limit() : null);
         $all = $this->read($sql, "limit={$limit}&offset={$offset}");
 
-        if($this->fail) {
-            $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
+        if ($this->fail) {
+            $this->message = "<span class='error'>" . $this->fail->errorInfo[1] . "</span>";
             return $this->message;
         }
 
-        if(!$all->rowCount()) {
+        if (!$all->rowCount()) {
             $this->message = "<span class='warning'>Your inquiry has not returned data</span>";
             return null;
         }
@@ -103,13 +103,13 @@ class Occupation extends Model implements Models
     public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false): ?array
     {
         $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE active=1 " . $this->order($order);
-        if($limit !== 0) {
+        if ($limit !== 0) {
             $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
         } else {
             $all = $this->read($sql);
         }
 
-        if(!$all->rowCount()) {
+        if (!$all->rowCount()) {
             $this->message = "Your query has not returned any registrations";
             return null;
         }
@@ -119,21 +119,21 @@ class Occupation extends Model implements Models
 
     public function save(): ?Occupation
     {
-        if(!$this->required()) {
+        if (!$this->required()) {
             return null;
         }
 
         /** Update */
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $id = $this->id;
             $membership = $this->read("SELECT id FROM " . self::$entity . " WHERE name = :name AND id != :id", "name={$this->name}&id={$id}");
-            if($membership->rowCount()) {
+            if ($membership->rowCount()) {
                 $this->message = "<span class='warning'>The Informed Occupation is already registered</span>";
                 return null;
             }
 
             $this->update(self::$entity, $this->safe(), "id = :id", "id={$id}");
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error updating, verify the data</span>";
                 return null;
             }
@@ -142,13 +142,13 @@ class Occupation extends Model implements Models
         }
 
         /** Create */
-        if(empty($this->id)) {
-            if($this->find($this->name)) {
+        if (empty($this->id)) {
+            if ($this->find($this->name)) {
                 $this->message = "<span class='warning'>The Informed Occupation is already registered</span>";
                 return null;
             }
             $id = $this->create(self::$entity, $this->safe());
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error to Register, Check the data</span>";
                 return null;
             }
@@ -161,11 +161,11 @@ class Occupation extends Model implements Models
 
     public function destroy()
     {
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $this->delete(self::$entity, "id=:id", "id={$this->id}");
         }
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<span class='danger'>Could not remove the occupation</span>";
             return null;
         }
@@ -177,8 +177,8 @@ class Occupation extends Model implements Models
 
     public function required(): bool
     {
-        foreach($this->required as $field) {
-            if(empty(trim($this->$field))) {
+        foreach ($this->required as $field) {
+            if (empty(trim($this->$field))) {
                 $this->message = "<span class='warning'>The field {$field} is required</span>";
                 return false;
             }

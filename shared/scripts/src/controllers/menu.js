@@ -1,10 +1,11 @@
 import AbstractController from "./abstractController.js"
-import Documentation from "./ddocumentation.js"
+import Documentation from "./documentation.js"
 import Membership from "./membership.js"
+import Occupation from "./occupation.js"
 
 export default class Menu extends AbstractController{
     initializer = () => {
-        this.view.showBirthday()
+        this.#showBirthmonth()
 
         this.view.initializer(({ pageName: page, element }) => {
             this.view.active(element)
@@ -21,7 +22,7 @@ export default class Menu extends AbstractController{
     }
 
     #getPage = (page) => {
-        return this.service.openFile({ method: 'GET', url: page})
+        return this.service.openFile({ method: 'GET', url: page })
     }
 
     #callScript = (page) => {
@@ -39,10 +40,15 @@ export default class Menu extends AbstractController{
                 scriptMoviment()
                 break
             case "membership/init":
-                Membership.initializer()
+                const membership = new Membership()
+                membership.initializer()
+                break
+            case "membership/birthday":
+                this.#showBirthmonth()
                 break
             case "occupation/init":
-                scriptOccupation()
+                const occupation = new Occupation()
+                occupation.initializer()
                 break
             case "documentation/add": case "documentation/init":
                 const documentation = new Documentation()
@@ -51,5 +57,14 @@ export default class Menu extends AbstractController{
             case "exit":
                 window.location.reload()
         }
+    }
+
+    #showBirthmonth() {
+        this.view.showBirthmonth((url) => {
+            let now = new Date
+            const formData = new FormData()
+            formData.append('month', now.getMonth() + 1)
+            return this.service.openFile({ method: 'POST', url, formData })
+        })
     }
 }
