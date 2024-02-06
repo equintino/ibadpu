@@ -19,6 +19,8 @@ class SqlParams extends Model
                 break;
             case "mysql":
                 $this->sql .= " LIMIT :limit OFFSET :offset";
+                break;
+            default:
         }
         return $this->sql;
     }

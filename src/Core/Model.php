@@ -86,12 +86,13 @@ abstract class Model
         return $this->message;
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msgDb = false)
+    /** @var $colums string, @var $order string, @var $msgDB bool*/
+    public function all(string $columns = "*", string $order = "id", bool $msgDb = false)
     {
         $all = $this->read("SELECT {$columns} FROM  "
             . static::$entity . " "
-            . $this->order($order)
-            . ($limit !== 0 ? $this->limit() : null), "limit={$limit}&offset={$offset}", $msgDb);
+            . $this->order($order));
+            // . ($limit !== 0 ? $this->limit() : null), "limit={$limit}&offset={$offset}", $msgDb);
 
         if($this->fail || !$all->rowCount()) {
             $this->message = "<span class='warning'>Your query has not returned data</span>";
@@ -120,11 +121,11 @@ abstract class Model
     {
         try {
             $stmt = Connect::getInstance($msgDb)->prepare($select);
-            if($params) {
+            if ($params) {
                 parse_str($params, $params);
-                foreach($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     $type = \PDO::PARAM_STR;
-                    if(is_numeric($value)) {
+                    if (is_numeric($value)) {
                         $type = \PDO::PARAM_INT;
                         $value = (int) $value;
                     }
@@ -132,7 +133,7 @@ abstract class Model
                 }
             }
             $stmt->execute();
-        } catch(\PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
         }
         return $stmt;

@@ -38,21 +38,6 @@ class Group extends Model implements Models
         return $find->fetchObject(__CLASS__);
     }
 
-    public function all(int $limit=30, int $offset=1, string $columns = "*", string $order = "id", bool $msgDb = false): ?array
-    {
-        $all = $this->read("SELECT {$columns} FROM  "
-            . self::$entity . " "
-            . $this->order($order)
-            . $this->limit(), "limit={$limit}&offset={$offset}", $msgDb);
-
-        if($this->fail || !$all->rowCount()) {
-            $this->message = "<span class='warning'>Your inquiry has not returned data</span>";
-            return null;
-        }
-
-        return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
-    }
-
     public function save(): ?Group
     {
         if(!$this->required()) {

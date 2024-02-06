@@ -6,14 +6,9 @@ class Occupation extends Controller
 {
     protected $page = "occupation";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
-        $occupation = (new \Models\Occupation())->all(0);
+        $occupation = (new \Models\Occupation())->all('*', 'name');
         if (!is_array($occupation) &&  preg_match("/doesn't exist/", $occupation)) {
             if ((new \Models\Occupation())->createThisTable()) {
                 alertLatch("Created new table, try again");
@@ -52,17 +47,17 @@ class Occupation extends Controller
         $this->view->setPath("Modals")->render("occupation", [ compact("occupations", "act") ] );
     }
 
-    public function save(array $data)
+    public function save(array $data): string
     {
         $occupation = new \Models\Occupation();
         $occupation->bootstrap($data);
         $occupation->save();
-        return print json_encode($occupation->message());
+        return print $occupation->message();
     }
 
     public function delete(array $data): ?string
     {
         $occupation = (new \Models\Occupation())->load($data["id"])->destroy();
-        return print json_encode($occupation->message());
+        return print $occupation->message();
     }
 }

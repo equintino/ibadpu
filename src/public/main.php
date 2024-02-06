@@ -8,10 +8,10 @@ use Config\Config;
 use Core\Session;
 use Models\User;
 
-$login = filter_input(INPUT_POST, "login", FILTER_SANITIZE_STRIPPED);
-$password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRIPPED);
-$remember = filter_input(INPUT_POST, "remember", FILTER_SANITIZE_STRIPPED);
-$connectionName = filter_input(INPUT_POST, "connection-name", FILTER_SANITIZE_STRIPPED);
+$login = filter_input(INPUT_POST, "login", FILTER_UNSAFE_RAW);
+$password = filter_input(INPUT_POST, "password", FILTER_UNSAFE_RAW);
+$remember = filter_input(INPUT_POST, "remember", FILTER_UNSAFE_RAW);
+$connectionName = filter_input(INPUT_POST, "connection-name", FILTER_UNSAFE_RAW);
 
 $confEnv = (new FileTransation(".env"))->setLocal($connectionName);
 if($confEnv->getLocal()) {

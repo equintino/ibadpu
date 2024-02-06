@@ -53,7 +53,7 @@ class User extends Model implements Models
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE {$params} ", $terms, $msgDb);
         } elseif(filter_var($search, FILTER_VALIDATE_EMAIL)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE email=:email", "email={$search}", $msgDb);
-        } elseif(filter_var($login, FILTER_SANITIZE_STRIPPED)) {
+        } elseif(filter_var($login, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE login=:login", "login={$login}", $msgDb);
         } else {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name", "name={$login}", $msgDb);
@@ -67,14 +67,15 @@ class User extends Model implements Models
         return (is_array($search) ? $find->fetchAll(\PDO::FETCH_CLASS, __CLASS__) : $find->fetchObject(__CLASS__));
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msgDb = false): ?array
+    // public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msgDb = false): ?array
+    public function activeAll(string $columns = "*", string $order = "id", bool $msgDb = false): ?array
     {
         $all = $this->read("SELECT {$columns} FROM  "
             . self::$entity . " "
-            . $this->order($order)
-            . $this->limit(), "limit={$limit}&offset={$offset}", $msgDb);
+            . $this->order($order));
+            // . $this->limit(), "limit={$limit}&offset={$offset}", $msgDb);
 
-        if($this->fail || !$all->rowCount()) {
+        if ($this->fail || !$all->rowCount()) {
             $this->message = "<span class='warning'>Your query has not returned data</span>";
             return null;
         }

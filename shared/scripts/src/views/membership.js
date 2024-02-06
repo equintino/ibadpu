@@ -27,7 +27,7 @@ export default class Membership extends AbstractView {
                     let name = e.attributes['data-name'].value
                     this.modal.show({
                         title: name,
-                        content: getPage('membership/register/' + memberId),
+                        content: getPage({ url: 'membership/register/' + memberId }),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
                     .styles({
@@ -46,16 +46,7 @@ export default class Membership extends AbstractView {
                             formData.append(i.id, i.files[0])
                         }
 
-                        /** Require compulsory fields */
-                        for (let field of required) {
-                            if (field.value == "") {
-                                let fieldName = field.previousElementSibling.textContent.trim()
-                                field.style.background = 'pink'
-                                field.focus()
-
-                                return this.message.text("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)")
-                            }
-                        }
+                        if (this.#validate(required) !== true) return
                         fn({ formData })
                     }
                 }
@@ -63,11 +54,25 @@ export default class Membership extends AbstractView {
         }
     }
 
+    #validate(required, fn) {
+        /** Require compulsory fields */
+        for (let field of required) {
+            if (field.value == "") {
+                let fieldName = field.previousElementSibling.textContent.trim()
+                field.style.background = 'pink'
+                field.focus()
+
+                return this.message.text("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)")
+            }
+        }
+        return true
+    }
+
     #add(fn, getPage) {
         document.querySelector('.add').onclick = () => {
             this.modal.show({
                 title: 'NOVO MEMBRO',
-                content: getPage('membership/register/0'),
+                content: getPage({ url: 'membership/register/0' }),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
             .styles({
@@ -106,10 +111,9 @@ export default class Membership extends AbstractView {
         noMembers.onclick = () => {
             this.modal.show({
                 title: "EX-MEMBROS OU VISITANTES",
-                content: getPage("membership/no_member"),
+                content: getPage({ url: "membership/no_member" }),
                 callback: () => {
                     let btnEdit = this.modal.content.querySelectorAll('button')
-                    let form = this.modal.content.querySelector('form')
                     this.#openModal({ btnEdit }, fn, getPage)
                 }
             })
@@ -178,7 +182,7 @@ export default class Membership extends AbstractView {
             formData.append('members_ids', this.membersIds)
             this.modal.show({
                 title: 'EMISSÃO DE CARTEIRINHA',
-                content: getPage('wallet', formData, 'POST'),
+                content: getPage({ url: 'wallet', formData, method: 'POST' }),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
                     this.loading.hide()
@@ -206,7 +210,7 @@ export default class Membership extends AbstractView {
             formData.append('side', side)
             this.modal.show({
                 title: 'CERTIFICADO DE BATISMO',
-                content: getPage('certificate', formData),
+                content: getPage({ url: 'certificate', formData, method: 'POST' }),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
                     /** Shifting aside */

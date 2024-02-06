@@ -84,26 +84,6 @@ class Membership extends Model implements Models
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    /** @var $liimit int */
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "name", bool $msg = false)
-    {
-        $sql = "SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order);
-        $sql .= ($limit !== 0 ? $this->limit() : null);
-        $all = $this->read($sql, "limit={$limit}&offset={$offset}");
-
-        if ($this->fail) {
-            $this->message = "<span class='error'>" . $this->fail->errorInfo[1] . "</span>";
-            return null;
-        }
-
-        if (!$all->rowCount()) {
-            $this->message = "<span class='warning'>Your inquiry has not returned data</span>";
-            return null;
-        }
-
-        return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
-    }
-
     public function activeAll(?int $limit=null, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false): ?array
     {
         $sql = "SELECT {$columns} FROM  " . static::$entity . " WHERE active=1 " . $this->order($order);

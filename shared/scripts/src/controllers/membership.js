@@ -7,7 +7,6 @@ export default class Membership extends AbstractController {
     #service
 
     initializer() {
-        // const membership = new Membership()
         this.#view = new View()
         this.#service = new Service()
         this.#edition()
@@ -33,10 +32,8 @@ export default class Membership extends AbstractController {
                 )
                 if (response.indexOf('success') !== -1 && validate.reload) window.location.reload()
             },
-            getPage: (url, formData, method = 'GET') => {
-                return this.#service.openFile({
-                    method, url, formData
-                })
+            getPage: (data) => {
+                return this.getPage(data)
             }
         })
     }
@@ -49,14 +46,14 @@ export default class Membership extends AbstractController {
     }
 
     #certificatePrint() {
-        const getPage = (url, formData, method = 'POST') => {
-            return this.#service.openFile({
-                method, url, formData
-            })
-        }
         const fn = ({ url, formData }) => {
             return this.#service.openFile({ method: 'POST', url, formData })
         }
-        this.#view.certificate({ fn, getPage })
+        this.#view.certificate({
+            fn,
+            getPage: (data) => {
+                return this.getPage(data)
+            }
+        })
     }
 }

@@ -31,7 +31,7 @@ class Moviment extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if(filter_var($search, FILTER_SANITIZE_STRIPPED)) {
+        if(filter_var($search, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 

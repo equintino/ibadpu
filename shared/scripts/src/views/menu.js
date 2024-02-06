@@ -99,5 +99,11 @@ export default class View extends AbstractView {
             title: 'Aniversariantes do Mês',
             content: fn('membership/birthmonth')
         })
+        .styles({
+            element: '#boxe_main #content',
+            css: {
+                height: 'auto'
+            }
+        })
     }
 }

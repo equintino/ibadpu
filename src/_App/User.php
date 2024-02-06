@@ -16,7 +16,7 @@ class User extends Controller
     public function init(?array $data): void
     {
         $params = [];
-        $company_id = ($data["company_id"] ?? null);
+        // $company_id = ($data["company_id"] ?? null);
         $this->view->render("user", $params);
     }
 
@@ -27,7 +27,7 @@ class User extends Controller
         if(!empty($data["company_id"])) {
             $users = (new \Models\User())->find(["company_id" => $data["company_id"]]);
         } else {
-            $users = (new \Models\User())->all();
+            $users = (new \Models\User())->activeAll();
         }
 
         $user = (new \Models\User())->find($login);
@@ -100,7 +100,7 @@ class User extends Controller
         $passwd = $params["password"];
         $confPasswd = $params["confPassword"];
         if($passwd !== $confPasswd) {
-            print(json_encode("<span class='warning'>The password was not confirmed</span>"));
+            print json_encode("<span class='warning'>The password was not confirmed</span>");
             die;
         } else {
             unset($params["confPassword"]);
