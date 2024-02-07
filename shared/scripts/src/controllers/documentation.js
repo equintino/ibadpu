@@ -1,62 +1,49 @@
-import Modal from "../../lib/modal.js"
+// import Modal from "../../lib/modal.js"
 import AbstractController from "./abstractController.js"
+import View from "./../views/documentation.js"
+import Service from "./../services/documentation.js"
 import Menu from "./menu.js"
 
 export default class Documentation extends AbstractController {
+    #view
+    #service
+
     initializer() {
-        const modal = new Modal
-        this.#openDoc(modal)
+        const menu = new Menu()
+        this.#view = new View()
+        this.#service = new Service()
+
+        this.#view.openDoc({
+            fn: ({ btnName, formData }) => {
+                let response
+                if (btnName === 'delete') {
+                    response = this.getPage({
+                        url: 'documentation/delete/id/' + formData.get('id'),
+                        method: 'POST'
+                    })
+                    if (response.indexOf('success') !== -1) {
+                        menu.showPage('documentation/init')
+                    }
+                }
+                if (btnName === 'edit') {
+                    response = this.getPage({
+                        url: 'documentation/update',
+                        method: 'POST',
+                        formData
+                    })
+                    if (response.indexOf('success') !== -1) {
+                        menu.showPage('documentation/init')
+                    }
+                }
+                return response
+            },
+            getPage: (data) => {
+                return this.getPage(data)
+            },
+        })
+
         this.#changeFile()
         this.#btnAction()
-    }
-
-    #openDoc(modal) {
-        const row = document.querySelectorAll('#documentation table.show tbody tr')
-        row.forEach((e) => {
-            e.onclick = (i) => {
-                let id = e.attributes['id'].value
-                if (typeof(i.target.parentElement.attributes["data-action"]) !== "undefined") {
-                    let action = i.target.parentElement.attributes["data-action"].value
-                    let description = i.target.parentElement.parentElement.children[1].textContent
-                    if (action === "delete") {
-                        modal.confirm({
-                            title: "Deseja realmente excluir este documento?",
-                            message: description,
-                            buttons: "<button class='button cancel' value='close'>NÃO</button><button class='button save' value='delete'>SIM</button>"
-                        })
-                        .on("click", function(e) {
-                            if (e.target.value === "delete") {
-                                if (saveData("documentation/delete/id/" + id, id)) {
-                                    (new Menu()).showPage('documentation/init')
-                                }
-                            }
-                        })
-                    } else {
-                        modal.show({
-                            title: "Modo de Edição",
-                            content: "documentation/edit/" + id,
-                            buttons: "<button class='button save' value='save'>Alterar</button>"
-                        })
-                        .callback(function() {
-                            buttons.querySelector('button').onclick = (btn) => {
-                                let btnName = btn.target.value
-                                if (btnName === "save") {
-                                    let formData = new FormData(
-                                        modal.content.find("#form-documentation")[0]
-                                    )
-                                    if (saveData("documentation/update", formData)) {
-                                        (new Menu).showPage('documentation/init')
-                                        modal.close()
-                                    }
-                                }
-                            }
-                        })
-                    }
-                } else {
-                    window.open("documentation/show/id/" + id)
-                }
-            }
-        })
     }
 
     #changeFile() {

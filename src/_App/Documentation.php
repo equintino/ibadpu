@@ -77,14 +77,14 @@ class Documentation extends Controller
             $file["name"] = $data["name"];
             $file["description"] = $data["description"];
             if(is_numeric($documentation->fileSave($file, $id))) {
-                return print(json_encode("<span class='success'>File succefully</span>"));
+                return print "<span class='success'>File successfully</span>";
             }
         } else {
             if(is_numeric($documentation->save())) {
-                return print(json_encode("<span class='success'>File succefully</span>"));
+                return print "<span class='success'>File successfully</span>";
             }
         }
-        return print(json_encode($documentation->message()));
+        return print $documentation->message();
     }
 
     public function delete(array $data): string
@@ -92,6 +92,6 @@ class Documentation extends Controller
         $id = $data["id"];
         $documentation = (new \Models\Documentation())->load($id);
         $documentation->destroy();
-        return print(json_encode($documentation->message()));
+        return print $documentation->message();
     }
 }

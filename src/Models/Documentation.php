@@ -108,7 +108,7 @@ class Documentation extends Model implements Models
 
         $data["image"] = file_get_contents($this->file["tmp_name"]);
         $this->bootstrap($data);
-        return ($this->save() ?? $this->message());
+        return $this->save() ?? $this->message();
     }
 
     private function is_pdf ( $file ) {
@@ -272,7 +272,7 @@ class Documentation extends Model implements Models
                 }
             }
             $stmt->execute();
-        } catch(PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
             return null;
         }
