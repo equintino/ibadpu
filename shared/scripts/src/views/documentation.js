@@ -2,6 +2,11 @@ import AbstractView from "./abstractView.js"
 
 export default class Documentation extends AbstractView {
     #row = document.querySelectorAll('#documentation table.show tbody tr')
+    legend
+
+    location() {
+        this.legend = document.querySelector('legend').innerText
+    }
 
     openDoc({ fn, getPage }) {
         this.#row.forEach((e) => {
@@ -44,5 +49,16 @@ export default class Documentation extends AbstractView {
                 }
             }
         })
+    }
+
+    changeFile(fn) {
+        const file = document.querySelector('#documentation #form-documentation [type=file]')
+        const filesAdd = documentation.querySelectorAll("[type=file]")
+        let btnSave = document.querySelector('#documentation [disabled]')
+        file.onchange = () => {
+            const response = fn(filesAdd)
+            if (response) this.message.text(response)
+            if (btnSave.disabled && !response) btnSave.disabled = false
+        }
     }
 }
