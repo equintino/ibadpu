@@ -61,4 +61,64 @@ export default class Documentation extends AbstractView {
             if (btnSave.disabled && !response) btnSave.disabled = false
         }
     }
+
+    btnAction(fn) {
+        const buildTable = (data) => {
+            let tr = document.createElement('tr')
+            data.forEach((el) => {
+                let element = document.createElement(el.element)
+                let td = document.createElement('td')
+                for (let i in el.attributes) {
+                    element.setAttribute(i, el.attributes[i])
+                }
+                td.appendChild(element)
+                tr.appendChild(td)
+            })
+            return tr
+        }
+
+        const buttons = document.querySelectorAll('#documentation button')
+        const form = document.querySelector('#documentation #form-documentation')
+
+        buttons.forEach((btn) => {
+            btn.onclick = (e) => {
+                const btnName = e.target.value
+                if (btnName === "new") {
+                    /** falta implementar */
+                    document.querySelector('#documentation table tbody').append(
+                        buildTable([
+                            { element: 'input', attributes: {
+                                type: 'text', name: 'names[]', required: 'required'
+                            } },
+                            { element: 'input', attributes: {
+                                type: 'text', name: 'description[]', required: 'required'
+                            }},
+                            { element: 'input', attributes: {
+                                type: 'file', name: 'files[]', riquired: 'required'
+                            }}
+                        ])
+                    )
+                } else if (btnName === "reset") {
+                    document.querySelector('#documentation #form-documentation').reset()
+                } else if (btnName === 'save') {
+                    const formData = new FormData(form)
+                    const url = form.attributes['action'].value
+                    let fields = document.querySelectorAll("#form-documentation [required]")
+                    for (let i of fields) {
+                        i.style.background = "white"
+                        if (i.value === "") {
+                            i.focus()
+                            i.style.background = "pink"
+                            return this.message.text("<span class='warning'>The field required</span>")
+                        }
+                    }
+                    const response = fn({ url, formData })
+                    if (response.indexOf('success') !== -1) {
+                        this.message.text(response)
+                        form.reset()
+                    }
+                }
+            }
+        })
+    }
 }
