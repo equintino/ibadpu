@@ -15,13 +15,13 @@ class Moviment extends Controller
 
     public function init(?array $data): void
     {
-        //$this->prepareSql();
         $params = [];
         $limit = 30;
         $pageNumber = ($data["page"] ?? 1);
         $offset = ($pageNumber - 1) * $limit;
-        $balance = (new Balance())->all($limit, $offset, "*", "year desc, id asc");
-        if(!is_array($balance) &&  preg_match("/doesn't exist/", $balance)) {
+        $balance = (new Balance())->activeAll($limit, $offset, "*", "year desc, id asc");
+        $pattern = "/doesn't exist/";
+        if (!is_array($balance) &&  preg_match($pattern, $balance)) {
             (new Balance())->createThisTable();
         }
         $params = [ $balance, compact("pageNumber", "limit") ];
@@ -32,12 +32,19 @@ class Moviment extends Controller
     {
         $act = "new";
         $balanceDb = new \Models\Balance();
-        if(preg_match("/doesn't exist/", ($balanceDb->all(0)))) {
+        $data = $balanceDb->activeAll();
+        if (is_string($data) && preg_match("/doesn't exist/", $data)) {
             $balanceDb->createThisTable();
         }
         $balance = $balanceDb->lastMonth();
-        $date = ($balance ? explode("-",(new \DateTime("{$balance->year}-" . monthToNumber($balance->month)))->modify("+1 month")->format("m-Y")) : null);
-        $month = (is_array($date) ? mb_strtoupper($this->numberMonth($date[0])) : mb_strtoupper($this->numberMonth(date("m"))));
+        $date = (
+            $balance ? explode("-",(new \DateTime("{$balance->year}-"
+            . monthToNumber($balance->month)))->modify("+1 month")->format("m-Y")) : null
+        );
+        $month = (
+            is_array($date) ?
+                mb_strtoupper($this->numberMonth($date[0]))
+                : mb_strtoupper($this->numberMonth(date("m"))));
         $year = ($date[1] ?? date("Y"));
 
         $this->view->render("moviment", [ compact("month", "year", "act") ]);

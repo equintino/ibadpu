@@ -52,9 +52,24 @@ class Balance extends Model implements Models
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function all(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false)
+    public function activeAll(
+        int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false
+        )
     {
-        $all = $this->read("SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order) . $this->limit(), "limit={$limit}&offset={$offset}");
+        $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE active=1 " . $this->order($order);
+        if($limit !== 0) {
+            $all = $this->read(
+                $sql . $this->limit(), "limit={$limit}&offset={$offset}"
+            );
+        } else {
+            $all = $this->read($sql);
+        }
+
+        // $all = $this->read(
+        //     "SELECT {$columns} FROM  "
+        //     . self::$entity
+        //     . " {$this->order($order)}  {$this->limit()} WHERE active=1 ", "limit={$limit}&offset={$offset}"
+        // );
 
         if($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";

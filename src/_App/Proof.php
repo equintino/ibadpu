@@ -14,7 +14,7 @@ class Proof extends Controller
     public function init(?array $data): void
     {
         $movimentDb = new \Models\Moviment();
-        $moviments = $movimentDb->all(0, 0, "year", "year desc");
+        $moviments = $movimentDb->activeAll(0, 0, "year", "year desc");
         if(!is_array($moviments) && preg_match("/doesn't exist/", $moviments)) {
             $movimentDb->createThisTable();
         } else {
