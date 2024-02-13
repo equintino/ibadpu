@@ -68,9 +68,10 @@ class Moviment extends Controller
 
     public function save(array $data)
     {
+        $data = json_decode($data['data']);
         $search = [
-            "month" => monthToNumber(strToLower($data["month"])),
-            "year" => $data["year"]
+            "month" => monthToNumber(strToLower($data->month)),
+            "year" => $data->year
         ];
         $previousMonthBalance = $this->previousMonthBalance($search);
         $moviments = (new \Models\Moviment())->search($search);
@@ -78,10 +79,10 @@ class Moviment extends Controller
         $depositTotal = $previousMonthBalance;
         $outputTotal = 0;
 
-        if(empty($moviments)) {
-            return print(json_encode("No movement was made for the month"));
+        if (empty($moviments)) {
+            return print json_encode("No movement was made for the month");
         }
-        foreach($moviments as $moviment) {
+        foreach ($moviments as $moviment) {
             $deposit = ($moviment->deposit ?? "0");
             $output = ($moviment->output ?? "0");
             $depositTotal += $deposit;
@@ -90,8 +91,8 @@ class Moviment extends Controller
         $totalBalance = $depositTotal - $outputTotal;
         $balance = new Balance();
         $dataBalance = [
-            "year" => $data["year"],
-            "month" => strToLower($data["month"]),
+            "year" => $data->year,
+            "month" => strToLower($data->month),
             "balance" => $totalBalance
         ];
         $balance->bootstrap($dataBalance);

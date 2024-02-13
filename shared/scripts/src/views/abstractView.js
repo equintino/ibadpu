@@ -13,7 +13,8 @@ export default class AbstractView {
         this.loading = Loading
     }
 
-    showPage({ page, params }) {
+    showPage({ page, params, fn }) {
         document.querySelector('.content').innerHTML = page
+        if (typeof(fn) === 'function') fn()
     }
 }

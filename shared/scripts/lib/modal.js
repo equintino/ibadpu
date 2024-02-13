@@ -210,6 +210,13 @@ export default class Modal {
                 document.querySelector(params.element).style.i = params.css[i]
             }
         }
+        if (params.elements != null) {
+            for (let el of params.elements.split(',')) {
+                for (let i in params.css) {
+                    document.querySelector(el).style.i = params.css[i]
+                }
+            }
+        }
         return this
     }
 

@@ -7,7 +7,7 @@ export default class AbstractService {
         this.#readFile = new ReadFile()
     }
 
-    openFile({ method, url, formData }) {
+    openFile({ method, url, formData}) {
         this.#readFile.open({
             method, url, formData
         })

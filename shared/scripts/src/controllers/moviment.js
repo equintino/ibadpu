@@ -22,6 +22,7 @@ export default class Moviment extends AbstractController {
             this.#mask()
             this.#selectInOut()
             this.#preview()
+            this.#closingReport()
             return
         }
         if (page.indexOf('proof') !== -1) {
@@ -194,7 +195,7 @@ export default class Moviment extends AbstractController {
                     buttons: "<button class='button btn-info' value='summary'>Resumo</button><button class='button btn-danger' value='save'>Salvar Alterações</button>"
                 })
                 .styles({
-                    element: ".input, .select",
+                    elements: "input, select",
                     css: {
                         background: "#e9e98c none repeat scroll 0% 0%",
                         "font-size": "1em"
@@ -460,21 +461,34 @@ export default class Moviment extends AbstractController {
     }
 
     #closingReport() {
-        $("#moviment [value=conclude]").on("click", function(){
+        document.querySelector("#moviment [value=conclude]").onclick = () => {
+            const formData = new FormData()
             let data = {
-                month: $("#moviment form [name=month]").val(),
-                year: $("#moviment form [name=year]").val()
-            };
-            modal.confirm({
+                month: document.querySelector("#moviment form [name=month]").value,
+                year: document.querySelector("#moviment form [name=year]").value
+            }
+            formData.append('data', JSON.stringify(data))
+            const conf  = this.#view.modal.confirm({
                 title: "Fechamento do relatório",
                 message: "Deseja realmente fechar o relatório?"
             })
-            .on("click", function() {
-                if($(this).val() == 1) {
-                    saveAjax("moviment/save", data);
+            this.#view.modal.mask.style.zIndex = '2'
+            conf.onclick = (btn) => {
+                if (btn.target.value == 1) {
+                    const response = this.getPage({
+                        url: 'moviment/save',
+                        method: 'POST',
+                        formData
+                    })
+                    if (response.indexOf('success') !== -1) {
+                        this.#view.showPage({
+                            page: this.getPage({ url: 'moviment' }),
+                            fn: () => this.#location({ page: 'moviment' })
+                        })
+                    }
                 }
-            });
-        });
+            }
+        }
     }
 
     #proof() {
