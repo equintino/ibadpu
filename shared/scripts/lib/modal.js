@@ -49,7 +49,6 @@ export default class Modal {
 
     /** @var title, message, content */
     show(params) {
-        let that = this
         this.closeEnable()
         this.escapeEnable()
         this.clickMaskEnable()
@@ -69,17 +68,6 @@ export default class Modal {
             this.content.style.display = 'block'
             if (params.callback != null) params.callback()
             this.complete()
-            // this.content.onload = (e) => {
-            //     console.log(
-            //         e
-            //     )
-            // }
-
-            // this.content.load(params.content, params.params, function() {
-            //     if(params.callback != null) params.callback()
-            //     that.complete()
-            //     loading.hide()
-            // }).show()
         } else {
             loading.hide()
         }
@@ -90,6 +78,7 @@ export default class Modal {
         }
 
         this.mask.style.display = 'block'
+        this.mask.style.zIndex = '2'
         this.nameModal.style.display = 'flex'
         this.nameModal.top = 0
 
@@ -100,36 +89,43 @@ export default class Modal {
         loading.show({
             text: "loading..."
         })
-        let that = this
-        if (params.title != null) this.dialogue.find("#title").html(params.title).show()
-        if (params.message != null) this.dialogue.find("#message").html(params.message).show()
+        if (params.title != null) {
+            this.dialogue.querySelector('#title').innerHTML = params.title
+            this.dialogue.querySelector('#title').style.display = 'block'
+        }
+        if (params.message != null) {
+            this.dialogue.querySelector('#message').innerHTML = params.message
+            this.dialogue.querySelector('#message').style.display = 'block'
+        }
         if (params.content != null) {
-            this.dialogue.find("#content").load(params.content, params.params, function() {
-                loading.hide()
-            }).show()
+            this.dialogue.querySelector("#content").innerHTML = params.content
+            this.dialogue.querySelector("#content").style.display = 'block'
         } else {
             loading.hide()
         }
 
-        if (params.html != null) this.dialogue.find("#content").html(params.html).show()
-        if (params.buttons != null) this.dialogue.find("#buttons").html(params.buttons).show()
+        if (params.html != null) {
+            this.dialogue.querySelector("#content").innerHTML = params.html
+            this.dialogue.querySelector("#content").style.display = 'block'
+        }
+        if (params.buttons != null) {
+            this.dialogue.querySelector("#buttons").innerHTML = params.buttons
+            this.dialogue.querySelector("#buttons").style.display = 'block'
+        }
         if (params.callback != null) params.callback()
 
-        this.dialogue.fadeIn().css({
-            display: "flex"
-        })
+        this.dialogue.style.display = "flex"
 
-        this.dialogue.find("#content").css({
-            "overflow-y": "scroll",
-            "max-height": "490px"
-        })
+        this.dialogue.querySelector("#content").style.overflowY = 'scroll'
+        this.dialogue.querySelector("#content").style.maxHeight = '490px'
 
-        $("#mask_main").css({
-            "z-index": "4"
-        })
+        this.mask.style.zIndex = "4"
+        this.mask.onclick = () => {
+            this.hideContent()
+        }
 
         this.styles({
-            element: this.dialogue.find("#buttons button"),
+            element: this.dialogue.querySelector("#buttons button"),
             css: {
                "border-radius": "0 0 5px 5px",
             }
@@ -161,15 +157,13 @@ export default class Modal {
     hideContent() {
         let that = this
         let indexMask = that.mask.style.zIndex
-        // this.mask.style.zIndex = 2
         if (indexMask == 4) {
-            that.dialogue.hide()
-            that.dialogue.find("#title").hide().find("html").remove()
-            that.dialogue.find("#message").hide().find("html").remove()
-            that.dialogue.find("#content").hide().html("")
-            that.dialogue.find("#buttons").hide().find("html").remove()
-            that.mask.css("z-index","2")
-        // } else if (indexMask == 2) {
+            this.dialogue.style.display = 'none'
+            this.dialogue.querySelector("#title").innerHTML = ''
+            this.dialogue.querySelector("#message").innerHTML = ''
+            this.dialogue.querySelector("#content").innerHTML = ''
+            this.dialogue.querySelector("#buttons").innerHTML = ''
+            this.mask.style.zIndex = "2"
         } else {
             this.title.style.display = 'none',
             this.message.style.display = 'none',
@@ -177,22 +171,7 @@ export default class Modal {
             this.buttons.style.display = 'none',
             this.nameModal.style.display = 'none',
             this.dialogue.style.display = 'none',
-            // this.nameModal.style.display = 'none',
-            // this.nameModal.style.display = 'none',
-            // this.nameModal.style.display = 'none',
-            // this.nameModal.style.display = 'none',
             this.mask.style.display= 'none'
-
-            // that.title.hide().find("html").remove()
-            // that.message.hide().find("html").remove()
-            // that.content.hide().html("")
-            // that.buttons.hide().find("html").remove()
-            // that.nameModal.hide().find("html").remove()
-            // that.dialogue.find("#title").hide().find("html").remove()
-            // that.dialogue.find("#message").hide().find("html").remove()
-            // that.dialogue.find("#content").hide().find("html").remove()
-            // that.dialogue.find("#buttons").hide().find("html").remove()
-            // that.mask.hide()
         }
     }
 
@@ -208,10 +187,9 @@ export default class Modal {
             this.dialogue.querySelector("#buttons").innerHTML = "<div align='right'><button class='button cancel'value='0'>Cancela</button><button class='button error' style='margin-left: 3px'value='1'>Confirma</button></div>"
         }
         this.dialogue.querySelector("#buttons").style.display = 'block'
-
         this.dialogue.style.display = "flex"
 
-        if (this.mask.style.zIndex === 2) this.mask.style.zIndex = 4
+        if (this.mask.style.zIndex == 2) this.mask.style.zIndex = 4
 
         this.mask.style.display = 'block'
         this.dialogue.querySelectorAll("button").forEach((e) => {
@@ -225,10 +203,13 @@ export default class Modal {
     }
 
     styles(params) {
-        // this.buttons.find("button").css({
-        //     "border-radius": "0 0 5px 5px"
-        // });
-        if (params != null && params.element != null) $(params.element).css(params.css)
+        // this.buttons.querySelector("button").style.borderRadius = "0 0 5px 5px"
+
+        if (params != null && params.element != null) {
+            for (let i in params.css) {
+                document.querySelector(params.element).style.i = params.css[i]
+            }
+        }
         return this
     }
 

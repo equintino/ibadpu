@@ -8,11 +8,6 @@ class Moviment extends Controller
 {
     protected $page = "moviment";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $params = [];
@@ -102,24 +97,25 @@ class Moviment extends Controller
         $balance->bootstrap($dataBalance);
         $balance->save();
 
-        return print(json_encode($balance->message()));
+        return print json_encode($balance->message());
     }
 
-    public function update(array $data)
+    public function update(array $data): string
     {
         $movimentDb = new \Models\Moviment();
-        $changes = $data["changes"];
-        foreach($changes as $change) {
-            $datas[$change["id"]][$change["name"]] = $change["value"];
+        $changes = json_decode($data["changes"]);
+        foreach ($changes as $change) {
+            $name = explode('-', $change->name)[0];
+            $datas[$change->id][$name] = $change->value;
         }
         $ids = array_keys($datas);
-        for($x = 0; $x < count($ids); $x++) {
+        for ($x = 0; $x < count($ids); $x++) {
             $moviment = $movimentDb->load($ids[$x]);
-            foreach($datas[$ids[$x]] as $k => $v) {
-                if($k === "day") {
+            foreach ($datas[$ids[$x]] as $k => $v) {
+                if ($k === "day") {
                     $date = explode("-", $moviment->date);
                     $moviment->date = "{$date[0]}-{$date[1]}-{$v}";
-                } elseif($k === "deposit" || $k === "output") {
+                } elseif ($k === "deposit" || $k === "output") {
                     $moviment->$k = formatReal($v);
                 } else {
                     $moviment->$k = $v;
@@ -128,15 +124,15 @@ class Moviment extends Controller
             $moviment->save();
             $resp[] = $moviment->message();
         }
-        // return print(json_encode($resp));
-        return print(json_encode($moviment->message()));
+
+        return print $moviment->message();
     }
 
-    public function delete(array $data)
+    public function delete(array $data): string
     {
         $moviment = (new \Models\Moviment())->load($data["id"]);
         $moviment->destroy();
-        return print(json_encode($moviment->message()));
+        return print $moviment->message();
     }
 
     public function balance(?array $data): void
@@ -148,10 +144,10 @@ class Moviment extends Controller
             "year" => $data["year"]
         ];
         $all[] = [ "previousMonthBalance" => $previousMonthBalance ];
-        if(!is_object($moviment->load(1)) && preg_match("/doesn't exist/", $moviment->load(1))) {
+        if (!is_object($moviment->load(1)) && preg_match("/doesn't exist/", $moviment->load(1))) {
             $moviment->createThisTable();
         }
-        foreach($moviment->search($search) as $value) {
+        foreach ($moviment->search($search, 'date') as $value) {
             $dataDb["id"] = $value->id;
             $dataDb["year"] = $value->year;
             $dataDb["month"] = $value->month;
@@ -169,15 +165,13 @@ class Moviment extends Controller
 
     public function summarie(array $data)
     {
-        $params = $_POST["data"];
-        $previousMonthBalance = (float) ($params[0]["previousMonthBalance"]);
+        $params = $_POST;
+        $previousMonthBalance = (float) ($params["previousMonthBalance"]);
         unset($params[0]);
 
         $vlrTotal = $this->sumValues($params);
         $totalBalance = $vlrTotal["depositTotal"] - $vlrTotal["outputTotal"] + $previousMonthBalance;
-        $dateArr = explode("-",$params[1]["date"]);
-        $month = strtoupper(monthToNumber($dateArr[1], true));
-        $year = $dateArr[0];
+
         $titles = [ "DESCRIÇÃO","ENTRADA","SAÍDA" ];
 
         $titheTotal = formatCurrency($vlrTotal["titheTotal"]);
@@ -188,7 +182,13 @@ class Moviment extends Controller
         $totalBalance = formatCurrency($totalBalance);
         $outputDescription = $vlrTotal["outputDescription"];
 
-        $this->view->setPath("Modals")->render("summarie", [ $params, compact("depositTotal","titheTotal", "offerTotal", "outputTotal", "titles", "outputDescription", "totalBalance","month","year") ]);
+        $this->view->setPath("Modals")->render("summarie", [
+            $params,
+            compact(
+                "depositTotal","titheTotal", "offerTotal", "outputTotal",
+                "titles", "outputDescription", "totalBalance","month","year"
+            )
+        ]);
     }
 
     public function previousMonthBalance(array $data): float
@@ -209,16 +209,21 @@ class Moviment extends Controller
         $outputTotal = 0;
         $titheTotal = 0;
         $offerTotal = 0;
-        foreach($vlr as $row) {
-            $output = formatReal($row["output"]);
-            $depositTotal += formatReal($row["deposit"]);
+        foreach ($vlr as $k => $row) {
+            $output = preg_match("/^output/", $k) ? formatReal($row) : 0;
+            $depositTotal += preg_match("/^deposit/", $k) ? formatReal($row) : 0;
             $outputTotal += $output;
             if($output > 0) {
-                $outputDescription[] = [$row["description"], $row["output"]];
+                $description  = $vlr['description-' . explode('-',$k)[1]];
+                $outputDescription[] = [$description, $output];
             }
 
-            $titheTotal += ($row["tithe_offer"] === "diz" ? formatReal($row["deposit"]) : 0);
-            $offerTotal += ($row["tithe_offer"] === "ofe" ? formatReal($row["deposit"]) : 0);
+            if (preg_match("/^tithe_offe/", $k) && $row === 'diz') {
+                $titheTotal += $vlr['deposit-' . explode('-',$k)[1]];
+            }
+            if (preg_match("/^tithe_offe/", $k) && $row === 'ofe') {
+                $offerTotal += $vlr['deposit-' . explode('-',$k)[1]];
+            }
         }
 
         return [
@@ -248,7 +253,7 @@ class Moviment extends Controller
             "dezembro" => "12"
         ];
 
-        return (is_numeric($name) ? array_search($name, $months) : (int) $months[$name]);
+        return is_numeric($name) ? array_search($name, $months) : (int) $months[$name];
     }
 
     private function prepareSql()

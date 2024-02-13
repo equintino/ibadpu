@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
     <head>
         <title><?= ( $head["title"] ?? "System Name" ) ?></title>
         <meta charset="UTF-8">

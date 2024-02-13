@@ -1,6 +1,7 @@
 import AbstractController from "./abstractController.js"
 import Documentation from "./documentation.js"
 import Membership from "./membership.js"
+import Moviment from "./moviment.js"
 import Occupation from "./occupation.js"
 
 export default class Menu extends AbstractController{
@@ -37,7 +38,8 @@ export default class Menu extends AbstractController{
                 scriptConfig()
                 break
             case "moviment": case "moviment/new": case "proof/init":
-                scriptMoviment()
+                const moviment = new Moviment()
+                moviment.initializer({ page })
                 break
             case "membership/init":
                 const membership = new Membership()

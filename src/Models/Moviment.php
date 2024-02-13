@@ -43,7 +43,7 @@ class Moviment extends Model implements Models
         return $find->fetchObject(__CLASS__);
     }
 
-    public function search(array $where)
+    public function search(array $where, $field = 'id')
     {
         $terms = "";
         $params = "";
@@ -53,7 +53,7 @@ class Moviment extends Model implements Models
         }
         $terms = substr($terms, 0, -3);
         $params = substr($params, 0, -1);
-        $data = $this->read("SELECT * FROM " . self::$entity . " WHERE {$terms} ", $params);
+        $data = $this->read("SELECT * FROM " . self::$entity . " WHERE {$terms} ORDER BY {$field}", $params);
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
