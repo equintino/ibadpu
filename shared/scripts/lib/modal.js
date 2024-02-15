@@ -7,7 +7,7 @@ export default class Modal {
     buttons = document.querySelector("#boxe_main #buttons")
     dialogue = document.querySelector("#div_dialogue")
 
-    closeEnable() {
+    closeEnable () {
         let closeEnable
         let that = this
         /** execute only once */
@@ -19,9 +19,9 @@ export default class Modal {
         }
     }
 
-    beforeSend() {}
+    beforeSend () {}
 
-    escapeEnable() {
+    escapeEnable () {
         let escapeEnable
         let that = this
         /** execute only once */
@@ -35,7 +35,7 @@ export default class Modal {
         }
     }
 
-    clickMaskEnable() {
+    clickMaskEnable () {
         let closeMaskEnable
         let that = this
         /** execute only once */
@@ -48,7 +48,7 @@ export default class Modal {
     }
 
     /** @var title, message, content */
-    show(params) {
+    show (params) {
         this.closeEnable()
         this.escapeEnable()
         this.clickMaskEnable()
@@ -85,7 +85,7 @@ export default class Modal {
         return this
     }
 
-    modal(params) {
+    modal (params) {
         loading.show({
             text: "loading..."
         })

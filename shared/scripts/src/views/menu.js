@@ -95,15 +95,18 @@ export default class View extends AbstractView {
     }
 
     showBirthmonth = (fn) => {
-        this.modal.show({
-            title: 'Aniversariantes do Mês',
-            content: fn('membership/birthmonth')
-        })
-        .styles({
-            element: '#boxe_main #content',
-            css: {
-                height: 'auto'
-            }
-        })
+        const response = fn('membership/birthmonth')
+        if (response !== '') {
+            this.modal.show({
+                title: 'Aniversariantes do Mês',
+                content: response
+            })
+            .styles({
+                element: '#boxe_main #content',
+                css: {
+                    height: 'auto'
+                }
+            })
+        }
     }
 }

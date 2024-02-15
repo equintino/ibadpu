@@ -166,10 +166,10 @@ class Membership extends Controller
 
     private function splitForMonth(\Models\Membership $membership): ?array
     {
-        foreach($membership->activeAll() as $membership) {
-            if($membership->birth_date) {
+        foreach ($membership->activeAll() as $membership) {
+            if ($membership->birth_date) {
                 $birthmonth = explode("-", $membership->birth_date);
-                switch($birthmonth[1]) {
+                switch ($birthmonth[1]) {
                     case "01":
                         $january[] = $membership;
                         break;
@@ -207,7 +207,6 @@ class Membership extends Controller
                         $dezember[] = $membership;
                         break;
                     default:
-                        null;
                 }
             }
         }
@@ -248,14 +247,18 @@ class Membership extends Controller
 
     private function sortingByDay($memberships)
     {
+        if (empty($memberships)) {
+            return [];
+        }
         $oldDay = 0;
-        foreach($memberships as $membership) {
-            $day = (int) explode("-",$membership->birth_date)[2];
+        foreach ($memberships as $membership) {
+            $day = (int) explode("-", $membership->birth_date)[2];
             $day = ($day === $oldDay ? $day + 1 : $day);
             $list[$day] = $membership;
             $oldDay = $day;
         }
-        ksort($list);
+
+        ksort ($list);
         return $list;
     }
 }

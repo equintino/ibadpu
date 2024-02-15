@@ -5,25 +5,62 @@ import Service from "./../services/meviment.js"
 export default class Moviment extends AbstractController {
     #view
     #service
-    listMembers
-    list
+    #listMembers
 
     initializer({ page }) {
         this.#view = new View()
         this.#service = new Service()
 
-        this.list = this.#getListMembers()
         this.#location({ page })
-        this.#btnForm()
     }
 
     #location({ page }) {
         if (page.indexOf('new') !== -1) {
-            this.#mask()
-            this.#selectInOut()
-            this.#preview()
-            this.#closingReport()
-            return
+            this.#view.mask()
+            this.#view.selectInOut({
+                validate: (data) => {
+                    return this.#validate(data)
+                },
+                getList: () => {
+                    return this.#getListMembers()
+                }
+            })
+            this.#view.preview({
+                getPage: (data) => {
+                    return this.getPage(data)
+                },
+                getList: () => {
+                    return this.#getListMembers()
+                },
+                evt: ({ btnName, formData }) => {
+                    if (btnName === 'save') {
+                        return this.getPage({
+                            url: 'moviment/update',
+                            method: 'POST',
+                            formData
+                        })
+                    }
+                    if (btnName === 'summary') {
+                        return this.getPage({
+                            url: 'moviment/summarie',
+                            method: 'POST',
+                            formData
+                        })
+                    }
+                    if (btnName === 'delete') {
+                        return this.getPage({
+                            url: 'moviment/delete/' + formData.get('id'),
+                            method: 'POST'
+                        })
+                    }
+                }
+            })
+            this.#view.btnForm({
+                submit: (formData) => {
+                    return this.#submit(formData)
+                }
+            })
+            return this.#closingReport()
         }
         if (page.indexOf('proof') !== -1) {
             return alert('proof')
@@ -31,339 +68,49 @@ export default class Moviment extends AbstractController {
         return alert('relatório')
     }
 
-    #mask() {
-        /* Máscaras ER */
-        // function mascara( str,fn ){
-        //     let v_obj = str
-        //     let v_fun = fn
-        //     setTimeout(execmascara(v_obj, v_fun), 1)
-        // }
-
-        // function execmascara(v_obj, v_fun){
-        //     return v_fun(v_obj)
-        // }
-
-        // function mtel(v){
-        //     v = v.replace(/D/g,""); //Remove tudo o que não é dígito
-        //     console.log(
-        //         v
-        //     )
-        //     return
-        //     v = v.replace(/^(d{2})(d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
-        //     v = v.replace(/(d)(d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
-        //     return v;
-        // }
-
-        // // function id( el ){
-        // //     return document.getElementById( el );
-        // // }
-        // // window.onload = function(){
-        // //     id('telefone').onkeypress = function(){
-        // //         mascara( this, mtel );
-        // //     }
-        // // }
-
-
-        // let day = document.querySelector('form [name=day]')
-        // let money = document.querySelector('form [name=value]')
-        // day.focus()
-
-        // money.onkeyup = (e) => {
-        //     let value = e.target.value
-        //     console.log(
-        //         value.replace(/\d{2}/, '$1'),
-        //         // value.replace(/\D/g, '')
-        //     )
-        // }
-
-        // const cpf = '12345679810'
-
-        // const cpfFormatado = cpf.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{2})/, "$1.$2.$3-$4")
-
-        $("#moviment form [name=day]").mask("#0").focus()
-        $("#moviment form [name=value]").mask("#.##0,00", { reverse: true })
+    #getListMembers () {
+        return JSON.parse(
+                this.getPage({
+                url: 'membership/list',
+                method: 'POST'
+            })
+        )
     }
 
-    #selectInOut() {
-        const type = document.querySelector('#type').style
-        const proof = document.querySelector('#proof').style
-        type.display = 'none'
-        proof.display = 'none'
-
-        document.querySelector('#moviment select[name=in_out]').onchange = (e) => {
-            const value = e.target.value
-
-            if (value == 'deposit') {
-                type.display = 'block'
-                proof.display = 'none'
-
-                document.querySelector('#moviment #type').onclick = (e) => {
-                    const checked = e.target.value
-                    if (checked == 'ofe') {
-                        document.querySelector('#description').innerText = 'OFERTA'
-                    } else if (checked == 'diz') {
-                        document.querySelector("#description").innerHTML = this.list
-                    }
-                }
-            } else if (value == 'output') {
-                type.display = 'none'
-                proof.display = 'block'
-                document.querySelector('#description').innerText = ''
-                document.querySelector('#description').innerHTML = '<input required type="text"name="description" />'
-                this.#validate()
-            }
+    #validate(data) {
+        let ext = data.files[0].type.split('/').pop()
+        let extValid = [ 'pdf', 'jpeg', 'png', 'jpg' ]
+        if (extValid.indexOf(ext) === -1) {
+            this.#view.message.text('<span class="warning">This file is not allowed</span>')
+            return false
         }
+        return true
     }
 
-    #validate() {
-        document.querySelector('#moviment [type=file]').onchange = (e) => {
-            let ext = e.target.files[0].type.split('/').pop()
-            let extValid = [ 'pdf', 'jpeg', 'png', 'jpg' ]
-            if (extValid.indexOf(ext) === -1) {
-                this.#view.message.text('<span class="warning">This file is not allowed</span>')
-                e.target.value = null
-            }
-        }
-    }
-
-    #btnForm() {
-        const form = document.querySelector('#moviment form')
-        form.onsubmit = (e) => {
-            e.preventDefault()
-            this.#submit(form)
-        }
-        document.querySelectorAll('#moviment .buttons button').forEach((btn) => {
-            btn.onclick = (e) => {
-                const btnName = e.target.value
-                if (btnName === 'clear') {
-                    form.querySelector('[name=day]').focus()
-                    return form.reset()
-                }
-                this.#submit(form)
-            }
-        })
-        form.onkeyup = (e) => {
-            if (e.which === 13) {
-                this.#submit(form)
-            }
-        }
-    }
-
-    #submit(form) {
-        const formData = new FormData(form)
-        const required = form.querySelectorAll('[required]')
-        for (let i of required) {
-            if (!i.value) {
-                i.style.background = 'pink'
-                this.#view.message.text("<span class='warning'>The field or fields are requireds</span>")
-                return i.focus()
-            }
-        }
-        const response = this.getPage({
+    #submit(formData) {
+        return this.getPage({
             url: 'moviment/add',
             method: 'POST',
             formData
         })
-        if (response.indexOf('success') !== -1) {
-            form.reset()
-            form.querySelector('[name=day]').focus()
-            form.querySelectorAll('[required]').forEach((e) => {
-                e.style.background = 'white'
-            })
-            this.#view.message.text("Data saved successfuly")
-        }
     }
 
-    #preview() {
-        let moviment = this
-        document.querySelector("#moviment [value=preview]").onclick = (e) => {
-            const month = document.querySelector('form [name=month]').value
-            const year = document.querySelector('form [name=year]').value
-            const url = "moviment/" + year + "/" + month
-            let response = this.getPage({
-                url,
-                method: 'POST'
-            })
-
-            response = JSON.parse(response)
-            let changes = []
-            if (response !== null) {
-                let table = moviment.mountingTableBalance(response, true)
-                this.#view.modal.show({
-                    title: "MOVIMENTAÇÃO FINANCEIRA DE " + month.toUpperCase() + " DE " + year,
-                    message: table,
-                    buttons: "<button class='button btn-info' value='summary'>Resumo</button><button class='button btn-danger' value='save'>Salvar Alterações</button>"
+    #closingReport() {
+        this.#view.closingReport({
+            fn: ({ formData, getPage }) => {
+                return this.getPage({
+                    url: 'moviment/save',
+                    method: 'POST',
+                    formData
                 })
-                .styles({
-                    elements: "input, select",
-                    css: {
-                        background: "#e9e98c none repeat scroll 0% 0%",
-                        "font-size": "1em"
-                    }
-                })
-                this.#view.modal.message.onchange = (e) => {
-                    changes.push({
-                        id: e.target.parentElement.parentElement.attributes['data-id'].value,
-                        name: e.target.name,
-                        value: e.target.value
-                    })
-                }
-                this.#view.modal.buttons.onclick = (e) => {
-                    const btnName = e.target.value
-                    if (btnName === 'save') {
-                        if (changes.length === 0) return this.#view.message.text("<span class='warning'>There were no changes</span>")
-                        const formData = new FormData()
-                        formData.append('changes', JSON.stringify(changes))
-                        const response = this.getPage({
-                            url: 'moviment/update',
-                            method: 'POST',
-                            formData
-                        })
-                        this.#view.message.text(response)
-                        if (response.indexOf('success') !== -1) this.#view.modal.hideContent()
-                    } else if(btnName === "summary") {
-                        const form = this.#view.modal.message.querySelector('form')
-                        const formData = new FormData(form)
-                        formData.append('year', year)
-                        formData.append('month', month)
-                        this.#view.modal.modal({
-                            html: this.getPage({
-                                url: 'moviment/summarie',
-                                method: 'POST',
-                                formData
-                            })
-                        })
-                    }
-                }
-
-                /** Mask */
-                document.querySelectorAll('#boxe_main table tbody input').forEach((e) => {
-                    if (e.name.indexOf('day') !== -1) {
-                        $(e).mask('#0')
-                    }
-                    if (e.name.indexOf('deposit') !== -1 || e.name.indexOf('output') !== -1) {
-                        $(e).mask('#.##0,#0', { reverse: true })
-                    }
-                })
-
-                const event = new Event('click')
-                document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
-                    del.onclick = (e) => {
-                        let tr = e.target.parentElement.parentElement
-                        let id = tr.attributes['data-id'].value
-                        tr.style.background = 'pink'
-
-                        const conf = this.#view.modal.confirm({
-                            message: 'Deseja realmente excluir a linha selecionada?'
-                        })
-                        conf.onclick = btn => {
-                            if (btn.target.value == 1) {
-                                const response = this.getPage({
-                                    url: 'moviment/delete/' + id,
-                                    method: 'POST'
-                                })
-                                if (response.indexOf('success') !== -1) {
-                                    document.querySelector('#moviment [value=preview]').dispatchEvent(event)
-                                }
-                                this.#view.message.text(response)
-                            }
-                            tr.style.background = 'white'
-                        }
-                        document.onkeydown = (e) => {
-                            if (e.code === 'Escape') tr.style.background = 'white'
-                        }
-                        this.#view.modal.mask.onclick = () => {
-                            this.#view.modal.hideContent()
-                            tr.style.background = 'white'
-                        }
-                    }
-                })
-
-                /** Change tithe_offer */
-                let listDiz
-                this.#view.modal.message.querySelectorAll('form table select').forEach((select) => {
-                    if (select.name.indexOf('tithe_offer') !== -1 && select.value === 'diz') {
-                        if (typeof(listDiz) === 'undefined') {
-                            listDiz = select.parentElement.previousSibling.innerHTML
-                        }
-                    }
-                    select.onchange = (e) => {
-                        if (e.target.name.indexOf('tithe_offer') !== -1) {
-                            let type = e.target.value
-                            if (type === 'diz') {
-                                e.target.parentElement.previousSibling.innerHTML = listDiz
-                            } else {
-                                e.target.parentElement.previousSibling.innerHTML = 'OFERTA'
-                            }
-                        }
-                    }
-                })
+            },
+            getPage: (data) => {
+                return this.getPage(data)
+            },
+            callScript: () => {
+                this.#location({ page: 'moviment' })
             }
-        }
-    }
-
-    #getListMembers(selected, memberList, i) {
-        let list = "<select class='select' name='description-" + i + "' >";
-        memberList = (
-            typeof memberList === "undefined" ?
-                loadData("membership/list")
-                : memberList
-        )
-        if (memberList !== null) {
-            for (let member of memberList) {
-                list += "<option value='" + member + "' " + (member === selected ? 'selected' : '') + " >" + member + "</option>";
-            }
-            list += "</select>";
-        }
-        this.listMembers = memberList;
-        return list
-    }
-
-    mountingTableBalance (data, edit=false) {
-        let table = "<form><table class='my-table'><thead align='center'><th>DIA</th><th style='text-align:left'>DESCRIÇÃO</th><th>DÍZIMO/OFERTA</th><th>ENTRADA</th><th>SAÍDA</th><th>SALDO</th><th><i class='fa fa-trash mr-2'></i></th></thead><tbody>"
-        let subtotal = 0
-        for (let i in data) {
-            if (i == 0) {
-                subtotal += parseFloat(data[i].previousMonthBalance)
-                table += "<tr><td align='center'>01</td><td>SALDO DO MÊS ANTERIOR</td><td></td><td></td><td></td><td align='right'>" + moeda(subtotal) + "</td></tr>"
-                table += "<input type='hidden' name='previousMonthBalance' value=" + subtotal + "' />"
-            } else {
-                subtotal += valReal(data[i].deposit) - valReal(data[i].output)
-                /** Editable values */
-                let day = (edit ? "<input class='input' type='text' size='1' value='" + getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />" : getYearMonthDay(data[i].date, 2))
-                let description = (edit ? this.#getListMembers(data[i].description, this.listMembers, i) : data[i].description)
-                let diz = ""
-                let ofe = ""
-                if (data[i].tithe_offer === "diz") {
-                    diz = "selected"
-                } else if (data[i].tithe_offer === "ofe") {
-                    ofe = "selected"
-                    description = "OFERTA"
-                } else {
-                    description = (edit ? "<input class='input' type='text' value='" + data[i].description + "' name='description-" + i + "' />" : data[i].description)
-                }
-                let tithe_offer = (edit ? "<select class='select' name='tithe_offer-" + i + "' style='text-align: center'><option value=''></option><option value='diz' " + diz + ">diz</option><option value='ofe' " + ofe + " >ofe</option></select>" : data[i].tithe_offer)
-                let deposit = (edit && data[i].deposit != '0,00' ? "<input class='input' type='text' name='deposit-" + i + "' value='" + data[i].deposit + "'style='text-align: right'/>" : data[i].deposit)
-                let output = ""
-                if (edit && data[i].output != "0,00") {
-                    output = "<input class='input' type='text' name='output-" + i + "' value='" + data[i].output + "' style='text-align: right'/>"
-                } else if (data[i].proof_id != null) {
-                    output = "<a href='" + data[i].proof_id + "' >" + data[i].output + "</a>"
-                } else if (data[i].output != "0,00") {
-                    output = data[i].output
-                }
-
-                table += "<tr data-id='" + data[i].id + "'><td align='center'>" + day + "</td>"
-                table += "<td>" + (description ?? '') + "</td>"
-                table += "<td align='center'>" + (data[i].tithe_offer ? tithe_offer : "") + "</td>"
-                table += "<td align='right'>" + (valReal(deposit) != 0 ? deposit : "") + "</td>"
-                table += "<td align='right'>" + (valReal(output) != 0 ? output : "") + "</td>"
-                table += "<td align='right' style='text-align: right'>" + moeda(subtotal) + "</td>"
-                table += (edit ? "<td class='delete' style='color: red'><i class='fa fa-times' title='Excluir esta linha' ></i></td></tr>" : "</tr>")
-            }
-        }
-        table += "</tbody></table></form>"
-        return table
+        })
     }
 
     #pagination() {
@@ -458,37 +205,6 @@ export default class Moviment extends AbstractController {
                 }).styles();
             }
         });
-    }
-
-    #closingReport() {
-        document.querySelector("#moviment [value=conclude]").onclick = () => {
-            const formData = new FormData()
-            let data = {
-                month: document.querySelector("#moviment form [name=month]").value,
-                year: document.querySelector("#moviment form [name=year]").value
-            }
-            formData.append('data', JSON.stringify(data))
-            const conf  = this.#view.modal.confirm({
-                title: "Fechamento do relatório",
-                message: "Deseja realmente fechar o relatório?"
-            })
-            this.#view.modal.mask.style.zIndex = '2'
-            conf.onclick = (btn) => {
-                if (btn.target.value == 1) {
-                    const response = this.getPage({
-                        url: 'moviment/save',
-                        method: 'POST',
-                        formData
-                    })
-                    if (response.indexOf('success') !== -1) {
-                        this.#view.showPage({
-                            page: this.getPage({ url: 'moviment' }),
-                            fn: () => this.#location({ page: 'moviment' })
-                        })
-                    }
-                }
-            }
-        }
     }
 
     #proof() {

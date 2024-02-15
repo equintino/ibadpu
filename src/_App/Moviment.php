@@ -59,11 +59,17 @@ class Moviment extends Controller
         } else {
             $data["output"] = "0.0";
         }
+        foreach ($data as $k => $v) {
+            if (preg_match("/^description/", $k)) {
+                $data['description'] = $v;
+                unset($data[$k]);
+            }
+        }
         unset($data["day"], $data["in_out"], $data["value"]);
         $moviment->bootstrap($data);
         $moviment->save();
 
-        return print(json_encode($moviment->message()));
+        return print $moviment->message();
     }
 
     public function save(array $data)
@@ -98,7 +104,7 @@ class Moviment extends Controller
         $balance->bootstrap($dataBalance);
         $balance->save();
 
-        return print json_encode($balance->message());
+        return print $balance->message();
     }
 
     public function update(array $data): string

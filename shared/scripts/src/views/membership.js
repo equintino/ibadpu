@@ -30,12 +30,6 @@ export default class Membership extends AbstractView {
                         content: getPage({ url: 'membership/register/' + memberId }),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
-                    .styles({
-                        element: '#boxe_main #content',
-                        css: {
-                            height: '450px'
-                        }
-                    })
                     this.modal.buttons.onclick = () => {
                         const form  = this.modal.content.querySelector('form')
                         const files = form.querySelectorAll('[type=file]')
@@ -75,12 +69,6 @@ export default class Membership extends AbstractView {
                 content: getPage({ url: 'membership/register/0' }),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
-            .styles({
-                element: '#boxe_main #content',
-                css: {
-                    height: '450px'
-                }
-            })
             this.modal.buttons.onclick = () => {
                 const form  = this.modal.content.querySelector('form')
                 const files = form.querySelectorAll('[type=file]')
@@ -115,12 +103,6 @@ export default class Membership extends AbstractView {
                 callback: () => {
                     let btnEdit = this.modal.content.querySelectorAll('button')
                     this.#openModal({ btnEdit }, fn, getPage)
-                }
-            })
-            .styles({
-                element: '#boxe_main #content',
-                css: {
-                    height: '450px'
                 }
             })
         }
@@ -234,13 +216,6 @@ export default class Membership extends AbstractView {
                     }
                 }
             })
-            .styles({
-                element: "#boxe_main #content",
-                    css: {
-                        height: "450px",
-                        display: 'block'
-                    }
-            })
         }
         document.querySelectorAll('.certificate').forEach((btn) => {
             btn.onclick = (e) => {
@@ -251,6 +226,7 @@ export default class Membership extends AbstractView {
                         message: "Deseja selecionar mais um certificado?",
                         buttons: "<button class='button cancel' value='0'>NÃO</button><button class='button error' value='1' style='margin-left: 3px'>SIM</button>"
                     })
+                    this.modal.mask.style.zIndex = '2'
                     conf.onclick = btn => {
                         ids.push(id)
                         if (btn.target.value == 0) {
