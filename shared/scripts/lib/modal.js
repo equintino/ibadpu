@@ -26,6 +26,10 @@ export default class Modal {
         Loading.show()
     }
 
+    async afterSend () {
+        await Loading.hide()
+    }
+
     escapeEnable () {
         let escapeEnable
         let that = this
@@ -74,8 +78,6 @@ export default class Modal {
             this.content.style.display = 'block'
             if (params.callback != null) params.callback()
             this.complete()
-        } else {
-            Loading.hide()
         }
 
         if (params.buttons != null) {
@@ -88,6 +90,7 @@ export default class Modal {
         this.nameModal.style.display = 'flex'
         this.nameModal.top = 0
 
+        this.afterSend()
         return this
     }
 
@@ -104,8 +107,6 @@ export default class Modal {
         if (params.content != null) {
             this.dialogue.querySelector("#content").innerHTML = params.content
             this.dialogue.querySelector("#content").style.display = 'block'
-        } else {
-            Loading.hide()
         }
 
         if (params.html != null) {
@@ -136,6 +137,7 @@ export default class Modal {
         })
 
         this.complete()
+        this.afterSend()
         return this
     }
 
@@ -170,13 +172,29 @@ export default class Modal {
             this.dialogue.querySelector("#buttons").innerHTML = ''
             this.mask.style.zIndex = "2"
         } else {
-            this.title.style.display = 'none',
-            this.message.style.display = 'none',
-            this.content.style.display = 'none',
-            this.buttons.style.display = 'none',
-            this.nameModal.style.display = 'none',
-            this.dialogue.style.display = 'none',
-            this.mask.style.display= 'none'
+            const dialogue = [
+                this.dialogue.querySelector("#title"),
+                this.dialogue.querySelector("#message"),
+                this.dialogue.querySelector("#content"),
+                this.dialogue.querySelector("#buttons")
+            ]
+            .forEach((e) => {
+                e.innerHTML = ''
+                e.style.display = 'none'
+            })
+            this.dialogue.style.display = 'none'
+
+            const box = [
+                this.title,
+                this.message,
+                this.content,
+                this.buttons,
+                this.mask
+            ]
+            .forEach((e) => {
+                e.style.display = 'none'
+                e.innerHTML = ''
+            })
         }
     }
 
@@ -201,7 +219,7 @@ export default class Modal {
         this.dialogue.querySelectorAll("button").forEach((e) => {
             e.onclick = btn => this.hideContent()
         })
-        Loading.hide()
+        this.afterSend()
         return this.dialogue.querySelector('#buttons')
     }
 
@@ -268,22 +286,22 @@ export default class Modal {
         })
     }
 
-    open (params) {
-        this.beforeSend()
-        this.closeEnable()
-        if (params.title != null) this.title.html(params.title).show()
-        if (params.message != null) this.message.html(params.message).show()
-        if (params.content != null) this.content.load(params.content, () => {
-            Loading.hide()
-        })
-        .show()
+    // open (params) {
+    //     this.beforeSend()
+    //     this.closeEnable()
+    //     if (params.title != null) this.title.html(params.title).show()
+    //     if (params.message != null) this.message.html(params.message).show()
+    //     if (params.content != null) this.content.load(params.content, () => {
+    //         Loading.hide()
+    //     })
+    //     .show()
 
-        this.mask.fadeIn()
-        this.nameModal.fadeIn().css({
-            display: "flex",
-            top: 0
-        })
+    //     this.mask.fadeIn()
+    //     this.nameModal.fadeIn().css({
+    //         display: "flex",
+    //         top: 0
+    //     })
 
-        return this
-    }
+    //     return this
+    // }
 }

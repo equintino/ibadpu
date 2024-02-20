@@ -156,9 +156,7 @@ export default class Membership extends AbstractView {
     #badge(getPage) {
         const formData = new FormData()
         document.querySelector('.cart').onclick = () => {
-            this.loading.show()
             if (document.querySelector('#selected').innerText === '0') {
-                this.loading.hide()
                 return this.message.text('Select at least one cart', 'var(--cor-warning)')
             }
             formData.append('members_ids', this.membersIds)
@@ -167,7 +165,6 @@ export default class Membership extends AbstractView {
                 content: getPage({ url: 'wallet', formData, method: 'POST' }),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
-                    this.loading.hide()
                     this.modal.buttons.onclick = (e) => {
                         const btnName = e.target.value
                         if (btnName === 'close') return this.modal.close()

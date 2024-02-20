@@ -229,7 +229,7 @@ class Moviment extends Controller
             $outputTotal += $output;
             if($output > 0) {
                 $description  = $vlr['description-' . explode('-',$k)[1]];
-                $outputDescription[] = [$description, $output];
+                $outputDescription[] = [$description, formatCurrency($output)];
             }
 
             if (preg_match("/^tithe_offe/", $k) && $row === 'diz') {

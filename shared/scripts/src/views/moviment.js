@@ -228,7 +228,11 @@ export default class Moviment extends AbstractView {
                 const event = new Event('click')
                 document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
                     del.onclick = (e) => {
-                        let tr = e.target.parentElement.parentElement
+                        let tr = (
+                            e.target.tagName === 'I' ?
+                                e.target.parentElement.parentElement
+                                : e.target.parentElement
+                        )
                         let id = tr.attributes['data-id'].value
                         tr.style.background = 'pink'
 
@@ -295,6 +299,7 @@ export default class Moviment extends AbstractView {
             conf.onclick = (btn) => {
                 if (btn.target.value == 1) {
                     const response = fn({ formData })
+                    this.modal.hideContent()
                     if (response.indexOf('success') !== -1) {
                         this.showPage({
                             page: getPage({ url: 'moviment' }),
