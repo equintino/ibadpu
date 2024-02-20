@@ -6,11 +6,6 @@ class Impression extends Controller
 {
     protected $page = "imprression";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $depositTotal = 0;
@@ -23,15 +18,15 @@ class Impression extends Controller
 
         $movimentDb = new \Models\Moviment();
         $search = [
-            "month" => $data["month"],
+            "month" => monthToNumber($data["month"]),
             "year" => $data["year"]
         ];
 
-        foreach($movimentDb->search($search) as $row) {
+        foreach ($movimentDb->search($search) as $row) {
             $output = $row->output;
             $depositTotal += $row->deposit;
             $outputTotal += $output;
-            if($output > 0) {
+            if ($output > 0) {
                 $outputDescription[] = [ $row->description, formatCurrency($row->output) ];
             }
 
@@ -40,19 +35,22 @@ class Impression extends Controller
         }
 
         $totalBalance = formatCurrency($depositTotal - $outputTotal + $previousMonthBalance);
-        $month = strtoupper(monthToNumber($data["month"], true));
+        $month = $data["month"];
         $year = $data["year"];
         $titles = [ "DESCRIÇÃO","ENTRADA","SAÍDA" ];
         $titheTotal = formatCurrency($titheTotal);
         $offerTotal = formatCurrency($offerTotal);
         $depositTotal = formatCurrency($depositTotal);
         $outputTotal = formatCurrency($outputTotal);
-        $this->view->setPath("Modals")->render("impression", [ compact("depositTotal","titheTotal", "offerTotal", "outputTotal", "titles", "outputDescription", "totalBalance","month","year") ]);
+        $this->view->setPath("Modals")->render("impression", [
+            compact("depositTotal","titheTotal", "offerTotal",
+            "outputTotal", "titles", "outputDescription", "totalBalance",
+            "month","year")
+        ]);
     }
 
     public function previousPrint(array $data): void
     {
-        var_dump($data);
         $this->view->setPath("Modals")->render("impression", [ $data ]);
     }
 
@@ -72,6 +70,6 @@ class Impression extends Controller
             "novembro" => "11",
             "dezembro" => "12"
         ];
-        return ($key ? array_search($name, $months) : (int) $months[$name]);
+        return $key ? array_search($name, $months) : (int) $months[$name];
     }
 }

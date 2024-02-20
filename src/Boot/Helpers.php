@@ -96,7 +96,10 @@ function filterNullException($array, $except)
 
 function formatReal(string $value): float
 {
-    return str_replace(",",".",str_replace(".","",$value));
+    if (preg_match('/,/',$value)) {
+        return str_replace(",",".", str_replace(".","",$value));
+    }
+    return $value;
 }
 
 function formatCurrency($val): string

@@ -68,7 +68,8 @@
    if(empty($act)): ?>
       <hr style="border: 1px solid gray" />
       <button data-name="preview" class="mr-2" style="padding: 5px; border-radius: 20px"><i class="fa fa-arrow-left"></i></button>
-      <span id="current-page" data-limit="<?= (!empty($params[0]) ? count($params[0]) < $limit : 0) ?>"><?= $pageNumber ?></span>
+      <!-- <span id="current-page" data-limit="<?= (!empty($params[0]) ? count($params[0]) < $limit : 0) ?>"><?= $pageNumber ?></span> -->
+      <span id="current-page" data-limit="<?= $totalPage ?>"><?= $pageNumber ?></span>
       <button data-name="next" style="padding: 5px; border-radius: 20px" >
       <i class="fa fa-arrow-right"></i></button>
    <?php endif ?>

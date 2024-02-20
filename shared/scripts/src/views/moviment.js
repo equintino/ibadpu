@@ -1,3 +1,5 @@
+import Loading from "../../lib/loading.js"
+import MountingMovimentTable from "../../lib/mountMovimentTable.js"
 import AbstractView from "./abstractView.js"
 
 export default class Moviment extends AbstractView {
@@ -7,8 +9,7 @@ export default class Moviment extends AbstractView {
         let list = "<select class='select' name='description-" + i + "' >"
         let _memberList = (
             typeof(this.memberList) === "undefined" ?
-                getList()
-                : this.memberList
+                getList() : this.memberList
         )
         list += "<option value=0></option>"
         if (_memberList !== null) {
@@ -19,54 +20,6 @@ export default class Moviment extends AbstractView {
         }
         this.memberList = _memberList
         return list
-    }
-
-    mountingTableBalance (data, getList, edit=false) {
-        let table = "<form><table class='my-table'><thead align='center'><th>DIA</th><th style='text-align:left'>DESCRIÇÃO</th><th>DÍZIMO/OFERTA</th><th>ENTRADA</th><th>SAÍDA</th><th>SALDO</th><th><i class='fa fa-trash mr-2'></i></th></thead><tbody>"
-        let subtotal = 0
-        for (let i in data) {
-            if (i == 0) {
-                subtotal += parseFloat(data[i].previousMonthBalance)
-                table += "<tr><td align='center'>01</td><td>SALDO DO MÊS ANTERIOR</td><td></td><td></td><td></td><td align='right'>" + moeda(subtotal) + "</td></tr>"
-                table += "<input type='hidden' name='previousMonthBalance' value=" + subtotal + "' />"
-            } else {
-                subtotal += valReal(data[i].deposit) - valReal(data[i].output)
-                /** Editable values */
-                let day = (edit ? "<input class='input' type='text' size='1' value='" + getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />" : getYearMonthDay(data[i].date, 2))
-                let description
-                let diz = ""
-                let ofe = ""
-                if (data[i].tithe_offer === "diz") {
-                    diz = "selected"
-                    description = (edit ? this.listMembers(data[i].description, getList, i) : data[i].description)
-                } else if (data[i].tithe_offer === "ofe") {
-                    ofe = "selected"
-                    description = "OFERTA"
-                } else {
-                    description = (edit ? "<input class='input' type='text' value='" + data[i].description + "' name='description-" + i + "' />" : data[i].description)
-                }
-                let tithe_offer = (edit ? "<select class='select' name='tithe_offer-" + i + "' style='text-align: center'><option value=''></option><option value='diz' " + diz + ">diz</option><option value='ofe' " + ofe + " >ofe</option></select>" : data[i].tithe_offer)
-                let deposit = (edit && data[i].deposit != '0,00' ? "<input class='input' type='text' name='deposit-" + i + "' value='" + data[i].deposit + "'style='text-align: right'/>" : data[i].deposit)
-                let output = ""
-                if (edit && data[i].output != "0,00") {
-                    output = "<input class='input' type='text' name='output-" + i + "' value='" + data[i].output + "' style='text-align: right'/>"
-                } else if (data[i].proof_id != null) {
-                    output = "<a href='" + data[i].proof_id + "' >" + data[i].output + "</a>"
-                } else if (data[i].output != "0,00") {
-                    output = data[i].output
-                }
-
-                table += "<tr data-id='" + data[i].id + "'><td align='center'>" + day + "</td>"
-                table += "<td>" + (description ?? '') + "</td>"
-                table += "<td align='center'>" + (data[i].tithe_offer ? tithe_offer : "") + "</td>"
-                table += "<td align='right'>" + (valReal(deposit) != 0 ? deposit : "") + "</td>"
-                table += "<td align='right'>" + (valReal(output) != 0 ? output : "") + "</td>"
-                table += "<td align='right' style='text-align: right'>" + moeda(subtotal) + "</td>"
-                table += (edit ? "<td class='delete' style='color: red'><i class='fa fa-times' title='Excluir esta linha' ></i></td></tr>" : "</tr>")
-            }
-        }
-        table += "</tbody></table></form>"
-        return table
     }
 
     mask() {
@@ -209,15 +162,14 @@ export default class Moviment extends AbstractView {
             const url = "moviment/" + year + "/" + month
             this.memberList = getList()
             let response = getPage({
-                url,
-                method: 'POST'
+                url, method: 'POST'
             })
 
-            response = JSON.parse(response)
             let changes = []
             const formData = new FormData()
             if (response !== null) {
-                let table = this.mountingTableBalance(response, getList, true)
+                const mountingMovimentTable = new MountingMovimentTable({ data: response, edition: true })
+                const table = mountingMovimentTable.mountingMovimentTable({ getList })
                 this.modal.show({
                     title: "MOVIMENTAÇÃO FINANCEIRA DE " + month.toUpperCase() + " DE " + year,
                     message: table,
@@ -252,7 +204,7 @@ export default class Moviment extends AbstractView {
                         const response = evt({ btnName, formData })
                         this.message.text(response)
                         if (response.indexOf('success') !== -1) this.modal.hideContent()
-                    } else if(btnName === "summary") {
+                    } else if (btnName === "summary") {
                         const form = this.modal.message.querySelector('form')
                         const formData = new FormData(form)
                         formData.append('year', year)
@@ -269,7 +221,7 @@ export default class Moviment extends AbstractView {
                         $(e).mask('#0')
                     }
                     if (e.name.indexOf('deposit') !== -1 || e.name.indexOf('output') !== -1) {
-                        $(e).mask('#.##0,#0', { reverse: true })
+                        $(e).mask('#0.##0,#0', { reverse: true })
                     }
                 })
 
@@ -343,11 +295,6 @@ export default class Moviment extends AbstractView {
             conf.onclick = (btn) => {
                 if (btn.target.value == 1) {
                     const response = fn({ formData })
-                    // const response = this.getPage({
-                    //     url: 'moviment/save',
-                    //     method: 'POST',
-                    //     formData
-                    // })
                     if (response.indexOf('success') !== -1) {
                         this.showPage({
                             page: getPage({ url: 'moviment' }),
@@ -357,5 +304,130 @@ export default class Moviment extends AbstractView {
                 }
             }
         }
+    }
+
+    pagination ({ getPage, callScript }) {
+        document.querySelectorAll("#moviment button").forEach((arrow) => {
+            arrow.onclick = (e) => {
+                const tagName = e.target.tagName
+                const btnName = tagName === 'BUTTON' ?
+                    e.target.attributes['data-name'].value :
+                    e.target.parentElement.attributes['data-name'].value
+
+                const maxPage = document.querySelector('#current-page').attributes['data-limit'].value
+                let prevNext = (btnName === "next" ? 1 : -1)
+                let currentPage = parseInt(document.querySelector('#current-page').innerText) + prevNext
+
+                if (typeof(btnName) !== "undefined") {
+                    if (maxPage < currentPage && btnName === "next" || btnName === "preview" && currentPage === 0) {
+                        e.target.parentElement.disabled = true
+                        return
+                    }
+                    currentPage = (currentPage !== 0 ? currentPage : 1)
+                    document.querySelector("#current-page").innerText = currentPage
+                    document.querySelector('.content').innerHTML = getPage({
+                        url: 'moviment/pagination/' + currentPage,
+                        method: 'GET'
+                    })
+                    callScript()
+                }
+            }
+        })
+    }
+
+    openReport({ getPage, getList }) {
+        document.querySelectorAll('#moviment a').forEach((a) => {
+            a.onclick = (e) => {
+                const year = a.attributes['data-year'].value
+                const month = a.attributes['data-month'].value
+                let response = getPage({
+                    url: 'moviment/' + year + '/' + month,
+                    method: 'POST'
+                })
+                if (response !== null) {
+                    const mountingMovimentTable = new MountingMovimentTable({ data: response, edition: false })
+                    const table = mountingMovimentTable.mountingMovimentTable({ getList })
+
+                    this.modal.show({
+                        title: 'MOVIMENTAÇÃO FINANCEIRA DE ' + month.toUpperCase() + ' DE ' + year,
+                        message: table,
+                        buttons: "<button class='button btn-danger'>Resumo</button>"
+                    })
+
+                    /** Open proof */
+                    this.#openProof()
+
+                    this.modal.buttons.onclick = () => {
+                        const form = this.modal.message.querySelector('form')
+                        const formData = new FormData(form)
+                        formData.append('year', year)
+                        formData.append('month', month.toUpperCase())
+                        this.#summarie({ getPage, formData })
+                    }
+                }
+            }
+        })
+    }
+
+    #openProof () {
+        document.querySelectorAll("#boxe_main a").forEach((e) => {
+            e.onclick = (evt) => {
+                evt.preventDefault()
+                let id = e.attributes['href'].value
+                window.open("proof/show/id/" + id)
+            }
+        })
+    }
+
+    #summarie ({ getPage, formData }) {
+        this.modal.modal({
+            html: getPage({
+                url: 'moviment/summarie',
+                method: 'POST',
+                formData
+            }),
+            buttons: "<button class='button btn-default mr-1' value='close'>Fechar</button><button class='button btn-danger' value='print'>Visualizar Impressão</button>",
+            callback: () => {
+                this.modal.dialogue.querySelectorAll('button').forEach((btn) => {
+                    btn.onclick = (e) => {
+                        const btnName = e.target.value
+                        if(btnName === "close") {
+                            document.querySelector("#div_dialogue #content").innerHTML = ""
+                            document.querySelector("#div_dialogue").style.display = 'none'
+                            document.querySelector("#mask_main").style.zIndex = 2
+                        } else {
+                            this.#printPreview({ getPage, formData })
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    #printPreview ({ formData, getPage }) {
+        this.modal.new({
+            content: getPage({
+                url: "impression",
+                method: 'POST',
+                formData
+            }),
+            box: "box_print",
+            buttons: "<button class='button btn-default mr-1' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
+            callback: () => {
+                this.modal.mask.style.zIndex = "5"
+                this.modal.mask.onclick = evt => evt.preventDefault()
+
+                document.querySelector('#box_print #buttons').onclick = (btn) => {
+                    const btnName = btn.target.value
+                    if (btnName === 'print') return window.print()
+                    if (btnName === 'close') {
+                        this.modal.mask.style.zIndex = '4'
+                        document.querySelector('#box_print').remove()
+                        this.modal.clickMaskEnable()
+                        Loading.hide()
+                    }
+                }
+            }
+        })
     }
 }

@@ -7,14 +7,14 @@ export default class Moviment extends AbstractController {
     #service
     #listMembers
 
-    initializer({ page }) {
+    initializer ({ page }) {
         this.#view = new View()
         this.#service = new Service()
 
         this.#location({ page })
     }
 
-    #location({ page }) {
+    #location ({ page }) {
         if (page.indexOf('new') !== -1) {
             this.#view.mask()
             this.#view.selectInOut({
@@ -65,7 +65,22 @@ export default class Moviment extends AbstractController {
         if (page.indexOf('proof') !== -1) {
             return alert('proof')
         }
-        return alert('relatório')
+        this.#view.pagination({
+            getPage: (data) => {
+                return this.getPage(data)
+            },
+            callScript: () => {
+                this.#location({ page: 'moviment' })
+            }
+        })
+        this.#view.openReport({
+            getPage: (data) => {
+                return this.getPage(data)
+            },
+            getList: () => {
+                return this.#getListMembers()
+            }
+        })
     }
 
     #getListMembers () {
@@ -77,7 +92,7 @@ export default class Moviment extends AbstractController {
         )
     }
 
-    #validate(data) {
+    #validate (data) {
         let ext = data.files[0].type.split('/').pop()
         let extValid = [ 'pdf', 'jpeg', 'png', 'jpg' ]
         if (extValid.indexOf(ext) === -1) {
@@ -87,7 +102,7 @@ export default class Moviment extends AbstractController {
         return true
     }
 
-    #submit(formData) {
+    #submit (formData) {
         return this.getPage({
             url: 'moviment/add',
             method: 'POST',
@@ -95,7 +110,7 @@ export default class Moviment extends AbstractController {
         })
     }
 
-    #closingReport() {
+    #closingReport () {
         this.#view.closingReport({
             fn: ({ formData, getPage }) => {
                 return this.getPage({
@@ -111,100 +126,6 @@ export default class Moviment extends AbstractController {
                 this.#location({ page: 'moviment' })
             }
         })
-    }
-
-    #pagination() {
-        $("#moviment button").on("click", function() {
-            let btnName = $(this).attr("data-name");
-            let prevNext = (btnName === "next" ? 1 : -1);
-            let currentPage = parseInt($("#current-page").text()) + prevNext;
-            let maxPage = $("#current-page").attr("data-limit");
-            if(typeof(btnName) !== "undefined") {
-                if(maxPage && btnName === "next" || btnName === "preview" && currentPage === 0) {
-                    $(this).attr("disabled",true);
-                    return null;
-                }
-                $(".loading, #mask_main").show();
-                currentPage = (currentPage !== 0 ? currentPage : 1);
-                $("#current-page").text(currentPage);
-                $(".content").load("moviment/pagination/" + currentPage, function() {
-                    scriptMoviment();
-                    $(".loading, #mask_main").hide();
-                });
-            }
-        })
-    }
-
-    #openReport() {
-        $("#moviment a").on("click", function(e) {
-            e.preventDefault();
-            let year = $(this).attr("data-year");
-            let month = $(this).attr("data-month");
-            let data = loadData("moviment/" + year + "/" + month);
-            if(data !== null) {
-                let date = data[1].date;
-                let monthNumber = data[1].month;
-                let table = mountingTableBalance(data);
-                modal.show({
-                    title: "MOVIMENTAÇÃO FINANCEIRA DE " + getYearMonthDay(date, 1, monthNumber).toUpperCase() + " DE " + getYearMonthDay(date, 0),
-                    message: table
-                }).
-                complete({
-                    buttons: "<button class='button btn-danger'>Resumo</button>",
-                    callback: function() {
-                        /** Open proof */
-                        $("#boxe_main a").on("click", function(evt) {
-                            evt.preventDefault();
-                            let id = $(this).attr("href");
-                            window.open("proof/show/id/" + id);
-                        });
-                        $(buttons).on("click", function() {
-                            let btnName = $(this).text();
-                            if(btnName === "Resumo") {
-                                let html = loadData("moviment/summarie", { data }, "html");
-                                if(html !== null) {
-                                    modal.modal({
-                                        html: html,
-                                        buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Visualizar Impressão</button>",
-                                        callback: function() {
-                                            $("#div_dialogue button").on("click", function() {
-                                                if($(this).text() === "Fechar") {
-                                                    $("#div_dialogue #content").html("");
-                                                    $("#div_dialogue").hide();
-                                                    $("#mask_main").css("z-index","2");
-                                                } else {
-                                                    /** Open impression preview */
-                                                    let dataPost = {
-                                                        "year": getYearMonthDay(date, 0),
-                                                        "month": getYearMonthDay(date, 1)
-                                                    };
-                                                    modal.new({
-                                                        url: "impression",
-                                                        post: dataPost,
-                                                        box: "box_print",
-                                                        buttons: "<button class='button btn-default mr-1'>Fechar</button><button class='button btn-danger'>Imprimir</button>",
-                                                        callback: function() {
-                                                            $("#mask_main").css("z-index", "5");
-                                                            $("#box_print button").on("click", function() {
-                                                                if($(this).text() === "Imprimir") {
-                                                                    window.print();
-                                                                }
-                                                                $("#box_print").remove();
-                                                                $("#mask_main").css("z-index", "4");
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }).styles();
-            }
-        });
     }
 
     #proof() {

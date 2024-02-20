@@ -1,3 +1,6 @@
+import CreateElement from './createElement.js'
+import Loading from './loading.js'
+
 export default class Modal {
     nameModal = document.querySelector("#boxe_main")
     mask = document.querySelector("#mask_main")
@@ -19,7 +22,9 @@ export default class Modal {
         }
     }
 
-    beforeSend () {}
+    beforeSend () {
+        Loading.show()
+    }
 
     escapeEnable () {
         let escapeEnable
@@ -49,6 +54,7 @@ export default class Modal {
 
     /** @var title, message, content */
     show (params) {
+        this.beforeSend()
         this.closeEnable()
         this.escapeEnable()
         this.clickMaskEnable()
@@ -69,7 +75,7 @@ export default class Modal {
             if (params.callback != null) params.callback()
             this.complete()
         } else {
-            loading.hide()
+            Loading.hide()
         }
 
         if (params.buttons != null) {
@@ -86,9 +92,7 @@ export default class Modal {
     }
 
     modal (params) {
-        loading.show({
-            text: "loading..."
-        })
+        this.beforeSend()
         if (params.title != null) {
             this.dialogue.querySelector('#title').innerHTML = params.title
             this.dialogue.querySelector('#title').style.display = 'block'
@@ -101,7 +105,7 @@ export default class Modal {
             this.dialogue.querySelector("#content").innerHTML = params.content
             this.dialogue.querySelector("#content").style.display = 'block'
         } else {
-            loading.hide()
+            Loading.hide()
         }
 
         if (params.html != null) {
@@ -125,7 +129,7 @@ export default class Modal {
         }
 
         this.styles({
-            element: this.dialogue.querySelector("#buttons button"),
+            element: "#buttons button",
             css: {
                "border-radius": "0 0 5px 5px",
             }
@@ -135,7 +139,7 @@ export default class Modal {
         return this
     }
 
-    complete(params) {
+    complete (params) {
         if (typeof(params) !== "undefined") {
             this.content.on("submit", function(e) {
                 e.preventDefault()
@@ -146,15 +150,16 @@ export default class Modal {
         return this
     }
 
-    close() {
-        $("#mask_main").trigger("click")
+    close () {
+        document.querySelector('#mask_main').dispatchEvent(new Event('click'))
     }
 
-    hide() {
-        $("#boxe_main, #div_dialogue").hide()
+    hide () {
+        document.querySelector("#boxe_main").style.display = 'none'
+        document.querySelector("#div_dialogue").style.display = 'none'
     }
 
-    hideContent() {
+    hideContent () {
         let that = this
         let indexMask = that.mask.style.zIndex
         if (indexMask == 4) {
@@ -175,7 +180,8 @@ export default class Modal {
         }
     }
 
-    confirm(params) {
+    confirm (params) {
+        this.beforeSend()
         this.dialogue.querySelector("#title").innerHTML = params.title
         this.dialogue.querySelector("#title").style.display = 'block'
         this.dialogue.querySelector("#message").innerHTML = params.message
@@ -195,16 +201,15 @@ export default class Modal {
         this.dialogue.querySelectorAll("button").forEach((e) => {
             e.onclick = btn => this.hideContent()
         })
+        Loading.hide()
         return this.dialogue.querySelector('#buttons')
     }
 
-    callback(func) {
-        func()
+    callback (fn) {
+        fn()
     }
 
-    styles(params) {
-        // this.buttons.querySelector("button").style.borderRadius = "0 0 5px 5px"
-
+    styles (params) {
         if (params != null && params.element != null) {
             for (let i in params.css) {
                 document.querySelector(params.element).style.i = params.css[i]
@@ -220,55 +225,65 @@ export default class Modal {
         return this
     }
 
-        // open: function(params) {
-        //     loading.show({
-        //         text: "loading..."
-        //     });
-        //     this.closeEnable();
-        //     if(params.title != null) this.title.html(params.title).show();
-        //     if(params.message != null) this.message.html(params.message).show();
-        //     if(params.content != null) this.content.load(params.content, function() {
-        //         loading.hide();
-        //     }).show();
-        //     this.mask.fadeIn();
-        //     this.nameModal.fadeIn().css({
-        //         display: "flex",
-        //         top: 0
-        //     });
-        //     return this;
-        // },
-        // new: function(params) {
-        //     loading.show({
-        //         text: "loading..."
-        //     });
-        //     $("body").append(
-        //         "<section id='" + params.box + "' ><div id='title' class='title'></div><span id='message'></span><div id='content'></div></section>"
-        //     );
-        //     let idName = $("#" + params.box);
-        //     idName.css({
-        //         position: "fixed",
-        //         top: "30px",
-        //         left: "25%",
-        //         width: "50%",
-        //         "z-index": "10",
-        //         background: "white"
-        //     });
-        //     idName.find("#title").html(params.title).show();
-        //     idName.find("#content").load(params.url, params.post, function() {
-        //         let buttons = "<div id='buttons' style='text-align: right; margin-bottom: -25px'>" + params.buttons + "</div>";
-        //         $(this).parent().append(buttons).find("button").css("border-radius","0 0 5px 5px");
-        //         params.callback();
-        //         loading.hide();
-        //     }).css({
-        //         "max-height": "450px",
-        //         "overflow-y": "scroll"
-        //     });
-        //     return this;
-        // },
-        // on: function(event, func) {
-        //     this.nameModal.on(event, function() {
-        //         func()
-        //     })
-        // },
-    // }
+    new (params) {
+        this.beforeSend()
+        CreateElement.initializer({
+            parent: {
+                element: 'section', attr: { id: params.box }
+            },
+            childs: {
+                divs: [
+                    { id: 'title' },
+                    { id: 'content' }
+                ],
+                span: { id: 'message' },
+                div: { id: 'buttons' }
+            }
+        })
+        .render()
+
+        document.querySelector(`#${params.box}`).style.position = 'absolute'
+        document.querySelector(`#${params.box}`).style.zIndex = '10'
+        document.querySelector(`#${params.box}`).style.top = '30px'
+        document.querySelector(`#${params.box}`).style.left = '20%'
+        document.querySelector(`#${params.box}`).style.width = '60%'
+        document.querySelector(`#${params.box}`).style.background = 'white'
+
+        document.querySelector(`#${params.box} #content`).innerHTML = params.content
+        document.querySelector(`#${params.box} #buttons`).innerHTML = params.buttons
+
+        document.querySelector(`#${params.box} #content`).style.maxHeight = '450px'
+        document.querySelector(`#${params.box} #content`).style.overflowY = 'scroll'
+        document.querySelector(`#${params.box} #buttons`).style.textAlign = 'right'
+        document.querySelector(`#${params.box} #buttons`).style.marginBottom = '-20px'
+
+        if (params.callback !== null) params.callback()
+
+        return this
+    }
+
+    on ({ event, fn }) {
+        this.nameModal.on(event, () => {
+            fn()
+        })
+    }
+
+    open (params) {
+        this.beforeSend()
+        this.closeEnable()
+        if (params.title != null) this.title.html(params.title).show()
+        if (params.message != null) this.message.html(params.message).show()
+        if (params.content != null) this.content.load(params.content, () => {
+            Loading.hide()
+        })
+        .show()
+
+        this.mask.fadeIn()
+        this.nameModal.fadeIn().css({
+            display: "flex",
+            top: 0
+        })
+
+        return this
+    }
 }

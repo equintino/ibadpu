@@ -12,15 +12,22 @@ class Moviment extends Controller
     {
         $params = [];
         $limit = 30;
-        $pageNumber = ($data["page"] ?? 1);
+        $totalPage = $this->totalPage($limit);
+        $pageNumber = ($data["page"] ?? $totalPage);
         $offset = ($pageNumber - 1) * $limit;
-        $balance = (new Balance())->activeAll($limit, $offset, "*", "year desc, id asc");
+        $balance = (new Balance())->activeAll($limit, $offset, "*", "year asc, id asc");
         $pattern = "/doesn't exist/";
         if (!is_array($balance) &&  preg_match($pattern, $balance)) {
             (new Balance())->createThisTable();
         }
-        $params = [ $balance, compact("pageNumber", "limit") ];
+        $params = [ $balance, compact("pageNumber", "limit", 'totalPage') ];
         $this->view->render($this->page, $params);
+    }
+
+    private function totalPage(int $limit): int
+    {
+        $num = (new Balance())->rows() / $limit;
+        return ceil($num);
     }
 
     public function new(): void
@@ -53,16 +60,16 @@ class Moviment extends Controller
         $data["month"] = monthToNumber($data["month"]);
         $data["date"] = $data["year"] . "-" . $data["month"] . "-" . $data["day"];
         $data["deposit"] = ($data["in_out"] === "deposit" ? $value : "0.0");
-        if($data["in_out"] === "output") {
+        if ($data["in_out"] === "output") {
             $data["output"] = $value;
             $data["tithe_offer"] = "";
         } else {
             $data["output"] = "0.0";
         }
         foreach ($data as $k => $v) {
-            if (preg_match("/^description/", $k)) {
-                $data['description'] = $v;
+            if (preg_match("/^description-/", $k)) {
                 unset($data[$k]);
+                $data['description'] = $v;
             }
         }
         unset($data["day"], $data["in_out"], $data["value"]);
@@ -170,7 +177,7 @@ class Moviment extends Controller
         echo json_encode($all);
     }
 
-    public function summarie(array $data)
+    public function summarie (array $data)
     {
         $params = $_POST;
         $previousMonthBalance = (float) ($params["previousMonthBalance"]);
@@ -226,10 +233,10 @@ class Moviment extends Controller
             }
 
             if (preg_match("/^tithe_offe/", $k) && $row === 'diz') {
-                $titheTotal += $vlr['deposit-' . explode('-',$k)[1]];
+                $titheTotal += formatReal($vlr['deposit-' . explode('-',$k)[1]]);
             }
             if (preg_match("/^tithe_offe/", $k) && $row === 'ofe') {
-                $offerTotal += $vlr['deposit-' . explode('-',$k)[1]];
+                $offerTotal += formatReal($vlr['deposit-' . explode('-',$k)[1]]);
             }
         }
 
