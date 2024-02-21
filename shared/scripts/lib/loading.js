@@ -1,10 +1,10 @@
 export default class Loading {
 
-    static show() {
+    static show () {
         document.querySelector('.loading').style.display = 'block'
     }
 
-    static hide() {
+    static async hide () {
         document.querySelector('.loading').style.display = 'none'
     }
 }

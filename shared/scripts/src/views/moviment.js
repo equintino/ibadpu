@@ -435,4 +435,114 @@ export default class Moviment extends AbstractView {
             }
         })
     }
+
+    proof ({ getPage, validate, initializer }) {
+        document.querySelector('#proof select[name=year]').onchange = (e) => {
+            Loading.show()
+            const year = e.target.value
+            const data = JSON.parse(
+                getPage({
+                    url: 'proof/year/' + year,
+                    method: 'POST'
+                })
+            )
+            if (data !== null) {
+                let option = '<option value=""></option>'
+                for (let i of data) {
+                    option += `<option value='${i}'>${i}</option>`
+                }
+                document.querySelector('#proof select[name=month]').innerHTML = option
+            }
+            Loading.hide()
+        }
+
+        document.querySelector('#proof select[name=month]').onchange = (e) => {
+            Loading.show()
+            const year = document.querySelector('#proof select[name=year]').value
+            const month = e.target.value
+            const formData = new FormData()
+            formData.append('year', year)
+            formData.append('month', month)
+            const data = JSON.parse(
+                getPage({
+                    url: 'proof/proof',
+                    method: 'POST',
+                    formData
+                })
+            )
+            if (data !== null) {
+                let table = "<thead><tr><th>Descrição</th><th>Comprovante</th></tr></thead><tbody>"
+                for(let i of data) {
+                    table += "<tr data-id='" + i.id + "'><td>" + i.description + "</td><td><input accept='image/*' type='file' name='proofs[]' /></td></tr>";
+                }
+                table += '</tbody>'
+                document.querySelector("#proof table").innerHTML = table
+            } else {
+                this.message.text('<span class="warning">No data in this periode</span>')
+                if (document.querySelector('#proof table tbody') !== null) {
+                    document.querySelector('#proof table tbody').remove()
+                }
+            }
+            Loading.hide()
+        }
+
+        /** Enable rescue button */
+        document.querySelector('#proof table').onclick = () => Loading.show()
+        document.querySelector("#proof table").onchange = (file) => {
+            if (!validate(file.target)) {
+                file.target.value = ''
+                return false
+            }
+            document.querySelector("#proof button[type=submit]").disabled = false
+            Loading.hide()
+        }
+
+        document.querySelector("#proof #form-proof").onreset = (e) => {
+            e.preventDefault()
+            document.querySelectorAll("#proof #form-proof [type=file]").forEach((e) => {
+                e.value = ''
+            })
+            document.querySelector("#proof button[type=submit]").disabled = true
+        }
+
+        document.querySelector('#proof #form-proof [type=submit]').onclick = () => Loading.show()
+        document.querySelector("#proof #form-proof").onsubmit = (e) => {
+            e.preventDefault()
+            const form = document.querySelector('#proof #form-proof')
+            const formData = new FormData(form)
+
+            /** pick up attached files */
+            let data = []
+            document.querySelectorAll("#proof #form-proof [type=file]").forEach((e) => {
+                if (e.value) {
+                    let file = e.files[0]
+                    let id = e.parentElement.parentElement.attributes['data-id'].value
+                    data.push({ id, name: file.name })
+                }
+            })
+
+            formData.append('data', JSON.stringify(data))
+            if (data.length < 1) {
+                return this.message.text("<span class='warning'>No voucher was added</span>")
+            }
+
+            const response = JSON.parse(
+                getPage({
+                    url: 'proof/save',
+                    method: 'POST',
+                    formData
+                })
+            )
+
+            if (response.indexOf('success') !== -1) {
+                document.querySelector('.content').innerHTML = getPage({
+                    url: 'proof/init',
+                    method: 'GET'
+                })
+                initializer({ page: 'proof' })
+            }
+            this.message.text(response)
+            Loading.hide()
+        }
+    }
 }

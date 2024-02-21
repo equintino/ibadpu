@@ -1,12 +1,10 @@
 import AbstractController from "./abstractController.js"
 import View from "./../views/moviment.js"
 import Service from "./../services/meviment.js"
-// import CreateElement from "../../lib/createElement.js"
 
 export default class Moviment extends AbstractController {
     #view
     #service
-    #listMembers
 
     initializer ({ page }) {
         this.#view = new View()
@@ -131,101 +129,12 @@ export default class Moviment extends AbstractController {
     }
 
     #proof() {
-        document.querySelector('#proof select[name=year]').onchange = (e) => {
-            const year = e.target.value
-            const data = JSON.parse(
-                this.getPage({
-                    url: 'proof/year/' + year,
-                    method: 'POST'
-                })
-            )
-            if (data !== null) {
-                let option = '<option value=""></option>'
-                for (let i of data) {
-                    option += `<option value='${i}'>${i}</option>`
-                }
-                document.querySelector('#proof select[name=month]').innerHTML = option
-            }
-        }
-
-        document.querySelector('#proof select[name=month]').onchange = (e) => {
-            const year = document.querySelector('#proof select[name=year]').value
-            const month = e.target.value
-            const formData = new FormData()
-            formData.append('year', year)
-            formData.append('month', month)
-            const data = JSON.parse(
-                this.getPage({
-                    url: 'proof/proof',
-                    method: 'POST',
-                    formData
-                })
-            )
-            if (data !== null) {
-                let table = "<thead><tr><th>Descrição</th><th>Comprovante</th></tr></thead><tbody>"
-                for(let i of data) {
-                    table += "<tr data-id='" + i.id + "'><td>" + i.description + "</td><td><input accept='image/*' type='file' name='proofs[]' /></td></tr>";
-                }
-                table += '</tbody>'
-                document.querySelector("#proof table").innerHTML = table
-            } else {
-                this.#view.message.text('<span class="warning">No data in this periode</span>')
-                if (document.querySelector('#proof table tbody') !== null) {
-                    document.querySelector('#proof table tbody').remove()
-                }
-            }
-        }
-
-        /** Enable rescue button */
-        document.querySelector("#proof table").onchange = () => {
-            document.querySelector("#proof button[type=submit]").disabled = false
-        }
-
-        document.querySelector("#proof #form-proof").onreset = (e) => {
-            e.preventDefault()
-            document.querySelectorAll("#proof #form-proof [type=file]").forEach((e) => {
-                e.value = ''
-            })
-            document.querySelector("#proof button[type=submit]").disabled = true
-        }
-
-        document.querySelector("#proof #form-proof").onsubmit = (e) => {
-            e.preventDefault()
-            const form = document.querySelector('#proof #form-proof')
-            const formData = new FormData(form)
-
-            /** pick up attached files */
-            let data = []
-            document.querySelectorAll("#proof #form-proof [type=file]").forEach((e) => {
-                if (e.value) {
-                    let file = e.files[0]
-                    let id = e.parentElement.parentElement.attributes['data-id'].value
-                    data.push({ id, name: file.name })
-                }
-            })
-
-            formData.append('data', JSON.stringify(data))
-            if (data.length < 1) {
-                return this.#view.message.text("<span class='warning'>No voucher was added</span>")
-            }
-
-            const response = JSON.parse(
-                this.getPage({
-                    url: 'proof/save',
-                    method: 'POST',
-                    formData
-                })
-            )
-
-            if (response.indexOf('success') !== -1) {
-                document.querySelector('.content').innerHTML = this.getPage({
-                    url: 'proof/init',
-                    method: 'GET'
-                })
-                this.initializer({ page: 'proof' })
-            }
-
-            this.#view.message.text(response)
-        }
+        this.#view.proof({
+            getPage: (data) => {
+                return this.getPage(data)
+            },
+            validate: file => this.#validate(file),
+            initializer: data => this.initializer(data)
+        })
     }
 }
