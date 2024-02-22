@@ -15,7 +15,7 @@ export default class Moviment extends AbstractController {
 
     #location ({ page }) {
         if (page.indexOf('new') !== -1) {
-            this.#view.mask()
+            this.#view.setMask()
             this.#view.selectInOut({
                 validate: (data) => {
                     return this.#validate(data)

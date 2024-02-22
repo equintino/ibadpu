@@ -1,4 +1,3 @@
-import Loading from "../../lib/loading.js"
 import MountingMovimentTable from "../../lib/mountMovimentTable.js"
 import AbstractView from "./abstractView.js"
 
@@ -22,57 +21,9 @@ export default class Moviment extends AbstractView {
         return list
     }
 
-    mask() {
-        /* Máscaras ER */
-        // function mascara( str,fn ){
-        //     let v_obj = str
-        //     let v_fun = fn
-        //     setTimeout(execmascara(v_obj, v_fun), 1)
-        // }
-
-        // function execmascara(v_obj, v_fun){
-        //     return v_fun(v_obj)
-        // }
-
-        // function mtel(v){
-        //     v = v.replace(/D/g,""); //Remove tudo o que não é dígito
-        //     console.log(
-        //         v
-        //     )
-        //     return
-        //     v = v.replace(/^(d{2})(d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
-        //     v = v.replace(/(d)(d{4})$/,"$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
-        //     return v;
-        // }
-
-        // // function id( el ){
-        // //     return document.getElementById( el );
-        // // }
-        // // window.onload = function(){
-        // //     id('telefone').onkeypress = function(){
-        // //         mascara( this, mtel );
-        // //     }
-        // // }
-
-
-        // let day = document.querySelector('form [name=day]')
-        // let money = document.querySelector('form [name=value]')
-        // day.focus()
-
-        // money.onkeyup = (e) => {
-        //     let value = e.target.value
-        //     console.log(
-        //         value.replace(/\d{2}/, '$1'),
-        //         // value.replace(/\D/g, '')
-        //     )
-        // }
-
-        // const cpf = '12345679810'
-
-        // const cpfFormatado = cpf.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{2})/, "$1.$2.$3-$4")
-
-        $("#moviment form [name=day]").mask("#0").focus()
-        $("#moviment form [name=value]").mask("#.##0,00", { reverse: true })
+    setMask () {
+        this.mask.createMask([ 'day', 'money' ])
+        document.querySelector("#moviment form [name=day]").focus()
     }
 
     selectInOut({ getList, validate }) {
@@ -216,14 +167,7 @@ export default class Moviment extends AbstractView {
                 }
 
                 /** Mask */
-                document.querySelectorAll('#boxe_main table tbody input').forEach((e) => {
-                    if (e.name.indexOf('day') !== -1) {
-                        $(e).mask('#0')
-                    }
-                    if (e.name.indexOf('deposit') !== -1 || e.name.indexOf('output') !== -1) {
-                        $(e).mask('#0.##0,#0', { reverse: true })
-                    }
-                })
+                this.setMask()
 
                 const event = new Event('click')
                 document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
@@ -429,7 +373,7 @@ export default class Moviment extends AbstractView {
                         this.modal.mask.style.zIndex = '4'
                         document.querySelector('#box_print').remove()
                         this.modal.clickMaskEnable()
-                        Loading.hide()
+                        this.loading.hide()
                     }
                 }
             }
@@ -438,7 +382,7 @@ export default class Moviment extends AbstractView {
 
     proof ({ getPage, validate, initializer }) {
         document.querySelector('#proof select[name=year]').onchange = (e) => {
-            Loading.show()
+            this.loading.show()
             const year = e.target.value
             const data = JSON.parse(
                 getPage({
@@ -453,11 +397,11 @@ export default class Moviment extends AbstractView {
                 }
                 document.querySelector('#proof select[name=month]').innerHTML = option
             }
-            Loading.hide()
+            this.loading.hide()
         }
 
         document.querySelector('#proof select[name=month]').onchange = (e) => {
-            Loading.show()
+            this.loading.show()
             const year = document.querySelector('#proof select[name=year]').value
             const month = e.target.value
             const formData = new FormData()
@@ -483,18 +427,18 @@ export default class Moviment extends AbstractView {
                     document.querySelector('#proof table tbody').remove()
                 }
             }
-            Loading.hide()
+            this.loading.hide()
         }
 
         /** Enable rescue button */
-        document.querySelector('#proof table').onclick = () => Loading.show()
+        document.querySelector('#proof table').onclick = () => this.loading.show()
         document.querySelector("#proof table").onchange = (file) => {
             if (!validate(file.target)) {
                 file.target.value = ''
                 return false
             }
             document.querySelector("#proof button[type=submit]").disabled = false
-            Loading.hide()
+            this.loading.hide()
         }
 
         document.querySelector("#proof #form-proof").onreset = (e) => {
@@ -505,7 +449,7 @@ export default class Moviment extends AbstractView {
             document.querySelector("#proof button[type=submit]").disabled = true
         }
 
-        document.querySelector('#proof #form-proof [type=submit]').onclick = () => Loading.show()
+        document.querySelector('#proof #form-proof [type=submit]').onclick = () => this.loading.show()
         document.querySelector("#proof #form-proof").onsubmit = (e) => {
             e.preventDefault()
             const form = document.querySelector('#proof #form-proof')
@@ -542,7 +486,7 @@ export default class Moviment extends AbstractView {
                 initializer({ page: 'proof' })
             }
             this.message.text(response)
-            Loading.hide()
+            this.loading.hide()
         }
     }
 }

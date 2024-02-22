@@ -83,17 +83,17 @@ class Moviment extends Model implements Models
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function save(): ?Moviment
+    public function save (): ?Moviment
     {
-        if(!$this->required()) {
+        if (!$this->required()) {
             return null;
         }
 
         /** Update */
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $id = $this->id;
             $this->update(self::$entity, $this->safe(), "id = :id", "id={$id}");
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error updating, verify the data</span>";
                 return null;
             }
@@ -101,9 +101,9 @@ class Moviment extends Model implements Models
         }
 
         /** Create */
-        if(empty($this->id)) {
+        if (empty($this->id)) {
             $id = $this->create(self::$entity, $this->safe());
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error to Register, Check the data</span>";
                 return null;
             }

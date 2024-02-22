@@ -141,16 +141,22 @@ abstract class Model
 
     protected function update(string $entity, array $data, string $terms, string $params, bool $msgDb = false): ?int
     {
-        $data["updated_at"] = ($this->connectionDetails->type() === "sqlsrv" ? (new \DateTime())->format("d/m/Y H:i:s") : (new \DateTime())->format("Y-m-d H:i:s"));
+        $data["updated_at"] = (
+            $this->connectionDetails->type() === "sqlsrv" ?
+                (new \DateTime())->format("d/m/Y H:i:s")
+                : (new \DateTime())->format("Y-m-d H:i:s")
+        );
         parse_str($params, $params);
+
         foreach($data as $bind => $value) {
             $dataSet[] = "{$bind} = '{$value}'";
         }
         $dataSet = implode(", ", $dataSet);
 
         $sql = "UPDATE {$entity} SET {$dataSet} WHERE {$terms}";
-        $this->execute($sql, $params);
-        return ($stmt->rowCount ?? 1);
+
+        $stmt = $this->execute($sql, $params);
+        return $stmt->rowCount() ?? 1;
     }
 
     protected function delete(string $entity, string $terms, string $params, bool $msgDb = false): ?int
@@ -159,7 +165,7 @@ abstract class Model
             $stmt = Connect::getInstance($msgDb)->prepare("DELETE FROM {$entity} WHERE {$terms}");
             parse_str($params, $params);
             $stmt->execute($params);
-            return ($stmt->rowCount() ?? 1);
+            return $stmt->rowCount() ?? 1;
         } catch(\PDOException $exception) {
             $this->fail = $exception;
             return null;
@@ -222,7 +228,7 @@ abstract class Model
         return $this->execute($sql);
     }
 
-    protected function dropTable(string $sql): ?bool
+    protected function dropTable(string $sql): \PDOStatement
     {
         return $this->execute($sql);
     }
@@ -231,20 +237,20 @@ abstract class Model
     {
         $stmt = Connect::getInstance()->prepare($sql);
         try {
-            if($params) {
+            if ($params) {
                 $params = $this->filter(removeAccentArray($params));
-                foreach($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     $type = \PDO::PARAM_STR;
-                    if(is_numeric($value)) {
+                    if (is_numeric($value)) {
                         $value = (float) $value;
-                    } elseif($value == null) {
+                    } elseif ($value == null) {
                         $type = \PDO::PARAM_NULL;
                     }
                     $stmt->bindValue(":{$key}", $value, $type);
                 }
             }
             $stmt->execute();
-        } catch(PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
         }
         return $stmt;

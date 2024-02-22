@@ -65,7 +65,7 @@ export default class MountingMovimentTable {
     #outputTable (row, i, edit) {
         let output = ""
         if (edit && row.output != "0,00") {
-            output = "<input class='input' type='text' name='output-" + i + "' value='" + row.output + "' style='text-align: right'/>"
+            output = "<input class='input money' type='text' name='output-" + i + "' value='" + row.output + "' style='text-align: right'/>"
         } else if (row.proof_id != null) {
             output = "<a href='" + row.proof_id + "' >" + row.output + "</a>"
         } else if (row.output != "0,00") {
@@ -117,13 +117,13 @@ export default class MountingMovimentTable {
                 subtotal += valReal(data[i].deposit) - valReal(data[i].output)
                 /** Editable values */
                 let type = edit ? 'text' : 'hidden'
-                let day = "<input class='input' type='" + type + "' size='1' value='" + getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />"
+                let day = "<input class='input day' type='" + type + "' size='1' value='" + getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />"
 
                 const { description, tithe_offer } = this.#titheOffer({
                     row: data[i], edit, i, getList
                 })
 
-                let deposit = (data[i].deposit != '0,00' ? "<input class='input' type='" + type + "' name='deposit-" + i + "' value='" + data[i].deposit + "'style='text-align: right'/>" : '')
+                let deposit = (data[i].deposit != '0,00' ? "<input class='input money' type='" + type + "' name='deposit-" + i + "' value='" + data[i].deposit + "'style='text-align: right'/>" : '')
 
                 const { output } = this.#outputTable (data[i], i, edit)
 
