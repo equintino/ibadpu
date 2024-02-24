@@ -3,6 +3,7 @@ import Documentation from "./documentation.js"
 import Membership from "./membership.js"
 import Moviment from "./moviment.js"
 import Occupation from "./occupation.js"
+import User from "./user.js"
 
 export default class Menu extends AbstractController{
     initializer = () => {
@@ -29,7 +30,8 @@ export default class Menu extends AbstractController{
     #callScript = (page) => {
         switch(page) {
             case "user":
-                scriptUser()
+                const user = new User()
+                user.initializer()
                 break
             case "shield":
                 scriptSecurity()

@@ -16,7 +16,6 @@ class User extends Controller
     public function init(?array $data): void
     {
         $params = [];
-        // $company_id = ($data["company_id"] ?? null);
         $this->view->render("user", $params);
     }
 
@@ -34,8 +33,8 @@ class User extends Controller
         $groups = (new Group())->all();
         $params = [ $data, compact("login", "users", "user", "groups") ];
 
-        // echo "<script>var company_id = '" . ($data["company_id"] ?? 1) . "' </script>";
-        $this->view->setPath("Modals")->render("user", $params);
+        // $this->view->setPath("Modals")->render("user", $params);
+        $this->view->render("user", $params);
     }
 
     public function add(): void
@@ -58,7 +57,7 @@ class User extends Controller
         $this->view->setPath("Modals")->render("user", $params);
     }
 
-    public function save(array $data): void
+    public function save(array $data): string
     {
         $data["user"] = &$data["login"];
         $data["company_id"] = ($data["company_id"] !== "undefined" ? $data["company_id"] : 1);
@@ -67,7 +66,7 @@ class User extends Controller
 
         $user->bootstrap($data);
         $user->save(true);
-        echo json_encode($user->message());
+        return print $user->message();
     }
 
     public function update(array $data): void
@@ -90,7 +89,8 @@ class User extends Controller
 
     public function delete(array $data): void
     {
-        $user = (new \Models\User())->find($data["login"]);
+        $id = $data['user'];
+        $user = (new \Models\User())->load($id);
         $user->destroy();
         echo json_encode($user->message());
     }
@@ -100,8 +100,7 @@ class User extends Controller
         $passwd = $params["password"];
         $confPasswd = $params["confPassword"];
         if($passwd !== $confPasswd) {
-            print json_encode("<span class='warning'>The password was not confirmed</span>");
-            die;
+            die("<span class='warning'>The password was not confirmed</span>");
         } else {
             unset($params["confPassword"]);
         }

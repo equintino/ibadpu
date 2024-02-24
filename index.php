@@ -29,7 +29,7 @@
         $router->post("/user/password/reset", "User:reset");
         $router->get("/user/register", "User:add");
         $router->post("/user/save", "User:save");
-        $router->get("/user/list/company/{companyId}", "User:list");
+        $router->get("/user/list", "User:list");
 
 
         /** The Groups' Screens */

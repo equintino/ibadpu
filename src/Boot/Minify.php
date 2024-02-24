@@ -43,7 +43,7 @@
     $minJS->add(__DIR__ . "/../../shared/scripts/functions.js");
     $minJS->add(__DIR__ . "/../../shared/scripts/script-config.js");
     $minJS->add(__DIR__ . "/../../shared/scripts/script-security.js");
-    $minJS->add(__DIR__ . "/../../shared/scripts/script-user.js");
+    //$minJS->add(__DIR__ . "/../../shared/scripts/script-user.js");
     // $minJS->add(__DIR__ . "/../../shared/scripts/script-moviment.js");
 
     /** MinifyCss */

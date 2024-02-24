@@ -766,33 +766,4 @@ if($(this).hasClass("edition")){var url="config/update";title="Modo de Edição 
 $("#mask_main").hide()})}else{return!1}})};function checkGroup(){var groupName=$(".group fieldset p.active").text();$(".screen legend span").text("Grupo: "+groupName).css("float","right");if(groupName){var url="group/load/"+groupName;var screens=security(groupName,url);if(screens.success){insertCheck(screens.access,$(".screen span"),"fa fa-check","fa fa-times")}}}
 function security(groupName,url=null){var resp;$.ajax({url:url,type:"POST",dataType:"JSON",data:{groupName:groupName},async:!1,success:function(response){response.success=!0;resp=response},error:function(error){error.seccces=!1;resp=error}});return resp};function scriptSecurity(){checkGroup();$(".btnAction").on("click",function(){var groupName=$(this).text();$(".screen legend span").html("Grupo: "+groupName).css("float","right");$(".btnAction").removeClass("active");$(this).addClass("active");var url="group/load/"+groupName;var screens=security(groupName,url);if(screens.success){insertCheck(screens.access,$(".screen span"),"fa fa-check","fa fa-times")}});var change;$(".screen span").on("click",function(){if(!$(".btnAction").hasClass("active"))return;change=changeCheck($(this).find("i"),"fa fa-check","fa fa-times")});$(".save, .cancel").on("click",function(e){e.preventDefault();var btnName=this["innerText"];if(btnName==="Adicionar Grupo"){var url="group/register";modal.show({title:"Cadastro de Grupo",message:null,content:url}).complete({buttons:"<button class='button save' >Save</button>",callback:function(){$(buttons).on("click",function(){if($(this).text()==="Save"){let newGroup=$("[name=group-name]").val();if(newGroup===""){return alertLatch("No name has been inserted","var(--cor-warning)")}
 let data=new FormData($("#content form")[0]);if(saveData("group/save",data)){$("#boxe_main, #mask_main").hide();$("#topHeader ul li a[data-id=shield]").trigger("click")}}})}})}else if(btnName==="Excluir Grupo"){if(!$(".btnAction").hasClass("active"))return;var groupName=$(".group .active").text();var url="group/delete/"+groupName;let message="Deseja realmente excluir o grupo <span style='color:red; font-size: 1.1rem; margin-left: 5px'>"+groupName+"</span>";let conf=modal.confirm({title:"Exclusão de gropo de acesso",message});conf.on("click",function(){if($(this).val()==1){data={};data.name=groupName;saveData(url,data,"Excluding");$(".btnAction.active").remove()}
-$("#div_dialogue, #mask_main").hide()})}else if(btnName==="Gravar"){if(!$(".btnAction").hasClass("active")||typeof(change)==="undefined")return;var groupName=$(".group .active").text();var security=getScreenAccess($(".screen span"),"fa fa-check",groupName);var url="group/update";saveAjax(url,security)}})};function exhibition(element){$(element).on("click",function(){$(".loading").show();var action=$(this).attr("title");var tr=$(this).closest("tr");var login=tr.find("td:eq(2)").text();var url="user/"+login;if(action==="Edita"){$("#exhibition").load(url,function(){$(".loading").hide()}).on("submit",function(e){e.preventDefault();const buttonName=$(this).text();const formData=new FormData($(this).find("form")[0]);if(buttonName!=="Salvar"){url="user/update";saveData(url,formData)}})}else if(action==="Exclui"){if(logged.toLowerCase()===login.toLowerCase()){alertLatch("User logged in, is not allowed to delete it","var(--cor-warning)");$(".loading").hide();return null}
-modal.confirm({title:"Você deseja realmente excluir o usuário <span style='margin-left: 5px;font-size: 1.2em'><strong style='color:red; margin-right: 5px'>"+login+"</strong>?</span>",message:" "}).on("click",function(){const formData=new FormData();formData.append("login",login);if($(this).val()==1){let url="user/delete/"+login;if(saveData(url,formData,"Excluindo")){$("#boxe_main .close").trigger("click");tr.remove()}
-modal.hide()}})}else if(action==="Reseta"){modal.confirm({title:"A senha será excluída",message:"A nova senha será cadastrada no próximo login"}).on("click",function(){if($(this).val()==1){let url="user/password/reset";const formData=new FormData();formData.append("login",login);saveData(url,formData);modal.hide()}
-$("#mask_main").hide()})}
-$(".loading").hide()})}
-function disabledTableLine(dom){$(dom).each(function(){var that=$(this);var disabledItens=$(this).find("td:eq(4)").text();if(disabledItens!=="SIM"){that.find("td").each(function(){if($(this).index()>0&&$(this).index()<5){var text=$(this).text();$(this).html("<strike>"+text+"</sctrike>").css("color","var(--cor-secondary-light)")}})}})}
-function scriptUser(){if(typeof(company_id)!=="undefined"){disabledTableLine("#exhibition table tbody tr")}
-$("select[name=NomeFantasia]").on("change",function(){var company_id=$(this).val()
-var url="user/list/company/"+company_id
-if(company_id!=""){$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td")
-disabledTableLine("#exhibition table tbody tr")})}})
-$(".header button").on("click",function(){$(".loading").show()
-var btnAction=$(this).text()
-var company_id=$("select[name=NomeFantasia]").val()
-if(company_id==""){alertLatch("Selecione a EMPRESA","var(--cor-warning)")
-$(this).closest(".header").find("select").focus()
-return!1}
-if(btnAction==="Adicionar"){let url="user/register"
-$("#exhibition").load(url,function(){$(this).find("[name=Nome]").focus()
-$(".loading").hide()}).on("submit",function(e){e.preventDefault()
-const formData=new FormData($(this).find("form")[0])
-formData.append("company_id",company_id)
-var link="user/save"
-var result=saveData(link,formData)
-if(result)$("#exhibition form#login-register").find("button[type=reset]").trigger("click")})}else{let url="user/list/company/"+company_id
-$("#exhibition").load(url,function(){exhibition("#exhibition table#tabList tbody td")
-disabledTableLine("#exhibition table tbody tr")
-$(".loading").hide()})}})
-exhibition("#exhibition #tabList tbody td")
-$(".header button").each(function(){if($(this).text()==="Listar")$(this).trigger("click")})}
+$("#div_dialogue, #mask_main").hide()})}else if(btnName==="Gravar"){if(!$(".btnAction").hasClass("active")||typeof(change)==="undefined")return;var groupName=$(".group .active").text();var security=getScreenAccess($(".screen span"),"fa fa-check",groupName);var url="group/update";saveAjax(url,security)}})}

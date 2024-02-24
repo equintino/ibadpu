@@ -132,7 +132,11 @@ class User extends Model implements Models
 
         $this->id = $this->create(self::$entity, $this->safe());
         if($this->fail()) {
-            $this->message = (!$msgDb ? "<span class='danger'>Error to Register, Check the data</span>" : $this->fail()->errorInfo[2]);
+            $this->message = (
+                !$msgDb ?
+                "<span class='danger'>Error to Register, Check the data</span>"
+                : $this->fail()->errorInfo[2]
+            );
             return null;
         }
         $this->message = "<span class='success'>Registration successfully</span>";
@@ -140,11 +144,11 @@ class User extends Model implements Models
 
     public function destroy(): ?User
     {
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $this->delete(self::$entity, "id=:id", "id={$this->id}");
         }
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<span class='danger'>Could not remove the user</span>";
             return null;
         }

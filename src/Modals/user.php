@@ -1,8 +1,7 @@
-<?php if(!empty($act) && $act === "edit"): ?>
 <div id="edit" >
     <form id="login-register" action="#" method="POST" class="form-horizontal">
-        <fieldset class="fieldset">
-            <legend>IDENTIFICAÇÃO</legend>
+        <!-- <fieldset class="fieldset"> -->
+            <!-- <legend>IDENTIFICAÇÃO</legend> -->
             <div class="form-row mb-2">
                 <div class="col-md">
                     <input name="id" type="hidden" value="<?= (isset($user) ? $user->id : null) ?>" />
@@ -46,49 +45,10 @@
                     <label class="label"> NÃO </label><input type="radio" name="active" value=0 <?= (isset($user) && $user->active == "0" ? "checked" : null) ?> />
                 </div><!-- col -->
             </div>
-        </fieldset>
-        <button type="submit" class="button save" style="float: right;"><?= (isset($user) ? "Gravar Alteração" : "Salvar") ?></button>
+        <!-- </fieldset> -->
+        <!-- <button type="submit" class="button save" style="float: right;"><?= (isset($user) ? "Gravar Alteração" : "Salvar") ?></button>
         <?php if(!isset($user)): ?>
-        <button type="reset" class="button cancel" style="float: right;">Limpar</button>
+        <button type="reset" class="button cancel" style="float: right;">Limpar</button> -->
         <?php endif ?>
     </form>
 </div><!-- edit -->
-
-<?php elseif(!empty($act) && $act === "list"): ?>
-    <fieldset class="fieldset p-3" >
-        <legend>LISTA DE USUÁRIOS</legend>
-        <table id="tabList" class="my-table" width="100%" >
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>NOME</th>
-                    <th>LOGIN</th>
-                    <th>GRUPO</th>
-                    <th>ATIVO</th>
-                    <th>EDITAR</th>
-                    <th>EXCLUIR</th>
-                    <th>RESETAR SENHA</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if(isset($users)):
-                    $login = $_SESSION["login"]->login;
-                    foreach($users as $user):
-                            $arrow = ($login === $user->login ? "<i class='fa fa-arrow-right' aria-hidden='true' ></i>" : null);
-                            if($user->login !== "admin"): ?>
-                        <tr <?= ($login !== $user->login ?: "style='background: #c3d2dd'") ?> >
-                            <td><?= (!empty($arrow) ? $arrow : null) ?></td>
-                            <td><?= $user->name ?></td>
-                            <td><?= $user->login ?></td>
-                            <td><?= (!empty($user->getGroup()) ? $user->getGroup()->name : null) ?></td>
-                            <td><?= $user->active == 1 ? "SIM" : "NÃO"; ?></td>
-                            <td title="Edita" data-id="<?= $user->id ?>" data="<?= $user->login ?>" ><i class="fa fa-pencil" ></i></td>
-                            <td title="Exclui" data-id="<?= $user->id ?>" data="<?= $user->login ?>" ><i class="fa fa-times"></i></td>
-                            <td title="Reseta" data-id="<?= $user->id ?>" data="<?= $user->login ?>" ><i class="fa fa-key "></i></td>
-                        </tr>
-                <?php endif; endforeach;
-                    endif ?>
-            </tbody>
-        </table>
-    </fieldset>
-<?php endif; ?>
