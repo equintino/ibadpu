@@ -5,6 +5,7 @@ export default class Modal {
     nameModal = document.querySelector("#boxe_main")
     mask = document.querySelector("#mask_main")
     title = document.querySelector("#boxe_main #title")
+    btnClose = document.querySelector('#boxe_main .close')
     message = document.querySelector("#boxe_main #message")
     content = document.querySelector("#boxe_main #content")
     buttons = document.querySelector("#boxe_main #buttons")
@@ -186,6 +187,7 @@ export default class Modal {
 
             const box = [
                 this.title,
+                this.btnClose,
                 this.message,
                 this.content,
                 this.buttons,

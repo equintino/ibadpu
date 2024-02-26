@@ -69,7 +69,7 @@ class User extends Controller
         return print $user->message();
     }
 
-    public function update(array $data): void
+    public function update(array $data): string
     {
         $user = (new \Models\User())->load($data["id"]);
         foreach($data as $key => $value) {
@@ -77,22 +77,22 @@ class User extends Controller
         }
 
         $user->save(true);
-        echo json_encode($user->message());
+        return print $user->message();
     }
 
-    public function reset(array $data): void
+    public function reset(array $data): string
     {
         $user = (new \Models\User())->find($data["login"]);
         $user->token($data["login"]);
-        echo json_encode($user->message());
+        return print $user->message();
     }
 
-    public function delete(array $data): void
+    public function delete(array $data): string
     {
         $id = $data['user'];
         $user = (new \Models\User())->load($id);
         $user->destroy();
-        echo json_encode($user->message());
+        return print $user->message();
     }
 
     private function confPassword(array $params): ?array
