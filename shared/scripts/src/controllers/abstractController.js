@@ -12,10 +12,4 @@ export default class AbstractController {
         this.service = new Service()
         this.modal = new Modal()
     }
-
-    // getPage({ url, formData, method = 'GET'}) {
-    //     return this.service.openFile({
-    //         method, url, formData
-    //     })
-    // }
 }

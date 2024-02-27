@@ -8,13 +8,13 @@ class Occupation extends Controller
 
     public function init(?array $data): void
     {
-        $occupation = (new \Models\Occupation())->all('*', 'name');
-        if (!is_array($occupation) &&  preg_match("/doesn't exist/", $occupation)) {
+        $occupations = (new \Models\Occupation())->all('*', 'name');
+        if (!is_array($occupations) &&  preg_match("/doesn't exist/", $occupations)) {
             if ((new \Models\Occupation())->createThisTable()) {
                 alertLatch("Created new table, try again");
             }
         } else {
-            $this->view->render($this->page, [ compact("occupation") ]);
+            $this->view->render($this->page, [ compact("occupations") ]);
         }
     }
 

@@ -6,14 +6,32 @@ export default class Membership extends AbstractController {
     #view
     #service
 
-    initializer() {
+    initializer () {
         this.#view = new View()
         this.#service = new Service()
+        this.#add()
         this.#edition()
         this.#certificatePrint()
     }
 
-    #edition() {
+    #add () {
+        this.#view.add({
+            submit: ({ formData }) => {
+                const response = this.#service.openFile({
+                    url: 'membership/save',
+                    method: 'POST',
+                    formData
+                })
+                return response
+            },
+            openFile: (data) => {
+                return this.#service.openFile(data)
+            },
+            initializer: () => this.initializer()
+        })
+    }
+
+    #edition () {
         this.#view.setBtns({
             fn: ({ formData }) => {
                 const validate = this.#validate(formData)
@@ -32,27 +50,27 @@ export default class Membership extends AbstractController {
                 )
                 if (response.indexOf('success') !== -1 && validate.reload) window.location.reload()
             },
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             }
         })
     }
 
-    #validate(formData) {
+    #validate (formData) {
         let reload = false
         if (formData.get('imgInp') !== 'undefined' || formData.get('imgCert') !== 'undefined') reload = true
         formData.delete('imgCert')
         return { data: formData, reload }
     }
 
-    #certificatePrint() {
+    #certificatePrint () {
         const fn = ({ url, formData }) => {
             return this.#service.openFile({ method: 'POST', url, formData })
         }
         this.#view.certificate({
             fn,
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             }
         })
     }

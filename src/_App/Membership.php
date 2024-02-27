@@ -72,6 +72,11 @@ class Membership extends Controller
         return print json_encode($list);
     }
 
+    public function save (array $data): string
+    {
+        return $this->update($data);
+    }
+
     public function update(array $data): ?string
     {
         $membership = new \Models\Membership();
@@ -132,8 +137,8 @@ class Membership extends Controller
     private function newRegister(): int
     {
         $membershipDb = (new \Models\Membership())->activeAll(0,0,"id,register","register desc");
-        $membership = ($membershipDb ? $membershipDb[0]->register : "0000000");
-        return date("Y") . str_pad(substr($membership,4)+1, "3", "0", STR_PAD_LEFT);
+        $register = ($membershipDb ? $membershipDb[0]->register : "0000000");
+        return date("Y") . str_pad(substr($register,4)+1, "3", "0", STR_PAD_LEFT);
     }
 
     public function birthday()

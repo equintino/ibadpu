@@ -58,6 +58,7 @@
         $router->post("/membership/list", "Membership:list");
         $router->get("/membership/register/{id}", "Membership:register");
         $router->post("/membership/update", "Membership:update");
+        $router->post("/membership/save", "Membership:save");
         $router->get("/membership/no_member", "Membership:noMember");
         $router->get("/membership/birthday", "Membership:birthday");
         $router->post("/membership/birthmonth", "Membership:birthmonth");

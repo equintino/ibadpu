@@ -4,22 +4,21 @@ import AbstractView from "./abstractView.js"
 export default class Membership extends AbstractView {
     membersId
 
-    setBtns({ fn, getPage }) {
+    setBtns ({ fn, openFile }) {
         const [ photos, btnEdits ] = [
             document.querySelectorAll('#membership .photo'),
             document.querySelectorAll('#membership [data-action="edit"]')
         ]
-        this.#openModal({ photos, btnEdits }, fn, getPage)
-        this.#add(fn, getPage)
-        this.#noMember(fn, getPage)
+        this.#openModal({ photos, btnEdits }, fn, openFile)
+        this.#noMember(fn, openFile)
         this.#btnBadgeOff()
         this.#markBadge()
-        this.#badge(getPage)
+        this.#badge(openFile)
         this.#scrollUp()
         this.#searchMember()
     }
 
-    #openModal(elements, fn, getPage) {
+    #openModal (elements, fn, openFile) {
         for (let i in elements) {
             elements[i].forEach( (e) => {
                 e.onclick = () => {
@@ -27,7 +26,10 @@ export default class Membership extends AbstractView {
                     let name = e.attributes['data-name'].value
                     this.modal.show({
                         title: name,
-                        content: getPage({ url: 'membership/register/' + memberId }),
+                        content: openFile({
+                            url: 'membership/register/' + memberId,
+                            method: 'GET'
+                        }),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
                     this.modal.buttons.onclick = () => {
@@ -48,7 +50,7 @@ export default class Membership extends AbstractView {
         }
     }
 
-    #validate(required, fn) {
+    #validate (required) {
         /** Require compulsory fields */
         for (let field of required) {
             if (field.value == "") {
@@ -62,11 +64,14 @@ export default class Membership extends AbstractView {
         return true
     }
 
-    #add(fn, getPage) {
+    add ({ submit, openFile, initializer }) {
         document.querySelector('.add').onclick = () => {
             this.modal.show({
                 title: 'NOVO MEMBRO',
-                content: getPage({ url: 'membership/register/0' }),
+                content: openFile({
+                    url: 'membership/register/0',
+                    method: 'GET'
+                }),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
             this.modal.buttons.onclick = () => {
@@ -89,26 +94,38 @@ export default class Membership extends AbstractView {
                         return this.message.text("O campo \"" + fieldName.substring(0, fieldName.length -1) + "\" requerido", "var(--cor-warning)")
                     }
                 }
-                fn({ formData })
+                const response = submit({ formData })
+                if (response.indexOf('success') !=='-1') {
+                    this.modal.close()
+                    document.querySelector('.content').innerHTML = openFile({
+                        url: 'membership/init',
+                        method: 'GET'
+                    })
+                    initializer()
+                }
+                this.message.text(response)
             }
         }
     }
 
-    #noMember(fn, getPage) {
+    #noMember (fn, openFile) {
         const noMembers = document.querySelector('#membership .no_members')
         noMembers.onclick = () => {
             this.modal.show({
                 title: "EX-MEMBROS OU VISITANTES",
-                content: getPage({ url: "membership/no_member" }),
+                content: openFile({
+                    url: "membership/no_member",
+                    method: 'GET'
+                }),
                 callback: () => {
                     let btnEdit = this.modal.content.querySelectorAll('button')
-                    this.#openModal({ btnEdit }, fn, getPage)
+                    this.#openModal({ btnEdit }, fn, openFile)
                 }
             })
         }
     }
 
-    #btnBadgeOff() {
+    #btnBadgeOff () {
         document.querySelector('.badgesOff').onclick = () => {
             const badges = document.querySelectorAll('.badge img')
             badges.forEach((e) => {
@@ -121,7 +138,7 @@ export default class Membership extends AbstractView {
         }
     }
 
-    #markBadge() {
+    #markBadge () {
         this.membersIds = []
         const btnOnOff = document.querySelectorAll('#membership .badge')
         const selected = document.querySelector('#selected')
@@ -153,7 +170,7 @@ export default class Membership extends AbstractView {
         }
     }
 
-    #badge(getPage) {
+    #badge (openFile) {
         const formData = new FormData()
         document.querySelector('.cart').onclick = () => {
             if (document.querySelector('#selected').innerText === '0') {
@@ -162,7 +179,7 @@ export default class Membership extends AbstractView {
             formData.append('members_ids', this.membersIds)
             this.modal.show({
                 title: 'EMISSÃO DE CARTEIRINHA',
-                content: getPage({ url: 'wallet', formData, method: 'POST' }),
+                content: openFile({ url: 'wallet', formData, method: 'POST' }),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
                     this.modal.buttons.onclick = (e) => {
@@ -181,7 +198,7 @@ export default class Membership extends AbstractView {
         }
     }
 
-    certificate({ fn, getPage, side = true }) {
+    certificate ({ fn, openFile, side = true }) {
         let ids = []
         const print = (ids) => {
             const formData = new FormData()
@@ -189,7 +206,7 @@ export default class Membership extends AbstractView {
             formData.append('side', side)
             this.modal.show({
                 title: 'CERTIFICADO DE BATISMO',
-                content: getPage({ url: 'certificate', formData, method: 'POST' }),
+                content: openFile({ url: 'certificate', formData, method: 'POST' }),
                 buttons: "<button class='button btn-secondary' value='close'>Fechar</button><button class='button btn-danger' value='print'>Imprimir</button>",
                 callback: () => {
                     /** Shifting aside */
@@ -240,7 +257,7 @@ export default class Membership extends AbstractView {
         })
     }
 
-    response(response, fn) {
+    response (response, fn) {
         let background
         if (response.indexOf("success") !== -1) {
             background = "var(--cor-success)"
@@ -254,11 +271,11 @@ export default class Membership extends AbstractView {
         this.message.text(response, background)
     }
 
-    #scrollUp() {
+    #scrollUp () {
         ScrollUp.init('#tab-membership')
     }
 
-    #searchMember() {
+    #searchMember () {
         const search = document.querySelector('#membership [name=search]')
         search.focus()
         search.onkeyup = str => this.#runSearch(search.value)
@@ -270,7 +287,7 @@ export default class Membership extends AbstractView {
         }
     }
 
-    #runSearch(str) {
+    #runSearch (str) {
         str = str.toUpperCase()
         const icon = document.querySelector('#membership i').classList
         str.length === 0 ?
