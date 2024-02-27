@@ -25,29 +25,29 @@ export default class Moviment extends AbstractController {
                 }
             })
             this.#view.preview({
-                getPage: (data) => {
-                    return this.getPage(data)
+                openFile: (data) => {
+                    return this.#service.openFile(data)
                 },
                 getList: () => {
                     return this.#getListMembers()
                 },
                 evt: ({ btnName, formData }) => {
                     if (btnName === 'save') {
-                        return this.getPage({
+                        return this.#service.openFile({
                             url: 'moviment/update',
                             method: 'POST',
                             formData
                         })
                     }
                     if (btnName === 'summary') {
-                        return this.getPage({
+                        return this.#service.openFile({
                             url: 'moviment/summarie',
                             method: 'POST',
                             formData
                         })
                     }
                     if (btnName === 'delete') {
-                        return this.getPage({
+                        return this.#service.openFile({
                             url: 'moviment/delete/' + formData.get('id'),
                             method: 'POST'
                         })
@@ -66,16 +66,16 @@ export default class Moviment extends AbstractController {
         if (page.indexOf('proof') !== -1) return this.#proof()
 
         this.#view.pagination({
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             },
             callScript: () => {
                 this.#location({ page: 'moviment' })
             }
         })
         this.#view.openReport({
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             },
             getList: () => {
                 return this.#getListMembers()
@@ -85,7 +85,7 @@ export default class Moviment extends AbstractController {
 
     #getListMembers () {
         return JSON.parse(
-                this.getPage({
+                this.#service.openFile({
                 url: 'membership/list',
                 method: 'POST'
             })
@@ -103,7 +103,7 @@ export default class Moviment extends AbstractController {
     }
 
     #submit (formData) {
-        return this.getPage({
+        return this.#service.openFile({
             url: 'moviment/add',
             method: 'POST',
             formData
@@ -112,15 +112,15 @@ export default class Moviment extends AbstractController {
 
     #closingReport () {
         this.#view.closingReport({
-            fn: ({ formData, getPage }) => {
-                return this.getPage({
+            fn: ({ formData }) => {
+                return this.#service.openFile({
                     url: 'moviment/save',
                     method: 'POST',
                     formData
                 })
             },
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             },
             callScript: () => {
                 this.#location({ page: 'moviment' })
@@ -130,8 +130,8 @@ export default class Moviment extends AbstractController {
 
     #proof() {
         this.#view.proof({
-            getPage: (data) => {
-                return this.getPage(data)
+            openFile: (data) => {
+                return this.#service.openFile(data)
             },
             validate: file => this.#validate(file),
             initializer: data => this.initializer(data)

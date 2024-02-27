@@ -106,13 +106,13 @@ export default class Moviment extends AbstractView {
         this.message.text(response)
     }
 
-    preview ({ getPage, getList, evt }) {
+    preview ({ openFile, getList, evt }) {
         document.querySelector("#moviment [value=preview]").onclick = (e) => {
             const month = document.querySelector('form [name=month]').value
             const year = document.querySelector('form [name=year]').value
             const url = "moviment/" + year + "/" + month
             this.memberList = getList()
-            let response = getPage({
+            let response = openFile({
                 url, method: 'POST'
             })
 
@@ -227,7 +227,7 @@ export default class Moviment extends AbstractView {
         }
     }
 
-    closingReport ({ fn, getPage, callScript }) {
+    closingReport ({ fn, openFile, callScript }) {
         document.querySelector("#moviment [value=conclude]").onclick = () => {
             const formData = new FormData()
             let data = {
@@ -246,7 +246,7 @@ export default class Moviment extends AbstractView {
                     this.modal.hideContent()
                     if (response.indexOf('success') !== -1) {
                         this.showPage({
-                            page: getPage({ url: 'moviment' }),
+                            page: openFile({ url: 'moviment' }),
                             fn: () => callScript()
                         })
                     }
@@ -255,7 +255,7 @@ export default class Moviment extends AbstractView {
         }
     }
 
-    pagination ({ getPage, callScript }) {
+    pagination ({ openFile, callScript }) {
         document.querySelectorAll("#moviment button").forEach((arrow) => {
             arrow.onclick = (e) => {
                 const tagName = e.target.tagName
@@ -274,7 +274,7 @@ export default class Moviment extends AbstractView {
                     }
                     currentPage = (currentPage !== 0 ? currentPage : 1)
                     document.querySelector("#current-page").innerText = currentPage
-                    document.querySelector('.content').innerHTML = getPage({
+                    document.querySelector('.content').innerHTML = openFile({
                         url: 'moviment/pagination/' + currentPage,
                         method: 'GET'
                     })
@@ -284,12 +284,12 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    openReport({ getPage, getList }) {
+    openReport({ openFile, getList }) {
         document.querySelectorAll('#moviment a').forEach((a) => {
             a.onclick = (e) => {
                 const year = a.attributes['data-year'].value
                 const month = a.attributes['data-month'].value
-                let response = getPage({
+                let response = openFile({
                     url: 'moviment/' + year + '/' + month,
                     method: 'POST'
                 })
@@ -311,7 +311,7 @@ export default class Moviment extends AbstractView {
                         const formData = new FormData(form)
                         formData.append('year', year)
                         formData.append('month', month.toUpperCase())
-                        this.#summarie({ getPage, formData })
+                        this.#summarie({ openFile, formData })
                     }
                 }
             }
@@ -328,9 +328,9 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    #summarie ({ getPage, formData }) {
+    #summarie ({ openFile, formData }) {
         this.modal.modal({
-            html: getPage({
+            html: openFile({
                 url: 'moviment/summarie',
                 method: 'POST',
                 formData
@@ -345,7 +345,7 @@ export default class Moviment extends AbstractView {
                             document.querySelector("#div_dialogue").style.display = 'none'
                             document.querySelector("#mask_main").style.zIndex = 2
                         } else {
-                            this.#printPreview({ getPage, formData })
+                            this.#printPreview({ openFile, formData })
                         }
                     }
                 })
@@ -353,9 +353,9 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    #printPreview ({ formData, getPage }) {
+    #printPreview ({ formData, openFile }) {
         this.modal.new({
-            content: getPage({
+            content: openFile({
                 url: "impression",
                 method: 'POST',
                 formData
@@ -380,12 +380,12 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    proof ({ getPage, validate, initializer }) {
+    proof ({ openFile, validate, initializer }) {
         document.querySelector('#proof select[name=year]').onchange = (e) => {
             this.loading.show()
             const year = e.target.value
             const data = JSON.parse(
-                getPage({
+                openFile({
                     url: 'proof/year/' + year,
                     method: 'POST'
                 })
@@ -408,7 +408,7 @@ export default class Moviment extends AbstractView {
             formData.append('year', year)
             formData.append('month', month)
             const data = JSON.parse(
-                getPage({
+                openFile({
                     url: 'proof/proof',
                     method: 'POST',
                     formData
@@ -471,7 +471,7 @@ export default class Moviment extends AbstractView {
             }
 
             const response = JSON.parse(
-                getPage({
+                openFile({
                     url: 'proof/save',
                     method: 'POST',
                     formData
@@ -479,7 +479,7 @@ export default class Moviment extends AbstractView {
             )
 
             if (response.indexOf('success') !== -1) {
-                document.querySelector('.content').innerHTML = getPage({
+                document.querySelector('.content').innerHTML = openFile({
                     url: 'proof/init',
                     method: 'GET'
                 })
