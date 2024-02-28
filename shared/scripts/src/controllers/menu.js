@@ -3,6 +3,7 @@ import Documentation from "./documentation.js"
 import Membership from "./membership.js"
 import Moviment from "./moviment.js"
 import Occupation from "./occupation.js"
+import Shield from "./shield.js"
 import User from "./user.js"
 
 export default class Menu extends AbstractController{
@@ -34,7 +35,9 @@ export default class Menu extends AbstractController{
                 user.initializer()
                 break
             case "shield":
-                scriptSecurity()
+                // scriptSecurity()
+                const shield = new Shield()
+                shield.initializer()
                 break
             case "config":
                 scriptConfig()

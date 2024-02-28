@@ -354,49 +354,49 @@ const saveForm = function(act, action, connectionName = null, url = "../Suporte/
 };
 
 /** @params array screens(access), element, icon One, icon two */
-const insertCheck = function(screens, element, optionGreen, optionRed) {
-    element.find("i").removeClass();
-    element.each(function() {
-        if(screens == " *" || screens.indexOf($(this).text().trim()) !== -1) {
-            $(this).find("i").addClass(optionGreen)
-                .css("color","green");
-        } else {
-            $(this).find("i").addClass(optionRed)
-                .css("color","red");
-        }
-    });
-};
+// const insertCheck = function(screens, element, optionGreen, optionRed) {
+//     element.find("i").removeClass();
+//     element.each(function() {
+//         if(screens == " *" || screens.indexOf($(this).text().trim()) !== -1) {
+//             $(this).find("i").addClass(optionGreen)
+//                 .css("color","green");
+//         } else {
+//             $(this).find("i").addClass(optionRed)
+//                 .css("color","red");
+//         }
+//     });
+// };
 
 /** @return object */
-const getScreenAccess = function(element, check, groupName) {
-    var access = "";
-    element.each(function() {
-        if($(this).find("i").hasClass(check)) {
-            access += (access.length === 0 ? $(this).text() : "," + $(this).text());
-        }
-    });
-    return {
-        access: access,
-        name: groupName
-    };
-};
+// const getScreenAccess = function(element, check, groupName) {
+//     var access = "";
+//     element.each(function() {
+//         if($(this).find("i").hasClass(check)) {
+//             access += (access.length === 0 ? $(this).text() : "," + $(this).text());
+//         }
+//     });
+//     return {
+//         access: access,
+//         name: groupName
+//     };
+// };
 
 /**
 * @return bool
 * @params element, icon One, icon Two
 */
-const changeCheck = function(element, optionGreen, optionRed) {
-    let currentOption = element.attr("class");
-    element.removeClass();
-    if(currentOption === optionRed) {
-        element.addClass(optionGreen)
-            .css("color","green");
-    } else {
-        element.addClass(optionRed)
-            .css("color","red");
-    }
-    return true;
-};
+// const changeCheck = function(element, optionGreen, optionRed) {
+//     let currentOption = element.attr("class");
+//     element.removeClass();
+//     if(currentOption === optionRed) {
+//         element.addClass(optionGreen)
+//             .css("color","green");
+//     } else {
+//         element.addClass(optionRed)
+//             .css("color","red");
+//     }
+//     return true;
+// };
 
 /** @return resp */
 const loadData = function(link, data = null, dataType = "JSON", msg = "Loading...") {

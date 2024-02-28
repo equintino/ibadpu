@@ -10,11 +10,6 @@ class Group extends Controller
 {
     use GroupTrait;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function list(): void
     {
         $groups = $this->group()->all() ?? [];
@@ -24,15 +19,15 @@ class Group extends Controller
         $this->view->render("shield", [ compact("groups","screens","group_id") ]);
     }
 
-    public function load(array $data): void
+    public function load(array $data): string
     {
-        $group = $this->group()->find($data["groupName"]);
-        if($group) {
+        $group = $this->group()->find($data["name"]);
+        if ($group) {
             $security["access"] = [];
-            foreach(explode(",", $group->access) as $screen) {
+            foreach (explode(",", $group->access) as $screen) {
                 array_push($security["access"], Safety::renameScreen($screen));
             }
-            echo json_encode($security);
+            return print json_encode($security);
         }
     }
 
@@ -41,17 +36,17 @@ class Group extends Controller
         ($this->view->setPath("Modals")->render("group"));
     }
 
-    public function save(): void
+    public function save(): string
     {
         $params = $this->getPost($_POST);
         $group = $this->group();
 
         $group->bootstrap($params);
         $group->save();
-        echo json_encode($group->message());
+        return print $group->message();
     }
 
-    public function update(): void
+    public function update(): string
     {
         $params = $this->getPost($_POST);
         $group = $this->group()->find($params["name"]);
@@ -62,13 +57,13 @@ class Group extends Controller
         }
 
         $group->save(true);
-        echo json_encode($group->message());
+        return print $group->message();
     }
 
-    public function delete(array $data): void
+    public function delete(array $data): string
     {
         $group = $this->group()->find($data["name"]);
         $group->destroy();
-        echo json_encode($group->message());
+        return print $group->message();
     }
 }
