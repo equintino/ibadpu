@@ -39,20 +39,18 @@ class Config extends Controller
         ($this->view->setPath("Modals")->render("config", [ compact("config", "types") ]));
     }
 
-    public function save(): void
+    public function save(): string
     {
         $params = $this->getPost($_POST);
-        $data = $params["data"];
-        $this->config->save($data);
-        echo json_encode($this->config->message());
+        $this->config->save($params);
+        return print $this->config->message();
     }
 
-    public function update(): void
+    public function update(): string
     {
         $params = $this->getPost($_POST);
-        $data = $params["data"];
         $this->config->update($params);
-        echo json_encode($this->config->message());
+        return print $this->config->message();
     }
 
     public function delete(array $data): void

@@ -31,9 +31,10 @@ class Config
         return Connect::getConfConnection();
     }
 
-    public function setConfConnection(string $data, string $connectionName = null)
+    public function setConfConnection($data, string $connectionName = null)
     {
-        parse_str($data, $data);
+        // var_dump($data);die;
+        // parse_str($data, $data);
         $this->local = (!empty($connectionName) ? $connectionName : $data["connectionName"]);
         $this->data = $data;
         $this->setType($this->data["type"]);
@@ -153,11 +154,11 @@ class Config
         }
     }
 
-    public function save(string $data): bool
+    public function save($data): bool
     {
         $file = (object) $this->getFile();
         $this->setConfConnection($data);
-        parse_str($data, $data);
+        // parse_str($data, $data);
         $connectionName = $data["connectionName"];
         if(!empty($file->$connectionName)) {
             $this->message = "<span class='warning'>Existing connection name</span>";
@@ -171,15 +172,20 @@ class Config
         ];
 
         $saved = $this->saveFile((array) $file);
-        $this->message = ($saved ? "<span class='success'>Data saved successfully</span>" : "<span class='danger'>Erro ao salvar</span>");
+        $this->message = (
+            $saved ?
+                "<span class='success'>Data saved successfully</span>"
+                : "<span class='danger'>Erro ao salvar</span>"
+        );
         return $saved;
     }
 
     public function update(array $data): bool
     {
         $file = (object) $this->getFile();
-        $this->setConfConnection($data["data"]);
-        parse_str($data["data"], $data);
+        // $this->setConfConnection($data["data"]);
+        $this->setConfConnection($data);
+        // parse_str($data["data"], $data);
         $connectionName = $data["connectionName"];
 
         $file->$connectionName = [
@@ -189,7 +195,11 @@ class Config
         ];
 
         $saved = $this->saveFile((array) $file);
-        $this->message = ($saved ? "<span class='success'>Data saved successfully</span>" : "<span class='error'>Erro ao salvar</span>");
+        $this->message = (
+            $saved ?
+                "<span class='success'>Data saved successfully</span>"
+                : "<span class='error'>Erro ao salvar</span>"
+            );
         return $saved;
     }
 

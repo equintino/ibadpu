@@ -1,6 +1,6 @@
 <div id="config">
     <div class="buttons">
-        <button class="button btnAction">Adicionar</button>
+        <button class="button btnAction" value="add">Adicionar</button>
     </div>
     <div class="table-conf">
         <fieldset class="fieldset pt-3" style="width: 100%">

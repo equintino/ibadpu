@@ -12,19 +12,40 @@ class Group extends Model implements Models
     /** @var array */
     private $required = [ "name" ];
 
-    public function load(int $id, string $columns = "*", bool $msgDb = false)
+    public function load (int $id, string $columns = "*", bool $msgDb = false)
     {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id=:id", "id={$id}", $msgDb);
 
         if($this->fail || !$load->rowCount()) {
-            $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed ID Group</span>");
+            $this->message = (
+                $msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed ID Group</span>"
+            );
             return null;
         }
 
         return $load->fetchObject(__CLASS__);
     }
 
-    public function find(string $search, string $columns = "*")
+    public function activeAll (
+        ?int $limit=null, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false
+    ): ?array
+    {
+        $sql = "SELECT {$columns} FROM  " . static::$entity . " WHERE active=1 " . $this->order($order);
+        if ($limit !== null && $limit !== 0) {
+            $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
+        } else {
+            $all = $this->read($sql);
+        }
+
+        if (!$all->rowCount()) {
+            $this->message = "Your query has not returned any registrations";
+            return null;
+        }
+
+        return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
+    }
+
+    public function find (string $search, string $columns = "*")
     {
         if(filter_var($search, FILTER_SANITIZE_STRIPPED)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");

@@ -41,7 +41,7 @@
     }
 
     $minJS->add(__DIR__ . "/../../shared/scripts/functions.js");
-    $minJS->add(__DIR__ . "/../../shared/scripts/script-config.js");
+    // $minJS->add(__DIR__ . "/../../shared/scripts/script-config.js");
 
     /** MinifyCss */
     $minJS->minify(__DIR__ . $themes . CONF_VIEW_THEME . "/assets/scripts.js");

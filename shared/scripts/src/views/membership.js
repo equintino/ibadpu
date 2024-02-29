@@ -263,7 +263,7 @@ export default class Membership extends AbstractView {
             background = "var(--cor-success)"
             fn()
             this.modal.close()
-        } else if(response.indexOf("danger") !== -1) {
+        } else if (response.indexOf("danger") !== -1) {
             background = "var(--cor-danger)"
         } else {
             background = "var(--cor-warning"
@@ -299,5 +299,21 @@ export default class Membership extends AbstractView {
             e.style.display = (typeof(member) !== 'undefined' && member.indexOf(str) === -1) ?
                 'none' : 'block'
         })
+    }
+
+    showBirthmonth (fn) {
+        const response = fn('membership/birthmonth')
+        if (response !== '') {
+            this.modal.show({
+                title: 'Aniversariantes do Mês',
+                content: response
+            })
+            .styles({
+                element: '#boxe_main #content',
+                css: {
+                    height: 'auto'
+                }
+            })
+        }
     }
 }

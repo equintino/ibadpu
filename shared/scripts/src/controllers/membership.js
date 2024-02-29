@@ -6,9 +6,13 @@ export default class Membership extends AbstractController {
     #view
     #service
 
-    initializer () {
+    constructor () {
+        super()
         this.#view = new View()
         this.#service = new Service()
+    }
+
+    initializer () {
         this.#add()
         this.#edition()
         this.#certificatePrint()
@@ -72,6 +76,15 @@ export default class Membership extends AbstractController {
             openFile: (data) => {
                 return this.#service.openFile(data)
             }
+        })
+    }
+
+    showBirthmonth() {
+        this.#view.showBirthmonth((url) => {
+            let now = new Date
+            const formData = new FormData()
+            formData.append('month', now.getMonth() + 1)
+            return this.#service.openFile({ method: 'POST', url, formData })
         })
     }
 }

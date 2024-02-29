@@ -25,7 +25,7 @@ class Membership extends Controller
         } else {
             $membership = ($membership ?? []);
             $certificate = $this->certificate;
-            $this->view->render($this->page, [ compact("membership","certificate") ]);
+            $this->view->render($this->page, [ compact("membership", "certificate") ]);
         }
     }
 

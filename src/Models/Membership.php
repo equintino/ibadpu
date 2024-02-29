@@ -84,7 +84,9 @@ class Membership extends Model implements Models
         return $data->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function activeAll(?int $limit=null, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false): ?array
+    public function activeAll(
+        ?int $limit=null, int $offset=0, string $columns = "*", string $order = "name", bool $msg=false
+    ): ?array
     {
         $sql = "SELECT {$columns} FROM  " . static::$entity . " WHERE active=1 " . $this->order($order);
         if($limit !== null && $limit !== 0) {

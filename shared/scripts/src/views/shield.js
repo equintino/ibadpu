@@ -4,6 +4,7 @@ export default class Shield extends AbstractView {
     btnAction (fn) {
         document.querySelectorAll('#shield button').forEach((buttons) => {
             buttons.onclick = (btn) => {
+                this.loading.show()
                 const btnName = btn.target.value
                 fn({ btnName })
             }
@@ -75,6 +76,7 @@ export default class Shield extends AbstractView {
 
         const response = update({ formData })
         this.message.text(response)
+        this.loading.hide()
     }
 
     #getScreenAccess () {
@@ -122,12 +124,14 @@ export default class Shield extends AbstractView {
                 }
             }
         })
+        this.loading.hide()
     }
 
     btnGroups ({ getListScreen }) {
         document.querySelectorAll("#shield .btnAction").forEach((e) => {
             let groupName
             e.onclick = (btn) => {
+                this.loading.show()
                 groupName = btn.target.innerText
                 const active = e.parentElement.querySelector('.active')
                 document.querySelector("#shield .screen legend span").innerHTML = "Grupo: " + groupName
@@ -152,6 +156,7 @@ export default class Shield extends AbstractView {
         document.querySelectorAll('#shield .screen span').forEach((check) => {
             if (check.querySelector('i')) {
                 check.querySelector('i').onclick = (icon) => {
+                    this.loading.show()
                     if (icon.target.classList.contains('fa-check')) {
                         icon.target.classList.remove('fa-check')
                         icon.target.classList.add('fa-times')
@@ -161,6 +166,7 @@ export default class Shield extends AbstractView {
                         icon.target.classList.add('fa-check')
                         icon.target.style.color = 'green'
                     }
+                    this.loading.hide()
                 }
             }
         })

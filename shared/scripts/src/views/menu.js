@@ -1,7 +1,7 @@
 import AbstractView from "./abstractView.js";
 
 export default class View extends AbstractView {
-    initializer = (fn) => {
+    initializer (fn) {
         const btnMenu = document.getElementById('top').querySelectorAll('li')
         btnMenu.forEach((e) => {
             e.onclick = (i) => {
@@ -11,39 +11,28 @@ export default class View extends AbstractView {
                     element.attributes['data-id'] ? element.attributes['data-id'].value : null
                 )
                 if (!pageName) return
-                this.#loading.show()
+                this.loading.show()
                 fn({ pageName, element })
                 this.identif(pageName, logged)
             }
         })
     }
 
-    showPage = (page, fn) => {
+    showPage (page, fn) {
         document.querySelector('.content').innerHTML = page
         if (typeof(fn) === 'function') fn()
         setTimeout(() => {
-            this.#loading.hide()
+            this.loading.hide()
         }, 100)
     }
 
-    #loading = {
-        show: () => {
-            document.querySelector('.loading').style.display = 'block'
-            // document.querySelector('#mask_main').style.display = 'block'
-        },
-        hide: async () => {
-            document.querySelector('.loading').style.display = 'none'
-            // document.querySelector('#mask_main').style.display = 'none'
-        }
-    }
-
-    active = (element) => {
+    active (element) {
         document.querySelectorAll("#topHeader ul li a").forEach((e) => {
             e.parentElement.classList.remove('active')
             e.classList.remove('active')
-            // if ($(this).attr("data-toggle") !== "dropdown") {
-            //     $("#upArrow").css("display","none")
-            // }
+            if (document.querySelector('body').scrollTop === 0) {
+                document.querySelector('#upArrow').style.display = 'none'
+            }
         })
         element.classList.add('active')
         while (element['tagName'] !== 'LI') {
@@ -52,7 +41,7 @@ export default class View extends AbstractView {
         }
     }
 
-    identif = (page, logged="Nenhum usuário logado") => {
+    identif (page, logged="Nenhum usuário logado") {
         let ident
         switch(page) {
             case "home":
@@ -92,21 +81,5 @@ export default class View extends AbstractView {
                 ident = "CADASTRO DE " + page.toUpperCase()
         }
         document.querySelector('.identification').innerHTML = ident
-    }
-
-    showBirthmonth = (fn) => {
-        const response = fn('membership/birthmonth')
-        if (response !== '') {
-            this.modal.show({
-                title: 'Aniversariantes do Mês',
-                content: response
-            })
-            .styles({
-                element: '#boxe_main #content',
-                css: {
-                    height: 'auto'
-                }
-            })
-        }
     }
 }
