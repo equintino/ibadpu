@@ -17,6 +17,6 @@
                 <span class="mr-2"><i class="fa fa-times" style="color: red"></i> <?= $screen ?></span>
             <?php endforeach ?>
         </fieldset>
-        <button class="button save" style="float: right" >Gravar</button>
+        <button class="button save" style="float: right" value="save">Gravar</button>
     </div>
 </div>

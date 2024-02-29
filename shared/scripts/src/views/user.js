@@ -26,7 +26,7 @@ export default class extends AbstractView {
                 this.loading.show()
                 const action = e.target.tagName === "I" ? e.target.parentElement : e.target
 
-                fn({ action })
+                if (action.title) fn({ action })
                 this.loading.hide()
             }
         })
