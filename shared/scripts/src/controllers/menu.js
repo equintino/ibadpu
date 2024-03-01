@@ -49,7 +49,6 @@ export default class Menu extends AbstractController{
                 shield.initializer()
                 break
             case "config":
-                // scriptConfig()
                 const config = new Config()
                 config.initializer()
                 break
