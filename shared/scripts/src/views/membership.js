@@ -32,6 +32,9 @@ export default class Membership extends AbstractView {
                         }),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
+
+                    this.#setThumb()
+
                     this.modal.buttons.onclick = () => {
                         const form  = this.modal.content.querySelector('form')
                         const files = form.querySelectorAll('[type=file]')
@@ -74,6 +77,9 @@ export default class Membership extends AbstractView {
                 }),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
+
+            this.#setThumb()
+
             this.modal.buttons.onclick = () => {
                 const form  = this.modal.content.querySelector('form')
                 const files = form.querySelectorAll('[type=file]')
@@ -106,6 +112,21 @@ export default class Membership extends AbstractView {
                 this.message.text(response)
             }
         }
+    }
+
+    #setThumb () {
+        this.thumbImage.run({
+            thumbs: [
+                {
+                    origin: '#imgInp',
+                    destination: '#thumb_image'
+                },
+                {
+                    origin: '#imgCert',
+                    destination: '#thumb_cert'
+                }
+            ]
+        })
     }
 
     #noMember (fn, openFile) {

@@ -70,10 +70,20 @@ export default class Documentation extends AbstractView {
         const file = document.querySelector('#documentation #form-documentation [type=file]')
         const filesAdd = documentation.querySelectorAll("[type=file]")
 
+        this.thumbImage.run({
+            thumbs: [
+                {
+                    origin: `#doc`,
+                    destination: '#preview'
+                }
+            ]
+        })
+
         file.onclick = () => this.loading.show()
 
         let btnSave = document.querySelector('#documentation [disabled]')
-        file.onchange = () => {
+
+        file.onchange = (e) => {
             const response = fn(filesAdd)
             if (response) this.message.text(response)
             if (btnSave.disabled && !response) btnSave.disabled = false

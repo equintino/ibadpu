@@ -29,7 +29,7 @@
                         <tr>
                             <td><input type="text" name="names[]"  required/></td>
                             <td><input type="text" name="descriptions[]" required/></td>
-                            <td><input type="file" name="files[]"  required/></td>
+                            <td><input type="file" name="files[]" id="doc"  required/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,4 +43,7 @@
         <button class="button btn-danger" disabled value="save" >Salvar</button>
     </section>
     <?php endif ?>
+    <section style="text-align: center; margin-top: 10px">
+        <img src="" alt="" id="preview" style="border-radius: 7px; width: 200px"/>
+    </section>
 </div>

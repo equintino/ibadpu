@@ -111,13 +111,13 @@ export default class MountingMovimentTable {
         for (let i in data) {
             if (i == 0) {
                 subtotal += parseFloat(data[i].previousMonthBalance)
-                _table += "<tr><td align='center'>01</td><td>SALDO DO MÊS ANTERIOR</td><td></td><td></td><td></td><td align='right'>" + moeda(subtotal) + "</td></tr>"
+                _table += "<tr><td align='center'>01</td><td>SALDO DO MÊS ANTERIOR</td><td></td><td></td><td></td><td align='right'>" + this.#moeda(subtotal) + "</td></tr>"
                 _table += "<input type='hidden' name='previousMonthBalance' value=" + subtotal + "' />"
             } else {
-                subtotal += valReal(data[i].deposit) - valReal(data[i].output)
+                subtotal += this.#valReal(data[i].deposit) - this.#valReal(data[i].output)
                 /** Editable values */
                 let type = edit ? 'text' : 'hidden'
-                let day = "<input class='input day' type='" + type + "' size='1' value='" + getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />"
+                let day = "<input class='input day' type='" + type + "' size='1' value='" + this.#getYearMonthDay(data[i].date, 2) + "' name='day-" + i + "' style='text-align: center' />"
 
                 const { description, tithe_offer } = this.#titheOffer({
                     row: data[i], edit, i, getList
@@ -127,15 +127,40 @@ export default class MountingMovimentTable {
 
                 const { output } = this.#outputTable (data[i], i, edit)
 
-                _table += "<tr data-id='" + data[i].id + "'><td align='center'>" + day + (!edit ? getYearMonthDay(data[i].date, 2) : '') + "</td>"
+                _table += "<tr data-id='" + data[i].id + "'><td align='center'>" + day + (!edit ? this.#getYearMonthDay(data[i].date, 2) : '') + "</td>"
                 _table += "<td>" + description + (!edit && description !== 'OFERTA' ? data[i].description : '') + "</td>"
                 _table += "<td align='center'>" + (data[i].tithe_offer ? tithe_offer : "") + "</td>"
-                _table += "<td align='right'>" + deposit + (!edit && valReal(data[i].deposit) != 0 ? data[i].deposit : '') + "</td>"
-                _table += "<td align='right'>" + (valReal(output) != 0 ? output : "") + "</td>"
-                _table += "<td align='right' style='text-align: right'>" + moeda(subtotal) + "</td>"
+                _table += "<td align='right'>" + deposit + (!edit && this.#valReal(data[i].deposit) != 0 ? data[i].deposit : '') + "</td>"
+                _table += "<td align='right'>" + (this.#valReal(output) != 0 ? output : "") + "</td>"
+                _table += "<td align='right' style='text-align: right'>" + this.#moeda(subtotal) + "</td>"
                 _table += (edit ? "<td class='delete' style='color: red'><i class='fa fa-times' title='Excluir esta linha' ></i></td></tr>" : "</tr>")
             }
         }
         return _table
+    }
+
+    #valReal (val) {
+        let _val = (
+            val != null ? val : "0,00"
+        )
+        return parseFloat(_val.replace(".","").replace(",","."))
+    }
+
+    #moeda (val) {
+        return parseFloat(val).toLocaleString('pt-br', {
+            minimumFractionDigits: 2, maximumFractionDigits: 2
+        })
+    }
+
+    #getYearMonthDay (date, index, name=null) {
+        date = date.split("-")
+        if(!name || index !== 1) {
+            return date[index]
+        }
+        let conversion = [
+            "janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
+            "agosto", "setembro", "outubro", "novembro", "dezembro"
+        ]
+        return conversion[name-1]
     }
 }
