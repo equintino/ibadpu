@@ -68,11 +68,10 @@ export default class Membership extends AbstractController {
     }
 
     #certificatePrint () {
-        const fn = ({ url, formData }) => {
-            return this.#service.openFile({ method: 'POST', url, formData })
-        }
         this.#view.certificate({
-            fn,
+            fn: ({ url, formData }) => {
+                return this.#service.openFile({ method: 'POST', url, formData })
+            },
             openFile: (data) => {
                 return this.#service.openFile(data)
             }

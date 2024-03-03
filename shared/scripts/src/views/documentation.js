@@ -7,7 +7,7 @@ export default class Documentation extends AbstractView {
         return document.querySelector('#documentation section').attributes['id'].value
     }
 
-    openDoc({ fn, openFile, initializer }) {
+    setIconDoc({ fn }) {
         this.#row.forEach((e) => {
             const formData = new FormData()
             e.onclick = (i) => {
@@ -15,55 +15,59 @@ export default class Documentation extends AbstractView {
                 formData.append('id', id)
                 if (typeof(i.target.parentElement.attributes["data-action"]) !== "undefined") {
                     let action = i.target.parentElement.attributes["data-action"].value
-                    let description = i.target.parentElement.parentElement.children[1].textContent
-                    if (action === "delete") {
-                        const conf = this.modal.confirm({
-                            title: "Deseja realmente excluir este documento?",
-                            message: description,
-                            buttons: "<button class='button cancel' value='close'>NÃO</button><button class='button save' value='delete'>SIM</button>"
-                        })
-                        this.modal.mask.style.zIndex = '2'
-                        conf.onclick = (e) => {
-                            let btnName = e.target.value
-                            if (btnName === 'close') return
-                            const response = fn({ btnName, formData })
-                            document.querySelector('.content').innerHTML = openFile({
-                                url: 'documentation/init',
-                                method: 'GET'
-                            })
-                            initializer()
-                            this.message.text(response)
-                        }
-                    } else {
-                        this.modal.show({
-                            title: "Modo de Edição",
-                            content: openFile({
-                                url: "documentation/edit/" + id,
-                                method: 'GET'
-                            }),
-                            buttons: "<button class='button save' value='edit'>Alterar</button>"
-                        })
-                        this.modal.buttons.onclick = (e) => {
-                            const btnName = e.target.value
-                            const form = this.modal.content.querySelector('form')
-                            const formData = new FormData(form)
-                            const response = fn({ btnName, formData })
-                            if (response.indexOf('success') !== -1) {
-                                document.querySelector('.content').innerHTML = openFile({
-                                    url: 'documentation/init',
-                                    method: 'GET'
-                                })
-                                initializer()
-                                this.modal.close()
-                            }
-                            this.message.text(response)
-                        }
-                    }
+                    let nameDoc = i.target.parentElement.parentElement.children[1].textContent
+                    fn({ action, nameDoc, id })
                 } else {
                     window.open("documentation/show/id/" + id)
                 }
             }
         })
+    }
+
+    edition ({ id, openFile, fn, initializer }) {
+        this.modal.show({
+            title: "Modo de Edição",
+            content: openFile({
+                url: "documentation/edit/" + id,
+                method: 'GET'
+            }),
+            buttons: "<button class='button save' value='edit'>Alterar</button>"
+        })
+        this.modal.buttons.onclick = (e) => {
+            const btnName = e.target.value
+            const form = this.modal.content.querySelector('form')
+            const formData = new FormData(form)
+            const response = fn({ btnName, formData })
+            if (response.indexOf('success') !== -1) {
+                document.querySelector('.content').innerHTML = openFile({
+                    url: 'documentation/init',
+                    method: 'GET'
+                })
+                initializer()
+                this.modal.close()
+            }
+            this.message.text(response)
+        }
+    }
+
+    del ({ nameDoc, openFile, initializer, fn }) {
+        const conf = this.modal.confirm({
+            title: "Deseja realmente excluir este documento?",
+            message: nameDoc,
+            buttons: "<button class='button cancel' value='close'>NÃO</button><button class='button save' value='delete'>SIM</button>"
+        })
+        this.modal.mask.style.zIndex = '2'
+        conf.onclick = (e) => {
+            let btnName = e.target.value
+            if (btnName === 'close') return
+            const response = fn()
+            document.querySelector('.content').innerHTML = openFile({
+                url: 'documentation/init',
+                method: 'GET'
+            })
+            initializer()
+            this.message.text(response)
+        }
     }
 
     changeFile(fn) {
@@ -128,6 +132,7 @@ export default class Documentation extends AbstractView {
                         ])
                     )
                 } else if (btnName === "reset") {
+                    document.querySelector('#documentation #preview').attributes['src'].value = '#'
                     document.querySelector('#documentation #form-documentation').reset()
                 } else if (btnName === 'save') {
                     const formData = new FormData(form)
@@ -144,6 +149,7 @@ export default class Documentation extends AbstractView {
                     }
                     const response = submit({ url, formData, method: 'POST' })
                     if (response.indexOf('success') !== -1) {
+                        document.querySelector('#documentation #preview').attributes['src'].value = '#'
                         this.message.text(response)
                         form.reset()
                     }

@@ -8,11 +8,6 @@ class Certificate extends Controller
 {
     protected $page = "certificate";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $ids = explode(',', $data['ids']);

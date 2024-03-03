@@ -17,28 +17,48 @@ export default class Documentation extends AbstractController {
     }
 
     #listDocuments () {
-        this.#view.openDoc({
-            fn: ({ btnName, formData }) => {
-                let response
-                if (btnName === 'delete') {
-                    response = this.#service.openFile({
-                        url: 'documentation/delete/id/' + formData.get('id'),
-                        method: 'POST'
-                    })
-                }
-                if (btnName === 'edit') {
-                    response = this.#service.openFile({
-                        url: 'documentation/update',
-                        method: 'POST',
-                        formData
-                    })
-                }
-                return response
-            },
+        this.#view.setIconDoc({
+            fn: ({ action, nameDoc, id }) => {
+                if (action === 'delete') this.#delete({ id, nameDoc })
+                if (action === 'edit') this.#edition({ id })
+            }
+        })
+    }
+
+    #delete ({ id, nameDoc }) {
+        this.#view.del({
+            nameDoc,
             openFile: (data) => {
                 return this.#service.openFile(data)
             },
-            initializer: () => this.initializer()
+            initializer: () => {
+                this.initializer()
+            },
+            fn: () => {
+                return this.#service.openFile({
+                    url: 'documentation/delete/id/' + id,
+                    method: 'POST'
+                })
+            }
+        })
+    }
+
+    #edition ({ id }) {
+        this.#view.edition({
+            id,
+            openFile: (data) => {
+                return this.#service.openFile(data)
+            },
+            fn: ({ formData }) => {
+                return this.#service.openFile({
+                    url: 'documentation/update',
+                    method: 'POST',
+                    formData
+                })
+            },
+            initializer: () => {
+                this.initializer()
+            }
         })
     }
 
