@@ -11,6 +11,7 @@ export default class Documentation extends AbstractView {
         this.#row.forEach((e) => {
             const formData = new FormData()
             e.onclick = (i) => {
+                this.loading.show()
                 let id = e.attributes['id'].value
                 formData.append('id', id)
                 if (typeof(i.target.parentElement.attributes["data-action"]) !== "undefined") {
@@ -19,6 +20,7 @@ export default class Documentation extends AbstractView {
                     fn({ action, nameDoc, id })
                 } else {
                     window.open("documentation/show/id/" + id)
+                    this.loading.hide()
                 }
             }
         })
@@ -34,6 +36,7 @@ export default class Documentation extends AbstractView {
             buttons: "<button class='button save' value='edit'>Alterar</button>"
         })
         this.modal.buttons.onclick = (e) => {
+            this.loading.show()
             const btnName = e.target.value
             const form = this.modal.content.querySelector('form')
             const formData = new FormData(form)
@@ -47,6 +50,7 @@ export default class Documentation extends AbstractView {
                 this.modal.close()
             }
             this.message.text(response)
+            this.loading.hide()
         }
     }
 
@@ -60,6 +64,7 @@ export default class Documentation extends AbstractView {
         conf.onclick = (e) => {
             let btnName = e.target.value
             if (btnName === 'close') return
+            this.loading.show()
             const response = fn()
             document.querySelector('.content').innerHTML = openFile({
                 url: 'documentation/init',
@@ -67,6 +72,7 @@ export default class Documentation extends AbstractView {
             })
             initializer()
             this.message.text(response)
+            this.loading.hide()
         }
     }
 
@@ -84,9 +90,7 @@ export default class Documentation extends AbstractView {
         })
 
         file.onclick = () => this.loading.show()
-
         let btnSave = document.querySelector('#documentation [disabled]')
-
         file.onchange = (e) => {
             const response = fn(filesAdd)
             if (response) this.message.text(response)

@@ -32,6 +32,13 @@ export default class Membership extends AbstractView {
                         }),
                         buttons: '<button class="button save" value="save">Salvar</button>'
                     })
+                    .styles({
+                        element: '#boxe_main',
+                        css: {
+                            height: '450px',
+                            display: 'flex'
+                        }
+                    })
 
                     this.#setThumb()
 
@@ -77,6 +84,13 @@ export default class Membership extends AbstractView {
                 }),
                 buttons: '<button class="button save" value="save">Salvar</button>'
             })
+            .styles({
+                element: '#boxe_main',
+                css: {
+                    height: '450px',
+                    display: 'flex'
+                }
+            })
 
             this.#setThumb()
 
@@ -101,7 +115,7 @@ export default class Membership extends AbstractView {
                     }
                 }
                 const response = submit({ formData })
-                if (response.indexOf('success') !=='-1') {
+                if (response.indexOf('success') !== -1) {
                     this.modal.close()
                     document.querySelector('.content').innerHTML = openFile({
                         url: 'membership/init',
@@ -141,6 +155,13 @@ export default class Membership extends AbstractView {
                 callback: () => {
                     let btnEdit = this.modal.content.querySelectorAll('button')
                     this.#openModal({ btnEdit }, fn, openFile)
+                }
+            })
+            .styles({
+                element: '#boxe_main',
+                css: {
+                    height: '450px',
+                    display: 'flex'
                 }
             })
         }
@@ -211,9 +232,10 @@ export default class Membership extends AbstractView {
                 }
             })
             .styles({
-                element: '#boxe_main #content',
+                element: '#boxe_main',
                 css: {
-                    height: '450px'
+                    height: '450px',
+                    display: 'flex'
                 }
             })
         }
@@ -249,6 +271,13 @@ export default class Membership extends AbstractView {
                         document.querySelector('#boxe_main').style.display = 'none'
                         document.querySelector('#mask_main').style.display = 'none'
                     }
+                }
+            })
+            .styles({
+                element: '#boxe_main',
+                css: {
+                    height: '450px',
+                    display: 'flex'
                 }
             })
         }
@@ -330,9 +359,10 @@ export default class Membership extends AbstractView {
                 content: response
             })
             .styles({
-                element: '#boxe_main #content',
+                element: '#boxe_main',
                 css: {
-                    height: 'auto'
+                    height: 'auto',
+                    display: 'flex'
                 }
             })
         }

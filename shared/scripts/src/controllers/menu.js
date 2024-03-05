@@ -13,7 +13,7 @@ export default class Menu extends AbstractController{
     #view
     #service
 
-    initializer () {
+    async initializer () {
         this.#view = new View()
         this.#service = new Service()
 

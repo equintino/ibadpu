@@ -70,6 +70,11 @@ class Proof extends Controller
         return print json_encode($proofs);
     }
 
+    public function saveProof (array $data): int
+    {
+        return (new \Models\Proof())->fileSave($data);
+    }
+
     public function save (array $data)
     {
         $files = $_FILES["proofs"];
@@ -77,7 +82,6 @@ class Proof extends Controller
         $keys = array_keys(array_filter($files["name"]));
         $proofs = new \Models\Proof();
         $moviments = new \Models\Moviment();
-        $message = [];
 
         foreach ($keys as $key) {
             $file["name"] = $files["name"][$key];

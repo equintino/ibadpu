@@ -471,15 +471,14 @@ main .form-signin {
     width: 70%;
     left: 15%;
     max-height: 450px;
-    /* margin-top: 75px; */
-    display: -ms-flexbox;
-    display: flex;
+    /* display: -ms-flexbox; */
+    /* display: flex; */
     -ms-flex-direction: column;
     flex-direction: column;
     pointer-events: auto;
+    background: #ffffff;
     background-clip: padding-box;
     outline: 0;
-    background: #ffffff;
     box-shadow: var(--box-shadow);
     z-index: 3;
     -webkit-transition: opacity 400ms ease-in;

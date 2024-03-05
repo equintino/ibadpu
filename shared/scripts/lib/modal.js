@@ -2,7 +2,7 @@ import CreateElement from './createElement.js'
 import Loading from './loading.js'
 
 export default class Modal {
-    nameModal = document.querySelector("#boxe_main")
+    nameModal = document.querySelector('#boxe_main')
     mask = document.querySelector("#mask_main")
     title = document.querySelector("#boxe_main #title")
     btnClose = document.querySelector('#boxe_main .close')
@@ -74,7 +74,7 @@ export default class Modal {
             this.message.style.overflowY = 'scroll'
             this.message.style.maxHeight = '450px'
         }
-        if(params.content != null) {
+        if (params.content != null) {
             this.content.innerHTML = params.content
             this.content.style.display = 'block'
             if (params.callback != null) params.callback()
@@ -197,6 +197,7 @@ export default class Modal {
                 e.style.display = 'none'
                 e.innerHTML = ''
             })
+            this.nameModal.style.display = 'none'
         }
     }
 
@@ -229,16 +230,22 @@ export default class Modal {
         fn()
     }
 
+    /**
+     *
+     * @param {element: class or id
+     * css: attribute, value} params
+     * @returns
+     */
     styles (params) {
         if (params != null && params.element != null) {
             for (let i in params.css) {
-                document.querySelector(params.element).style.i = params.css[i]
+                document.querySelector(params.element).style = `${i}: ${params.css[i]}`
             }
         }
         if (params.elements != null) {
             for (let el of params.elements.split(',')) {
                 for (let i in params.css) {
-                    document.querySelector(el).style.i = params.css[i]
+                    document.querySelector(el).style = `${i}: ${params.css[i]}`
                 }
             }
         }

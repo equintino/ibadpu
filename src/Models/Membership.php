@@ -103,23 +103,25 @@ class Membership extends Model implements Models
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function save(): ?Membership
+    public function save (): ?Membership
     {
-        if(!$this->required()) {
+        if (!$this->required()) {
             return null;
         }
 
         /** Update */
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $id = $this->id;
-            $membership = $this->read("SELECT id FROM " . self::$entity . " WHERE name = :name AND id != :id", "name={$this->name}&id={$id}");
-            if($membership->rowCount()) {
+            $membership = $this->read(
+                "SELECT id FROM " . self::$entity . " WHERE name = :name AND id != :id", "name={$this->name}&id={$id}"
+            );
+            if ($membership->rowCount()) {
                 $this->message = "<span class='warning'>The Informed Member is already registered</span>";
                 return null;
             }
 
             $this->update(self::$entity, $this->safe(), "id = :id", "id={$id}");
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error updating, verify the data</span>";
                 return null;
             }
@@ -128,13 +130,13 @@ class Membership extends Model implements Models
         }
 
         /** Create */
-        if(empty($this->id)) {
-            if($this->find($this->name)) {
+        if (empty($this->id)) {
+            if ($this->find($this->name)) {
                 $this->message = "<span class='warning'>The Informed Member is already registered</span>";
                 return null;
             }
             $id = $this->create(self::$entity, $this->safe());
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error to Register, Check the data</span>";
                 return null;
             }
@@ -145,13 +147,13 @@ class Membership extends Model implements Models
         return $this;
     }
 
-    public function destroy()
+    public function destroy ()
     {
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $this->delete(self::$entity, "id=:id", "id={$this->id}");
         }
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<span class='danger'>Could not remove the member</span>";
             return null;
         }
@@ -161,10 +163,10 @@ class Membership extends Model implements Models
         return $this;
     }
 
-    public function required(): bool
+    public function required (): bool
     {
-        foreach($this->required as $field) {
-            if(empty(trim($this->$field))) {
+        foreach ($this->required as $field) {
+            if (empty(trim($this->$field))) {
                 $this->message = "<span class='warning'>The field {$field} is required</span>";
                 return false;
             }
@@ -172,13 +174,13 @@ class Membership extends Model implements Models
         return true;
     }
 
-    public function createThisTable()
+    public function createThisTable ()
     {
         $sql = (new CreateMembershipsTable())->up(self::$entity);
         return $this->createTable($sql);
     }
 
-    public function dropThisTable()
+    public function dropThisTable ()
     {
         $sql = (new CreateMembershipsTable())->down(self::$entity);
         return $this->dropTable($sql);

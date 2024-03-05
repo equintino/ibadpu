@@ -9,17 +9,17 @@ class Membership extends Controller
     protected $page = "membership";
     private $certificate;
 
-    public function __construct()
+    public function __construct ()
     {
         parent::__construct();
         $this->certificate = new Certificate();
     }
 
-    public function init(?array $data): void
+    public function init (?array $data): void
     {
         $membership = (new \Models\Membership())->activeAll(0);
-        if(!is_array($membership) &&  preg_match("/doesn't exist/", $membership)) {
-            if((new \Models\Membership())->createThisTable()) {
+        if (!is_array($membership) &&  preg_match("/doesn't exist/", $membership)) {
+            if ((new \Models\Membership())->createThisTable()) {
                 alertLatch("Created new table, try again");
             }
         } else {
@@ -29,7 +29,7 @@ class Membership extends Controller
         }
     }
 
-    public function noMember(?array $data): void
+    public function noMember (?array $data): void
     {
         $search = [
             "active" => 0
@@ -38,11 +38,11 @@ class Membership extends Controller
         $this->view->setPath("Modals")->render("nomembers", [ compact("noMembers") ]);
     }
 
-    public function show()
+    public function show ()
     {
         $list = $this->list();
-        if(!is_array($list) &&  preg_match("/doesn't exist/", $list)) {
-            if((new \Models\Membership())->createThisTable()) {
+        if (!is_array($list) &&  preg_match("/doesn't exist/", $list)) {
+            if ((new \Models\Membership())->createThisTable()) {
                 alertLatch("Created new table, try again");
             }
         } else {
@@ -50,7 +50,7 @@ class Membership extends Controller
         }
     }
 
-    public function register(array $data): void
+    public function register (array $data): void
     {
         $id = $data["id"];
         $certificate = $this->certificate;
@@ -63,10 +63,10 @@ class Membership extends Controller
         ]);
     }
 
-    public function list()
+    public function list ()
     {
         $membership = (new \Models\Membership())->activeAll(0,0,"id,name");
-        foreach($membership as $member) {
+        foreach ($membership as $member) {
             $list[] = $member->name;
         }
         return print json_encode($list);
@@ -77,13 +77,13 @@ class Membership extends Controller
         return $this->update($data);
     }
 
-    public function update(array $data): ?string
+    public function update (array $data): ?string
     {
         $membership = new \Models\Membership();
-        if(!empty($_FILES['certificate']) && $_FILES['certificate']["error"] === 0) {
+        if (!empty($_FILES['certificate']) && $_FILES['certificate']["error"] === 0) {
             $id = (!empty($data["certificate_id"]) ? $data["certificate_id"] : null);
             $certificate_id = $this->updateCertificate($id);
-            if(!empty($certificate_id) && is_numeric($certificate_id)) {
+            if (!empty($certificate_id) && is_numeric($certificate_id)) {
                 $data["certificate_id"] = $certificate_id;
             } else {
                 alertLatch("Could not save the certificate", "var(--car-danger)");
@@ -105,7 +105,7 @@ class Membership extends Controller
         return print $membership->message();
     }
 
-    public function validate(array $data)
+    public function validate (array $data)
     {
         $field = [
             "photo_id" => 0,
@@ -122,26 +122,26 @@ class Membership extends Controller
         return $data;
     }
 
-    private function updatePhoto($photo_id = null)
+    private function updatePhoto ($photo_id = null)
     {
         $_FILES["imgInp"] = ($_FILES["imgInp"] ?? []);
         $photo = new Photo();
         return $photo->fileSave($_FILES["imgInp"], $photo_id);
     }
 
-    private function updateCertificate(?int $certificate_id)
+    private function updateCertificate (?int $certificate_id)
     {
         return $this->certificate->fileSave($_FILES["certificate"], $certificate_id);
     }
 
-    private function newRegister(): int
+    private function newRegister (): int
     {
-        $membershipDb = (new \Models\Membership())->activeAll(0,0,"id,register","register desc");
+        $membershipDb = (new \Models\Membership())->all("id,register","register desc");
         $register = ($membershipDb ? $membershipDb[0]->register : "0000000");
         return date("Y") . str_pad(substr($register,4)+1, "3", "0", STR_PAD_LEFT);
     }
 
-    public function birthday()
+    public function birthday ()
     {
         $memberships = new \Models\Membership();
         $birthdays = $this->splitForMonth($memberships);
@@ -162,14 +162,14 @@ class Membership extends Controller
         $this->view->render("birthday", [compact("birthdays","months")]);
     }
 
-    public function birthmonth(array $data): void
+    public function birthmonth (array $data): void
     {
         $month = $this->numberMonth($data["month"]);
         $birthmonths = $this->splitForMonth(new \Models\Membership())[$month];
         $this->view->setPath("Modals")->render("birth", [ compact("birthmonths") ]);
     }
 
-    private function splitForMonth(\Models\Membership $membership): ?array
+    private function splitForMonth (\Models\Membership $membership): ?array
     {
         foreach ($membership->activeAll() as $membership) {
             if ($membership->birth_date) {
@@ -231,7 +231,7 @@ class Membership extends Controller
         ];
     }
 
-    private function numberMonth(int $month): string
+    private function numberMonth (int $month): string
     {
         $months = [
             1 => "january",
@@ -250,7 +250,7 @@ class Membership extends Controller
         return $months[$month];
     }
 
-    private function sortingByDay($memberships)
+    private function sortingByDay ($memberships)
     {
         if (empty($memberships)) {
             return [];

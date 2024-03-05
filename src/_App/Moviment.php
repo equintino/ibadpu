@@ -8,7 +8,7 @@ class Moviment extends Controller
 {
     protected $page = "moviment";
 
-    public function init(?array $data): void
+    public function init (?array $data): void
     {
         $params = [];
         $limit = 30;
@@ -24,13 +24,13 @@ class Moviment extends Controller
         $this->view->render($this->page, $params);
     }
 
-    private function totalPage(int $limit): int
+    private function totalPage (int $limit): int
     {
         $num = (new Balance())->rows() / $limit;
         return ceil($num);
     }
 
-    public function new(): void
+    public function new (): void
     {
         $act = "new";
         $balanceDb = new \Models\Balance();
@@ -52,7 +52,7 @@ class Moviment extends Controller
         $this->view->render("moviment", [ compact("month", "year", "act") ]);
     }
 
-    public function add(array $data)
+    public function add (array $data)
     {
         $moviment = new \Models\Moviment();
 
@@ -63,6 +63,10 @@ class Moviment extends Controller
         if ($data["in_out"] === "output") {
             $data["output"] = $value;
             $data["tithe_offer"] = "";
+            if (!empty($_FILES['proof']['name'])) {
+                $proof_id = (new Proof())->saveProof($_FILES['proof']);
+                $data['proof_id'] = $proof_id;
+            }
         } else {
             $data["output"] = "0.0";
         }
