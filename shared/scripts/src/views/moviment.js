@@ -1,4 +1,5 @@
 import MountingMovimentTable from "../../lib/mountMovimentTable.js"
+import ThumbImage from "../../lib/thumbImage.js"
 import AbstractView from "./abstractView.js"
 
 export default class Moviment extends AbstractView {
@@ -116,8 +117,6 @@ export default class Moviment extends AbstractView {
                 url, method: 'POST'
             })
 
-            let changes = []
-            const formData = new FormData()
             if (response !== null) {
                 const mountingMovimentTable = new MountingMovimentTable({ data: response, edition: true })
                 const table = mountingMovimentTable.mountingMovimentTable({ getList })
@@ -133,98 +132,169 @@ export default class Moviment extends AbstractView {
                         "font-size": "1em"
                     }
                 })
-                this.modal.message.onchange = (e) => {
-                    changes.push({
-                        id: e.target.parentElement.parentElement.attributes['data-id'].value,
-                        name: e.target.name,
-                        value: e.target.value
-                    })
-                    if (e.target.value === 'diz') {
-                        const select = e.target.parentElement.previousSibling
-                        select.innerHTML = this.listMembers(0, getList, 0)
-                        select.querySelector('select').style.background = 'pink'
-                        this.message.text('<span class="warning">Select the name of the tithe payer</span>')
-                        return this.modal.buttons.querySelector('[value=save]').disabled = true
-                    }
-                    this.modal.buttons.querySelector('[value=save]').disabled = false
-                }
-                this.modal.buttons.onclick = (e) => {
-                    const btnName = e.target.value
-                    if (btnName === 'save') {
-                        formData.append('changes', JSON.stringify(changes))
-                        const response = evt({ btnName, formData })
-                        this.message.text(response)
-                        if (response.indexOf('success') !== -1) this.modal.hideContent()
-                    } else if (btnName === "summary") {
-                        const form = this.modal.message.querySelector('form')
-                        const formData = new FormData(form)
-                        formData.append('year', year)
-                        formData.append('month', month)
-                        this.modal.modal({
-                            html: evt({ btnName, formData })
-                        })
-                    }
-                }
+                let changes = this.#changePreview()
+                if (!changes) return
+                this.#btnModalClick({ changes, evt, year, month })
 
-                /** Mask */
+                /** Mask z-index*/
                 this.setMask()
 
-                const event = new Event('click')
-                document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
-                    del.onclick = (e) => {
-                        let tr = (
-                            e.target.tagName === 'I' ?
-                                e.target.parentElement.parentElement
-                                : e.target.parentElement
-                        )
-                        let id = tr.attributes['data-id'].value
-                        tr.style.background = 'pink'
-
-                        const conf = this.modal.confirm({
-                            message: 'Deseja realmente excluir a linha selecionada?'
-                        })
-                        conf.onclick = btn => {
-                            if (btn.target.value == 1) {
-                                formData.append('id', id)
-                                const response = evt({ btnName: 'delete', formData })
-                                if (response.indexOf('success') !== -1) {
-                                    document.querySelector('#moviment [value=preview]').dispatchEvent(event)
-                                }
-                                this.message.text(response)
-                            }
-                            tr.style.background = 'white'
-                        }
-                        document.onkeydown = (e) => {
-                            if (e.code === 'Escape') tr.style.background = 'white'
-                        }
-                        this.modal.mask.onclick = () => {
-                            this.modal.hideContent()
-                            tr.style.background = 'white'
-                        }
-                    }
-                })
+                this.#delPreview({ evt })
 
                 /** Change tithe_offer */
-                let listDiz
-                this.modal.message.querySelectorAll('form table select').forEach((select) => {
-                    if (select.name.indexOf('tithe_offer') !== -1 && select.value === 'diz') {
-                        if (typeof(listDiz) === 'undefined') {
-                            listDiz = this.listMembers(0, getList, 0)
-                        }
-                    }
-                    select.onchange = (e) => {
-                        if (e.target.name.indexOf('tithe_offer') !== -1) {
-                            let type = e.target.value
-                            if (type === 'diz') {
-                                e.target.parentElement.previousSibling.innerHTML = listDiz
-                            } else {
-                                e.target.parentElement.previousSibling.innerHTML = 'OFERTA'
-                            }
-                        }
-                    }
+                this.#changeTitheOffer({ getList })
+                this.#clickLinkProof({ openFile, evt })
+            }
+        }
+    }
+
+    #changePreview () {
+        let changes = []
+        this.modal.message.onchange = (e) => {
+            changes.push({
+                id: e.target.parentElement.parentElement.attributes['data-id'].value,
+                name: e.target.name,
+                value: e.target.value
+            })
+            if (e.target.value === 'diz') {
+                const select = e.target.parentElement.previousSibling
+                select.innerHTML = this.listMembers(0, getList, 0)
+                select.querySelector('select').style.background = 'pink'
+                this.message.text('<span class="warning">Select the name of the tithe payer</span>')
+                this.modal.buttons.querySelector('[value=save]').disabled = true
+                return null
+            }
+            this.modal.buttons.querySelector('[value=save]').disabled = false
+        }
+        return changes
+    }
+
+    #btnModalClick ({ changes, evt, year, month }) {
+        const formData = new FormData()
+        this.modal.buttons.onclick = (e) => {
+            const btnName = e.target.value
+            if (btnName === 'save') {
+                formData.append('changes', JSON.stringify(changes))
+                const response = evt({ btnName, formData })
+                this.message.text(response)
+                if (response.indexOf('success') !== -1) this.modal.hideContent()
+            } else if (btnName === "summary") {
+                const form = this.modal.message.querySelector('form')
+                const formData = new FormData(form)
+                formData.append('year', year)
+                formData.append('month', month)
+                this.modal.modal({
+                    html: evt({ btnName, formData })
                 })
             }
         }
+    }
+
+    #delPreview ({ evt }) {
+        const formData = new FormData()
+        document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
+            del.onclick = (e) => {
+                let tr = (
+                    e.target.tagName === 'I' ?
+                        e.target.parentElement.parentElement
+                        : e.target.parentElement
+                )
+                let id = tr.attributes['data-id'].value
+                tr.style.background = 'pink'
+
+                const conf = this.modal.confirm({
+                    message: 'Deseja realmente excluir a linha selecionada?'
+                })
+                conf.onclick = btn => {
+                    if (btn.target.value == 1) {
+                        formData.append('id', id)
+                        const response = evt({ btnName: 'delete', formData })
+                        if (response.indexOf('success') !== -1) {
+                            document.querySelector('#moviment [value=preview]').dispatchEvent(new Event('click'))
+                        }
+                        this.message.text(response)
+                    }
+                    tr.style.background = 'white'
+                }
+                document.onkeydown = (e) => {
+                    if (e.code === 'Escape') tr.style.background = 'white'
+                }
+                this.modal.mask.onclick = () => {
+                    this.modal.hideContent()
+                    tr.style.background = 'white'
+                }
+            }
+        })
+    }
+
+    #changeTitheOffer ({ getList }) {
+        let listDiz
+        this.modal.message.querySelectorAll('form table select').forEach((select) => {
+            if (select.name.indexOf('tithe_offer') !== -1 && select.value === 'diz') {
+                if (typeof(listDiz) === 'undefined') {
+                    listDiz = this.listMembers(0, getList, 0)
+                }
+            }
+            select.onchange = (e) => {
+                if (e.target.name.indexOf('tithe_offer') !== -1) {
+                    let type = e.target.value
+                    if (type === 'diz') {
+                        e.target.parentElement.previousSibling.innerHTML = listDiz
+                    } else {
+                        e.target.parentElement.previousSibling.innerHTML = 'OFERTA'
+                    }
+                }
+            }
+        })
+    }
+
+    #clickLinkProof ({ openFile, evt }) {
+        this.modal.message.querySelectorAll('a').forEach((link) => {
+            link.onclick = (e) => {
+                e.preventDefault()
+                let formData = new FormData()
+                const proofId = e.target.parentElement.attributes['proof-id'].value
+                const movimentId = e.target.parentElement.attributes['moviment-id'].value
+                formData.append('id', movimentId)
+                formData.append('proof_id', proofId)
+                const previewProof = this.modal.modal({
+                    title: 'MODO DE EDIÇÃO',
+                    content: openFile({
+                        url: `proof/edit`,
+                        method: 'POST',
+                        formData
+                    }),
+                    buttons: '<button class="button save" value="save" disabled>Salvar</button>'
+                })
+                ThumbImage.run({
+                    thumbs: [{
+                        origin: '#proofFile',
+                        destination: '#preview'
+                    }]
+                })
+
+                previewProof.dialogue.querySelector('[type=file]').onchange = () => {
+                    previewProof.dialogue.querySelector('button').disabled = false
+                }
+
+                previewProof.dialogue.querySelector('button').onclick = () => {
+                    const form = previewProof.dialogue.querySelector('form')
+                    formData = new FormData(form)
+                    const data = {
+                        id: movimentId,
+                        proof_id: proofId
+                    }
+                    formData.append('data', JSON.stringify(data))
+                    const response = evt({
+                        url: 'proof/edit/save',
+                        formData
+                    })
+                    if (response.indexOf('success') !== -1) {
+                        previewProof.hideContent()
+                    }
+                }
+            }
+        })
     }
 
     closingReport ({ fn, openFile, callScript }) {

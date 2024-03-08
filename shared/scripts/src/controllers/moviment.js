@@ -31,7 +31,7 @@ export default class Moviment extends AbstractController {
                 getList: () => {
                     return this.#getListMembers()
                 },
-                evt: ({ btnName, formData }) => {
+                evt: ({ btnName, formData, url }) => {
                     if (btnName === 'save') {
                         return this.#service.openFile({
                             url: 'moviment/update',
@@ -52,6 +52,11 @@ export default class Moviment extends AbstractController {
                             method: 'POST'
                         })
                     }
+                    return this.#service.openFile({
+                        url,
+                        method: 'POST',
+                        formData
+                    })
                 }
             })
             this.#view.btnForm({

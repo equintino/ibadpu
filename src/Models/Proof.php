@@ -86,7 +86,7 @@ class Proof extends Model implements Models
         $data["size"] = $file["size"];
         $data["image"] = file_get_contents($file["tmp_name"]);
         $this->bootstrap($data);
-        return ($this->save() ?? $this->message());
+        return $this->save() ?? $this->message();
     }
 
     public function save()
@@ -117,6 +117,7 @@ class Proof extends Model implements Models
             $this->message = "<span class='danger'>Error updating, check the data</span>";
             return null;
         }
+        $this->message = "<span class='success'>Successful file</span>";
         return $this->id;
     }
 
@@ -198,7 +199,7 @@ class Proof extends Model implements Models
                 }
             }
             $stmt->execute();
-        } catch(PDOException $exception) {
+        } catch(\PDOException $exception) {
             $this->fail = $exception;
             return null;
         }
@@ -242,7 +243,7 @@ class Proof extends Model implements Models
     private function lastId()
     {
         $lastData = $this->all(1, 0, "id", "id DESC");
-        return ($lastData ? $lastData[0]->id + 1 : 1);
+        return $lastData ? $lastData[0]->id + 1 : 1;
     }
 
     private function validateFields()

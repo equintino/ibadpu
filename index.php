@@ -113,6 +113,8 @@
         $router->post("/proof/save", "Proof:save");
         $router->post("/proof/show", "Proof:show");
         $router->get("/proof/show/id/{id}", "Proof:showImage");
+        $router->post("/proof/edit", "Proof:edit");
+        $router->post("/proof/edit/save", "Proof:saveProof");
 
 
         /** Wallet screens */

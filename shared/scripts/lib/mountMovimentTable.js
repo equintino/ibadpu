@@ -66,7 +66,13 @@ export default class MountingMovimentTable {
         let output = ""
         if (edit && row.output != "0,00") {
             output = "<input class='input money' type='text' name='output-" + i + "' value='" + row.output + "' style='text-align: right'/>"
-            output += row.proof_id ? `<a target="_blank" href="proof/show/id/${row.proof_id}"><i class="fa fa-paperclip"></i></a>` : ''
+            let link = '#'
+            let color = 'gray'
+            if (row.proof_id) {
+                link = "proof/show/id/${row.proof_id}"
+                color = 'blue'
+            }
+            output += `<a target="_blank" href="${link}" moviment-id="${row.id}" proof-id="${row.proof_id}"><i class="fa fa-paperclip" style="color: ${color}"></i></a>`
         } else if (row.proof_id != null) {
             output = "<a href='" + row.proof_id + "' >" + row.output + "</a>"
         } else if (row.output != "0,00") {

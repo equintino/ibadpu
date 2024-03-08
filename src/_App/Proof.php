@@ -23,6 +23,15 @@ class Proof extends Controller
         $this->view->render($this->page, [ compact("years") ]);
     }
 
+    public function edit (array $data)
+    {
+        $moviment = (new \Models\Moviment())->load($data['id']);
+        if ($data['proof_id'] != 'null') {
+            $proof = (new \Models\Proof())->load($data['proof_id']);
+        }
+        $this->view->setPath('Modals')->render($this->page, [ compact('moviment', 'proof') ]);
+    }
+
     public function show (array $data): void
     {
         $id = $data["id"];
@@ -70,9 +79,21 @@ class Proof extends Controller
         return print json_encode($proofs);
     }
 
-    public function saveProof (array $data): int
+    public function saveProof (array $data): string
     {
-        return (new \Models\Proof())->fileSave($data);
+        $proof = new \Models\Proof();
+        if ($data['proof_id']) {
+            var_dump(
+                $proof->fileSave($_FILES['proofs'], $data['proof_id']),
+                $proof->message()
+            );
+        } else {
+            $proof_id = $proof->fileSave($_FILES['proofs']);
+            $moviment = (new \Models\Moviment())->load($data['id']);
+            $moviment->proof_id = $proof_id;
+            $moviment->save();
+        }
+        return print $proof->message();
     }
 
     public function save (array $data)
