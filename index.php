@@ -81,6 +81,7 @@
         $router->post("/moviment/{year}/{month}", "Moviment:balance");
         $router->post("/moviment/summarie", "Moviment:summarie");
         $router->get("/moviment/new", "Moviment:new");
+        $router->post("/moviment/load/{id}", "Moviment:load");
         $router->post("/moviment/add", "Moviment:add");
         $router->post("/moviment/save", "Moviment:save");
         $router->post("/moviment/update", "Moviment:update");
@@ -115,6 +116,7 @@
         $router->get("/proof/show/id/{id}", "Proof:showImage");
         $router->post("/proof/edit", "Proof:edit");
         $router->post("/proof/edit/save", "Proof:saveProof");
+        $router->post("/proof/delete/{id}", "Proof:delete");
 
 
         /** Wallet screens */

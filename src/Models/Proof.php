@@ -75,7 +75,7 @@ class Proof extends Model implements Models
         }
     }
 
-    public function fileSave(array $file, int $documentation_id = null)
+    public function fileSave(array $file, int $documentation_id = null): string
     {
         $dataDb = ($documentation_id ? $this->load($documentation_id) : null);
         if($dataDb) {

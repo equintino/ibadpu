@@ -71,9 +71,11 @@ export default class Moviment extends AbstractView {
         }
         document.querySelectorAll('#moviment .buttons button').forEach((btn) => {
             btn.onclick = (e) => {
+                this.loading.show()
                 const btnName = e.target.value
                 if (btnName === 'clear') {
                     form.querySelector('[name=day]').focus()
+                    this.loading.hide()
                     return form.reset()
                 }
                 this.#submit({ form, submit })
@@ -84,6 +86,8 @@ export default class Moviment extends AbstractView {
                 this.#submit({ form, submit })
             }
         }
+        form.querySelector('[type=file]').oninput = () => this.loading.hide()
+        form.querySelector('[type=file]').onclick = () => this.loading.show()
     }
 
     #submit ({ form, submit }) {
@@ -93,6 +97,7 @@ export default class Moviment extends AbstractView {
             if (!i.value) {
                 i.style.background = 'pink'
                 this.message.text("<span class='warning'>The field or fields are requireds</span>")
+                this.loading.hide()
                 return i.focus()
             }
         }
@@ -105,9 +110,10 @@ export default class Moviment extends AbstractView {
             })
         }
         this.message.text(response)
+        this.loading.hide()
     }
 
-    preview ({ openFile, getList, evt }) {
+    preview ({ openFile, getList, delMoviment }) {
         document.querySelector("#moviment [value=preview]").onclick = (e) => {
             const month = document.querySelector('form [name=month]').value
             const year = document.querySelector('form [name=year]').value
@@ -134,16 +140,16 @@ export default class Moviment extends AbstractView {
                 })
                 let changes = this.#changePreview()
                 if (!changes) return
-                this.#btnModalClick({ changes, evt, year, month })
+                this.#btnModalClick({ changes, openFile, year, month })
 
                 /** Mask z-index*/
                 this.setMask()
 
-                this.#delPreview({ evt })
+                this.#delPreview({ delMoviment })
 
                 /** Change tithe_offer */
                 this.#changeTitheOffer({ getList })
-                this.#clickLinkProof({ openFile, evt })
+                this.#clickLinkProof({ openFile })
             }
         }
     }
@@ -169,13 +175,17 @@ export default class Moviment extends AbstractView {
         return changes
     }
 
-    #btnModalClick ({ changes, evt, year, month }) {
+    #btnModalClick ({ changes, openFile, year, month }) {
         const formData = new FormData()
         this.modal.buttons.onclick = (e) => {
             const btnName = e.target.value
             if (btnName === 'save') {
                 formData.append('changes', JSON.stringify(changes))
-                const response = evt({ btnName, formData })
+                const response = openFile({
+                    url: 'moviment/update',
+                    method: 'POST',
+                    formData
+                })
                 this.message.text(response)
                 if (response.indexOf('success') !== -1) this.modal.hideContent()
             } else if (btnName === "summary") {
@@ -184,14 +194,17 @@ export default class Moviment extends AbstractView {
                 formData.append('year', year)
                 formData.append('month', month)
                 this.modal.modal({
-                    html: evt({ btnName, formData })
+                    html: openFile({
+                        url: 'moviment/summarie',
+                        method: 'POST',
+                        formData
+                    })
                 })
             }
         }
     }
 
-    #delPreview ({ evt }) {
-        const formData = new FormData()
+    #delPreview ({ delMoviment }) {
         document.querySelectorAll("#boxe_main table tbody .delete").forEach((del) => {
             del.onclick = (e) => {
                 let tr = (
@@ -207,8 +220,7 @@ export default class Moviment extends AbstractView {
                 })
                 conf.onclick = btn => {
                     if (btn.target.value == 1) {
-                        formData.append('id', id)
-                        const response = evt({ btnName: 'delete', formData })
+                        const response = delMoviment({ id })
                         if (response.indexOf('success') !== -1) {
                             document.querySelector('#moviment [value=preview]').dispatchEvent(new Event('click'))
                         }
@@ -248,9 +260,10 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    #clickLinkProof ({ openFile, evt }) {
+    #clickLinkProof ({ openFile, }) {
         this.modal.message.querySelectorAll('a').forEach((link) => {
             link.onclick = (e) => {
+                this.loading.show()
                 e.preventDefault()
                 let formData = new FormData()
                 const proofId = e.target.parentElement.attributes['proof-id'].value
@@ -275,9 +288,14 @@ export default class Moviment extends AbstractView {
 
                 previewProof.dialogue.querySelector('[type=file]').onchange = () => {
                     previewProof.dialogue.querySelector('button').disabled = false
+                    this.loading.hide()
+                }
+                previewProof.dialogue.querySelector('[type=file]').onclick = () => {
+                    this.loading.show()
                 }
 
                 previewProof.dialogue.querySelector('button').onclick = () => {
+                    this.loading.show()
                     const form = previewProof.dialogue.querySelector('form')
                     formData = new FormData(form)
                     const data = {
@@ -285,13 +303,15 @@ export default class Moviment extends AbstractView {
                         proof_id: proofId
                     }
                     formData.append('data', JSON.stringify(data))
-                    const response = evt({
+                    const response = openFile({
                         url: 'proof/edit/save',
+                        method: 'POST',
                         formData
                     })
                     if (response.indexOf('success') !== -1) {
                         previewProof.hideContent()
                     }
+                    this.loading.hide()
                 }
             }
         })

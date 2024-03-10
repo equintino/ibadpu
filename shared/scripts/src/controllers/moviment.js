@@ -31,31 +31,22 @@ export default class Moviment extends AbstractController {
                 getList: () => {
                     return this.#getListMembers()
                 },
-                evt: ({ btnName, formData, url }) => {
-                    if (btnName === 'save') {
-                        return this.#service.openFile({
-                            url: 'moviment/update',
-                            method: 'POST',
-                            formData
+                delMoviment: ({ id }) => {
+                    const response = JSON.parse(
+                        this.#service.openFile({
+                            url: `moviment/load/${id}`,
+                            method: 'POST'
                         })
-                    }
-                    if (btnName === 'summary') {
-                        return this.#service.openFile({
-                            url: 'moviment/summarie',
-                            method: 'POST',
-                            formData
-                        })
-                    }
-                    if (btnName === 'delete') {
-                        return this.#service.openFile({
-                            url: 'moviment/delete/' + formData.get('id'),
+                    )
+                    if (response.proof_id !== null) {
+                        this.#service.openFile({
+                            url: `proof/delete/${response.proof_id}`,
                             method: 'POST'
                         })
                     }
                     return this.#service.openFile({
-                        url,
-                        method: 'POST',
-                        formData
+                        url: 'moviment/delete/' + id,
+                        method: 'POST'
                     })
                 }
             })

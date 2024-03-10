@@ -31,7 +31,7 @@
                                  <input type="radio" name="tithe_offer" value="ofe"/>Oferta
                            </span>
                            <span id="proof">
-                                 <input multiple="multiple" type="file" name="proof" />
+                                 <input multiple="multiple" type="file" name="proofs" />
                            </span>
                         </td>
                      </tr>

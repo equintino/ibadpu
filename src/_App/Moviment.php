@@ -63,8 +63,8 @@ class Moviment extends Controller
         if ($data["in_out"] === "output") {
             $data["output"] = $value;
             $data["tithe_offer"] = "";
-            if (!empty($_FILES['proof']['name'])) {
-                $proof_id = (new Proof())->saveProof($_FILES['proof']);
+            if (!empty($_FILES['proofs']['name'])) {
+                $proof_id = (new \Models\Proof())->fileSave($_FILES['proofs']);
                 $data['proof_id'] = $proof_id;
             }
         } else {
@@ -81,6 +81,18 @@ class Moviment extends Controller
         $moviment->save();
 
         return print $moviment->message();
+    }
+
+    public function load (array $data): string
+    {
+        $moviments = (new \Models\Moviment())->load($data['id']);
+        $moviment = [
+            'id' => $moviments->id,
+            'proof_id' => $moviments->proof_id,
+            'description' => $moviments->description,
+            'output' => $moviments->output
+        ];
+        return print json_encode($moviment);
     }
 
     public function save(array $data)
@@ -177,7 +189,6 @@ class Moviment extends Controller
             $dataDb["proof_id"] = $value->proof_id;
             $all[] = $dataDb;
         }
-
         echo json_encode($all);
     }
 

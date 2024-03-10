@@ -83,13 +83,12 @@ class Proof extends Controller
     {
         $proof = new \Models\Proof();
         if ($data['proof_id']) {
-            var_dump(
-                $proof->fileSave($_FILES['proofs'], $data['proof_id']),
-                $proof->message()
-            );
+            $proof->fileSave($_FILES['proofs'], $data['proof_id']);
         } else {
             $proof_id = $proof->fileSave($_FILES['proofs']);
-            $moviment = (new \Models\Moviment())->load($data['id']);
+            if (!empty($data['id'])) {
+                $moviment = (new \Models\Moviment())->load($data['id']);
+            }
             $moviment->proof_id = $proof_id;
             $moviment->save();
         }
@@ -121,5 +120,13 @@ class Proof extends Controller
         }
 
         return print json_encode($moviment->message());
+    }
+
+    public function delete (array $data): ?string
+    {
+        $proof = (new \Models\Proof())->load($data['id']);
+        if ($proof) {
+            return $proof->destroy();
+        }
     }
 }

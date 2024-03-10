@@ -69,7 +69,7 @@ export default class MountingMovimentTable {
             let link = '#'
             let color = 'gray'
             if (row.proof_id) {
-                link = "proof/show/id/${row.proof_id}"
+                link = `proof/show/id/${row.proof_id}`
                 color = 'blue'
             }
             output += `<a target="_blank" href="${link}" moviment-id="${row.id}" proof-id="${row.proof_id}"><i class="fa fa-paperclip" style="color: ${color}"></i></a>`
