@@ -286,14 +286,19 @@ export default class Moviment extends AbstractView {
                     }]
                 })
 
-                previewProof.dialogue.querySelector('[type=file]').onchange = () => {
+                const file = previewProof.dialogue.querySelector('[type=file]')
+                file.onchange = () => {
                     previewProof.dialogue.querySelector('button').disabled = false
                     this.loading.hide()
                 }
-                previewProof.dialogue.querySelector('[type=file]').onclick = () => {
-                    this.loading.show()
-                }
+                file.onclick = () => this.loading.show()
 
+                const img = previewProof.dialogue.querySelector('img')
+                img.title = 'Clique para ampliar imagem'
+                img.onmouseover = () => img.style.cursor = 'pointer'
+                img.onclick = (e) => window.open(e.target.src, '_blank')
+
+                /** save preview */
                 previewProof.dialogue.querySelector('button').onclick = () => {
                     this.loading.show()
                     const form = previewProof.dialogue.querySelector('form')
