@@ -113,7 +113,7 @@ export default class Moviment extends AbstractView {
         this.loading.hide()
     }
 
-    preview ({ openFile, getList, delMoviment }) {
+    preview ({ openFile, getList, delMoviment, validate }) {
         document.querySelector("#moviment [value=preview]").onclick = (e) => {
             const month = document.querySelector('form [name=month]').value
             const year = document.querySelector('form [name=year]').value
@@ -149,7 +149,7 @@ export default class Moviment extends AbstractView {
 
                 /** Change tithe_offer */
                 this.#changeTitheOffer({ getList })
-                this.#clickLinkProof({ openFile })
+                this.#clickLinkProof({ openFile, validate })
             }
         }
     }
@@ -260,7 +260,7 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    #clickLinkProof ({ openFile, }) {
+    #clickLinkProof ({ openFile, validate }) {
         this.modal.message.querySelectorAll('a').forEach((link) => {
             link.onclick = (e) => {
                 this.loading.show()
@@ -288,6 +288,10 @@ export default class Moviment extends AbstractView {
 
                 const file = previewProof.dialogue.querySelector('[type=file]')
                 file.onchange = () => {
+                    if (!validate({ files: file.files })) {
+                        file.value = ''
+                        return this.loading.hide()
+                    }
                     previewProof.dialogue.querySelector('button').disabled = false
                     this.loading.hide()
                 }
@@ -322,7 +326,7 @@ export default class Moviment extends AbstractView {
         })
     }
 
-    closingReport ({ fn, openFile, callScript }) {
+    closingReport ({ openFile, callScript }) {
         document.querySelector("#moviment [value=conclude]").onclick = () => {
             const formData = new FormData()
             let data = {
@@ -337,11 +341,18 @@ export default class Moviment extends AbstractView {
             this.modal.mask.style.zIndex = '2'
             conf.onclick = (btn) => {
                 if (btn.target.value == 1) {
-                    const response = fn({ formData })
+                    const response = openFile({
+                        url: 'moviment/save',
+                        method: 'POST',
+                        formData
+                    })
                     this.modal.hideContent()
                     if (response.indexOf('success') !== -1) {
                         this.showPage({
-                            page: openFile({ url: 'moviment' }),
+                            page: openFile({
+                                url: 'moviment',
+                                method: 'GET'
+                            }),
                             fn: () => callScript()
                         })
                     }

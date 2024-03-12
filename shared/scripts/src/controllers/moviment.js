@@ -48,7 +48,8 @@ export default class Moviment extends AbstractController {
                         url: 'moviment/delete/' + id,
                         method: 'POST'
                     })
-                }
+                },
+                validate: (data) => this.#validate(data)
             })
             this.#view.btnForm({
                 submit: (formData) => {
@@ -88,6 +89,7 @@ export default class Moviment extends AbstractController {
         )
     }
 
+    /** validate type file and its size */
     #validate (data) {
         let ext = data.files[0].type.split('/').pop()
         let extValid = [ 'pdf', 'jpeg', 'png', 'jpg' ]
@@ -108,13 +110,6 @@ export default class Moviment extends AbstractController {
 
     #closingReport () {
         this.#view.closingReport({
-            fn: ({ formData }) => {
-                return this.#service.openFile({
-                    url: 'moviment/save',
-                    method: 'POST',
-                    formData
-                })
-            },
             openFile: (data) => {
                 return this.#service.openFile(data)
             },
