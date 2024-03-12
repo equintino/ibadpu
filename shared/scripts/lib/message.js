@@ -3,7 +3,7 @@ export default class Message {
     css
 
     /** @string var text, var background var(--cor-warning) */
-    text(text, background, id = '#alert') {
+    text (text, background, id = '#alert') {
         this.box = document.querySelector(id)
         this.box.innerHTML = text
         this.css = this.box.style
@@ -13,13 +13,16 @@ export default class Message {
         this.css.marginRight = -(marginRight) + 40
 
         this.#showMsg(marginRight)
+        let hiddenMsg = this.#closingMsg(7000)
         this.box.onclick = () => {
             this.#showMsg(marginRight)
+            clearTimeout(hiddenMsg)
+            hiddenMsg = this.#closingMsg(7000)
         }
     }
 
     /** show msg */
-    #showMsg(marginRight) {
+    #showMsg (marginRight) {
         let pos = -(marginRight) + 40
         const msg = setInterval(() => {
             if (pos >= 0) {
@@ -37,16 +40,23 @@ export default class Message {
         }, 1)
     }
 
-    #sleep(ms) {
+    #sleep (ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    #setCollor(response) {
+    #setCollor (response) {
         let collor = [ 'success', 'warning', 'danger' ]
         const back = collor.map((a, i) => {
             if (response.indexOf(a) !== -1) return 1
             return 0
         })
         return 'var(--cor-' + collor[back.indexOf(1)] + ')'
+    }
+
+    #closingMsg (ms) {
+        const idTimeout  = setTimeout(() => {
+            this.box.innerHTML = ''
+        }, ms)
+        return idTimeout
     }
 }
