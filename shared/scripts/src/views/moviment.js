@@ -87,7 +87,6 @@ export default class Moviment extends AbstractView {
             }
         }
         form.querySelector('[type=file]').oninput = () => this.loading.hide()
-        form.querySelector('[type=file]').onclick = () => this.loading.show()
     }
 
     #submit ({ form, submit }) {
@@ -295,7 +294,6 @@ export default class Moviment extends AbstractView {
                     previewProof.dialogue.querySelector('button').disabled = false
                     this.loading.hide()
                 }
-                file.onclick = () => this.loading.show()
 
                 const img = previewProof.dialogue.querySelector('img')
                 img.title = 'Clique para ampliar imagem'
