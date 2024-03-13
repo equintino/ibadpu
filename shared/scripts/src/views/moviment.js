@@ -535,14 +535,12 @@ export default class Moviment extends AbstractView {
         }
 
         /** Enable rescue button */
-        document.querySelector('#proof table').onclick = () => this.loading.show()
         document.querySelector("#proof table").onchange = (file) => {
             if (!validate(file.target)) {
                 file.target.value = ''
                 return false
             }
             document.querySelector("#proof button[type=submit]").disabled = false
-            this.loading.hide()
         }
 
         document.querySelector("#proof #form-proof").onreset = (e) => {

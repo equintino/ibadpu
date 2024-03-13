@@ -89,7 +89,6 @@ export default class Documentation extends AbstractView {
             ]
         })
 
-        file.onclick = () => this.loading.show()
         let btnSave = document.querySelector('#documentation [disabled]')
         file.onchange = (e) => {
             const response = fn(filesAdd)
