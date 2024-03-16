@@ -18,27 +18,40 @@ export default class Menu extends AbstractController{
         this.#service = new Service()
 
         const membership = new Membership()
-        membership.showBirthmonth()
 
-        this.#view.initializer(({ pageName: page, element }) => {
-            this.#view.active(element)
-            this.showPage(page)
+        this.#view.initializer({
+            fn: ({ pageName, element }) => {
+                this.#view.active(element)
+                this.#view.showPage({
+                    page: this.#service.openFile({
+                        url: pageName,
+                        method: 'GET'
+                    }),
+                    callScript: () => {
+                        console.log(
+                            pageName
+                        )
+                        this.#callScript(pageName)
+                    }
+                })
+            }
+
         })
-        this.showPage('home')
+
+        this.#view.showPage({
+            page: this.#service.openFile({
+                url: 'home',
+                method: 'GET'
+            }),
+            callScript: () => {
+                this.#callScript('home')
+            }
+        })
         this.#view.identif('home', logged)
+        membership.showBirthmonth()
     }
 
-    showPage (page) {
-        this.#view.showPage(this.#getPage(page), () => {
-            this.#callScript(page)
-        })
-    }
-
-    #getPage (page) {
-        return this.#service.openFile({ method: 'GET', url: page })
-    }
-
-    #callScript = (page) => {
+    #callScript = async (page) => {
         switch(page) {
             case "user":
                 const user = new User()

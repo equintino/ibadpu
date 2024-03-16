@@ -1,7 +1,7 @@
 import AbstractView from "./abstractView.js";
 
 export default class View extends AbstractView {
-    initializer (fn) {
+    initializer ({ fn }) {
         const btnMenu = document.getElementById('top').querySelectorAll('li')
         btnMenu.forEach((e) => {
             e.onclick = (i) => {
@@ -18,9 +18,9 @@ export default class View extends AbstractView {
         })
     }
 
-    showPage (page, fn) {
+    showPage ({ page, callScript }) {
         document.querySelector('.content').innerHTML = page
-        if (typeof(fn) === 'function') fn()
+        callScript()
         setTimeout(() => {
             this.loading.hide()
         }, 100)
