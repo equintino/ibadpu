@@ -192,7 +192,7 @@ class Moviment extends Controller
         echo json_encode($all);
     }
 
-    public function summarie (array $data)
+    public function summarie (array $data): void
     {
         $params = $_POST;
         $previousMonthBalance = (float) ($params["previousMonthBalance"]);

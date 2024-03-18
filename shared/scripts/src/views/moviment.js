@@ -398,7 +398,10 @@ export default class Moviment extends AbstractView {
                     method: 'POST'
                 })
                 if (response !== null) {
-                    const mountingMovimentTable = new MountingMovimentTable({ data: response, edition: false })
+                    const mountingMovimentTable = new MountingMovimentTable({
+                        data: response,
+                        edition: false
+                    })
                     const table = mountingMovimentTable.mountingMovimentTable({ getList })
 
                     this.modal.show({

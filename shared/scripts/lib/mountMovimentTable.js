@@ -74,7 +74,8 @@ export default class MountingMovimentTable {
             }
             output += `<a target="_blank" href="${link}" moviment-id="${row.id}" proof-id="${row.proof_id}"><i class="fa fa-paperclip" style="color: ${color}"></i></a>`
         } else if (row.proof_id != null) {
-            output = "<a href='" + row.proof_id + "' >" + row.output + "</a>"
+            output = "<input type='hidden' name='output-" + i + "' value='" + row.output + "'/>"
+            output += "<a href='" + row.proof_id + "' >" + row.output + "</a>"
         } else if (row.output != "0,00") {
             output = "<input type='hidden' name='output-" + i + "' value='" + row.output + "'/>" + row.output
         }

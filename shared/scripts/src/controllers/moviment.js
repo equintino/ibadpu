@@ -9,7 +9,6 @@ export default class Moviment extends AbstractController {
     initializer ({ page }) {
         this.#view = new View()
         this.#service = new Service()
-
         this.#location({ page })
     }
 

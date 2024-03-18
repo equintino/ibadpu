@@ -16,9 +16,7 @@ export default class Menu extends AbstractController{
     async initializer () {
         this.#view = new View()
         this.#service = new Service()
-
         const membership = new Membership()
-
         this.#view.initializer({
             fn: ({ pageName, element }) => {
                 this.#view.active(element)
@@ -27,12 +25,7 @@ export default class Menu extends AbstractController{
                         url: pageName,
                         method: 'GET'
                     }),
-                    callScript: () => {
-                        console.log(
-                            pageName
-                        )
-                        this.#callScript(pageName)
-                    }
+                    callScript: () => this.#callScript(pageName)
                 })
             }
 
