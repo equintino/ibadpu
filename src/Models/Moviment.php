@@ -16,12 +16,12 @@ class Moviment extends Model implements Models
     {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id=:id", "id={$id}", $msgDb);
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$load->rowCount()) {
+        if (!$load->rowCount()) {
             $this->message = ($msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>");
             return null;
         }
@@ -31,11 +31,11 @@ class Moviment extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if(filter_var($search, FILTER_UNSAFE_RAW)) {
+        if (filter_var($search, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
-        if($this->fail || !$find->rowCount()) {
+        if ($this->fail || !$find->rowCount()) {
             $this->message = "<span class='warning'>Not found moviment</span>";
             return null;
         }
@@ -47,7 +47,7 @@ class Moviment extends Model implements Models
     {
         $terms = "";
         $params = "";
-        foreach($where as $k => $v) {
+        foreach ($where as $k => $v) {
             $terms .= " {$k}=:{$k} AND";
             $params .= "{$k}={$v}&";
         }
@@ -60,7 +60,7 @@ class Moviment extends Model implements Models
     public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "id", bool $msg=false)
     {
         $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE active=1 " . $this->order($order);
-        if($limit !== 0) {
+        if ($limit !== 0) {
             $all = $this->read(
                 $sql . $this->limit(), "limit={$limit}&offset={$offset}"
             );
@@ -70,12 +70,12 @@ class Moviment extends Model implements Models
 
         // $all = $this->read("SELECT {$columns} FROM  " . self::$entity . " " . $this->order($order) . ($limit !== 0 ? $this->limit() : null), "limit={$limit}&offset={$offset}");
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$all->rowCount()) {
+        if (!$all->rowCount()) {
             $this->message = "<span class='warning'>Your inquiry has not returned data</span>";
             return null;
         }
@@ -116,11 +116,11 @@ class Moviment extends Model implements Models
 
     public function destroy()
     {
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $this->delete(self::$entity, "id=:id", "id={$this->id}");
         }
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<span class='danger'>Could not remove the moviment</span>";
             return null;
         }
@@ -132,8 +132,8 @@ class Moviment extends Model implements Models
 
     public function required(): bool
     {
-        foreach($this->required as $field) {
-            if(empty(trim($this->$field))) {
+        foreach ($this->required as $field) {
+            if (empty(trim($this->$field))) {
                 $this->message = "<span class='warning'>The field {$field} is required</span>";
                 return false;
             }

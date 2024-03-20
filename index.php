@@ -13,7 +13,7 @@
     $session = new Session();
     $router = new Router(url(), ":");
 
-    if(!empty($_SESSION["login"])) {
+    if (!empty($_SESSION["login"])) {
         /**  Web Routes */
         $router->namespace("_App");
         $router->get("/home", "Web:home");
@@ -158,7 +158,7 @@
 
 
         /**  Error Redirect */
-        if($router->error()) {
+        if ($router->error()) {
             $router->redirect("/ops/{$router->error()}");
         }
 

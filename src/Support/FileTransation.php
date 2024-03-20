@@ -20,13 +20,13 @@ class FileTransation
 
     public function setLocal(string $connectionName)
     {
-        if(!defined("CONF_CONNECTION")) {
+        if (!defined("CONF_CONNECTION")) {
             define("CONF_CONNECTION", $connectionName);
         }
         $handle = fopen($this->file, "r+b");
         $string = "";
-        while($row = fgets($handle)) {
-            if(preg_match("/CONF_CONNECTION/", $row)) {
+        while ($row = fgets($handle)) {
+            if (preg_match("/CONF_CONNECTION/", $row)) {
                 $string .= "CONF_CONNECTION=" . $connectionName . "\r\n";
             } else {
                 $string .= $row;
@@ -45,9 +45,9 @@ class FileTransation
     {
         $handle = fopen(__DIR__ . "/../../.env", "r+b");
         $string = "";
-        while($row = fgets($handle)) {
+        while ($row = fgets($handle)) {
             $parter = key($params);
-            if(preg_match("/$parter/", $row)) {
+            if (preg_match("/$parter/", $row)) {
                 $string .= $parter . "=" . $params[$parter];
             } else {
                 $string .= $row;
@@ -56,8 +56,8 @@ class FileTransation
 
         ftruncate($handle, 0);
         rewind($handle);
-        if(!fwrite($handle, $string)) {
-            die("Could not change the file");
+        if (!fwrite($handle, $string)) {
+            die ("Could not change the file");
         } else {
             echo json_encode("Successfully changed");
         }
@@ -66,7 +66,7 @@ class FileTransation
 
     public function setConst(string $text=null)
     {
-        if(!file_exists($this->file)) {
+        if (!file_exists($this->file)) {
             $handle = fopen($this->file, "w+");
             $text = (!empty($text) ? $text: "CONF_CONNECTION=local\r\nCONF_URL_BASE=initial-default-project\r\nCONF_URL_TEST=test/initial-default-project\r\nCONF_BASE_THEME=layout\r\nCONF_VIEW_THEME=template\r\nCONF_SITE_NAME=Site-Address\r\nCONF_SITE_TITLE=System Name\r\nCONF_SITE_DESC=System Description");
 
@@ -78,10 +78,10 @@ class FileTransation
     public function getConst(): void
     {
         $handle = fopen($this->file, "r");
-        while($row = fgets($handle)) {
-            if(!empty(trim($row))) {
+        while ($row = fgets($handle)) {
+            if (!empty(trim($row))) {
                 $params = explode("=", trim(str_replace("\"","", $row)));
-                if(!defined($params[0])) {
+                if (!defined($params[0])) {
                     define($params[0], "{$params[1]}");
                 }
             }

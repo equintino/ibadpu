@@ -6,11 +6,6 @@ class Wallet extends Controller
 {
     protected $page = "wallet";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $x = 0;
@@ -20,8 +15,8 @@ class Wallet extends Controller
         $membershipDb = new \Models\Membership();
         $occupation = new \Models\Occupation();
 
-        if(!empty($ids)) {
-            foreach($ids as $id) {
+        if (!empty($ids)) {
+            foreach ($ids as $id) {
                 $memberships[] = $membershipDb->load($id);
             }
         }

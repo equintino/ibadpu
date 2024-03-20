@@ -19,7 +19,7 @@ class Documentation extends Model implements Models
     {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id=:id", "id={$id}");
 
-        if($this->fail || !$load->rowCount()) {
+        if ($this->fail || !$load->rowCount()) {
             $this->message = "File not found";
             return null;
         }
@@ -28,11 +28,11 @@ class Documentation extends Model implements Models
 
     public function find(string $name, string $columns = "*")
     {
-        if(filter_var($name, FILTER_SANITIZE_STRIPPED)) {
+        if (filter_var($name, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$name}");
         }
 
-        if($this->fail || empty($find)) {
+        if ($this->fail || empty($find)) {
             $this->message = "File not found";
             return null;
         }
@@ -44,7 +44,7 @@ class Documentation extends Model implements Models
     {
         $terms = "";
         $params = "";
-        foreach($where as $k => $v) {
+        foreach ($where as $k => $v) {
             $terms .= " {$k}=:{$k} AND";
             $params .= "{$k}={$v}&";
         }
@@ -57,13 +57,13 @@ class Documentation extends Model implements Models
     public function activeAll(int $limit=30, int $offset=0, string $columns = "*", string $order = "id"): ?array
     {
         $sql = "SELECT {$columns} FROM  " . self::$entity . " WHERE " . $this->order($order);
-        if($limit !== 0) {
+        if ($limit !== 0) {
             $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
         } else {
             $all = $this->read($sql);
         }
 
-        if($this->fail || !$all->rowCount()) {
+        if ($this->fail || !$all->rowCount()) {
             $this->message = "Your query has not returned any registrations";
             return null;
         }
@@ -73,7 +73,7 @@ class Documentation extends Model implements Models
 
     public function readDataTable(string $sql, ?array $where)
     {
-        if(empty($where)) {
+        if (empty($where)) {
             return $this->activeAll();
         }
     }
@@ -82,29 +82,13 @@ class Documentation extends Model implements Models
     {
         $this->file = $file;
         $dataDb = ($documentation_id ? $this->load($documentation_id) : null);
-        if($dataDb) {
+        if ($dataDb) {
             $data["id"] = $dataDb->id;
         }
         $data["name"] = $this->file["name"];
         $data["description"] = $this->file["description"];
         $data["type"] = $this->indType($this->file["type"]);
         $data["size"] = $this->file["size"];
-
-        /** converter pdf em jpg */
-        // if($data["type"] === 5 && $this->is_pdf($this->file["tmp_name"])) {
-        //     $directory = __DIR__ . "/../public/preview";
-
-        //     if(!is_dir($directory)) {
-        //         mkdir($directory, 0755, true);
-        //     }
-        //     // exec("ps2pdf " . $this->file['tmp_name'] . " " . $directory . "/preview.pdf");
-        //     // die;
-        //     if($this->create_preview($this->file["tmp_name"])) {
-        //         $this->file["tmp_name"] = $directory . "/preview.jpg";
-        //     }
-        //     $this->im = $this->imageCreateFromAny($this->file["tmp_name"]);
-        //     $this->resize($this->file["tmp_name"]);
-        // }
 
         $data["image"] = file_get_contents($this->file["tmp_name"]);
         $this->bootstrap($data);
@@ -136,7 +120,7 @@ class Documentation extends Model implements Models
         /** Executing command */
         exec( $exec_command, $command_output, $return_val );
 
-        foreach( $command_output as $line ) {
+        foreach ( $command_output as $line ) {
             // echo $line . "\n";
         }
 
@@ -162,19 +146,19 @@ class Documentation extends Model implements Models
     public function save()
     {
         static::$safe = ["id","created_at","updated_at"];
-        if(!$this->required()) {
+        if (!$this->required()) {
             return null;
         }
 
         $this->validateFields();
 
         /** Update */
-        if($this->id) {
+        if ($this->id) {
             return $this->update_();
         }
 
         /** Create */
-        if(empty($this->id)) {
+        if (empty($this->id)) {
             return $this->create_();
         }
     }
@@ -183,7 +167,7 @@ class Documentation extends Model implements Models
     {
         $this->update(self::$entity, $this->safe(), "id=:id", "id={$this->id}");
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<span class='danger'>Error updating, check the data</span>";
             return null;
         }
@@ -192,11 +176,11 @@ class Documentation extends Model implements Models
 
     private function create_()
     {
-        if(!empty($this->id) && $this->find($this->id)) {
+        if (!empty($this->id) && $this->find($this->id)) {
             $this->message = "<span class='warning'>Informed file is already registered</span>";
         } else {
             $id = $this->create(self::$entity, $this->safe());
-            if($this->fail()) {
+            if ($this->fail()) {
                 $this->message = "<span class='danger'>Error to Register, Check the data</span>";
                 return null;
             }
@@ -212,7 +196,7 @@ class Documentation extends Model implements Models
             $values = ":" . implode(", :", array_keys(removeAccentArray($data)));
             $stmt = \Core\Connect::getInstance($msgDb)->prepare("INSERT INTO {$entity} ({$columns}) VALUES ({$values})");
 
-            foreach($data as $key => $value) {
+            foreach ($data as $key => $value) {
                 $$key = $value;
                 $params[":{$key}"] = $value;
             }
@@ -224,10 +208,10 @@ class Documentation extends Model implements Models
             $stmt->bindParam(':description', $description, \PDO::PARAM_STR);
             $stmt->bindParam(':type', $type, \PDO::PARAM_STR);
 
-            if($stmt->execute()) {
+            if ($stmt->execute()) {
                 return \Core\Connect::getInstance($msgDb)->lastInsertId();
             }
-        } catch(\PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
             return null;
         }
@@ -238,7 +222,7 @@ class Documentation extends Model implements Models
         $data["updated_at"] = ($this->connectionDetails->type() === "sqlsrv" ? (new \DateTime())->format("d/m/Y H:i:s") : (new \DateTime())->format("Y-m-d H:i:s"));
 
         parse_str($params, $params);
-        foreach($data as $bind => $value) {
+        foreach ($data as $bind => $value) {
             $dataSet[] = $bind . "= :" . $bind;
             $params[$bind] = $value;
         }
@@ -253,17 +237,17 @@ class Documentation extends Model implements Models
     {
         $stmt = \Core\Connect::getInstance()->prepare($sql);
         try {
-            if($params) {
+            if ($params) {
                 //$params = $this->filter(removeAccentArray($params));
-                foreach($params as $key => $value) {
+                foreach ($params as $key => $value) {
                     $type = \PDO::PARAM_STR;
-                    if(is_numeric($value)) {
+                    if (is_numeric($value)) {
                         $value = (float) $value;
-                    } elseif($value == null) {
+                    } elseif ($value == null) {
                         $type = \PDO::PARAM_NULL;
                     }
 
-                    if($key === "image") {
+                    if ($key === "image") {
                         $stmt->bindValue(":image", $value, \PDO::PARAM_LOB);
                         //$stmt->bindParam(":photo", $value, \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
                     } else {
@@ -281,11 +265,11 @@ class Documentation extends Model implements Models
 
     public function destroy()
     {
-        if(!empty($this->id)) {
+        if (!empty($this->id)) {
             $this->delete(self::$entity, "id=:id", "id={$this->id}");
         }
 
-        if($this->fail()) {
+        if ($this->fail()) {
             $this->message = "<div class=danger>Could not remove file</div>";
             return null;
         }
@@ -297,9 +281,9 @@ class Documentation extends Model implements Models
 
     private function indType($type): int
     {
-        if(strpos($type, "/")) {
+        if (strpos($type, "/")) {
             $t = explode("/", $type)[1];
-            switch($t) {
+            switch ($t) {
                 case "png":
                     return 1;
                 case "jpg": case "jpeg":
@@ -326,8 +310,8 @@ class Documentation extends Model implements Models
 
     public function required(): bool
     {
-        foreach($this->required as $field) {
-            if(empty(trim($this->$field))) {
+        foreach ($this->required as $field) {
+            if (empty(trim($this->$field))) {
                 $this->message = "The {$field} field is mandatory";
                 return false;
             }

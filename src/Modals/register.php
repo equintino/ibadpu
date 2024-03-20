@@ -5,7 +5,7 @@
 		<div class="photo">
   			<img id="thumb_image" src="<?= url("image/id/" . ($membership->photo_id ?? 0)) ?>"
 				alt="" height="152" width="138" />
-			<input accept="image/*" type='file' id="imgInp"/>
+			<input type='file' id="imgInp"/>
 		</div>
 		<fieldset>
 			<legend>Dados Pessoais
@@ -125,13 +125,3 @@
 		</fieldset>
     </form>
 </div>
-<script>
-	if (typeof imgCert !== "undefined") {
-		imgCert.onchange = evt => {
-			thumbImage(imgCert, thumb_cert)
-		}
-	}
-	document.querySelector('#imgInp').onchange = () => {
-		thumbImage(imgInp, thumb_image)
-	}
-</script>

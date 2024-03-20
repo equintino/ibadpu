@@ -16,12 +16,12 @@ class Membership extends Model implements Models
     {
         $load = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE id=:id", "id={$id}", $msgDb);
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$load->rowCount()) {
+        if (!$load->rowCount()) {
             $this->message = (
                 $msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>"
             );
@@ -34,19 +34,19 @@ class Membership extends Model implements Models
     public function loads(array $ids, string $columns = "*", bool $msgDb = false)
     {
         $where = "";
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
             $where .= "id={$id} OR ";
         }
         $where = substr($where, 0, -3);
         $sql = "SELECT {$columns} FROM " . self::$entity . " WHERE {$where} ";
         $load = $this->read($sql, $msgDb);
 
-        if($this->fail) {
+        if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
             return $this->message;
         }
 
-        if(!$load->rowCount()) {
+        if (!$load->rowCount()) {
             $this->message = (
                 $msgDb ? $this->fail->errorInfo[2] : "<span class='warning'>Not Found Informed id</span>"
             );
@@ -58,11 +58,11 @@ class Membership extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if(filter_var($search, FILTER_UNSAFE_RAW)) {
+        if (filter_var($search, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
-        if($this->fail || (isset($find) && !$find->rowCount()) || empty($find)) {
+        if ($this->fail || (isset($find) && !$find->rowCount()) || empty($find)) {
             $this->message = "<span class='warning'>Not found member</span>";
             return null;
         }
@@ -74,7 +74,7 @@ class Membership extends Model implements Models
     {
         $terms = "";
         $params = "";
-        foreach($where as $k => $v) {
+        foreach ($where as $k => $v) {
             $terms .= " {$k}=:{$k} AND";
             $params .= "{$k}={$v}&";
         }
@@ -89,13 +89,13 @@ class Membership extends Model implements Models
     ): ?array
     {
         $sql = "SELECT {$columns} FROM  " . static::$entity . " WHERE active=1 " . $this->order($order);
-        if($limit !== null && $limit !== 0) {
+        if ($limit !== null && $limit !== 0) {
             $all = $this->read($sql . $this->limit(), "limit={$limit}&offset={$offset}");
         } else {
             $all = $this->read($sql);
         }
 
-        if(!$all->rowCount()) {
+        if (!$all->rowCount()) {
             $this->message = "Your query has not returned any registrations";
             return null;
         }

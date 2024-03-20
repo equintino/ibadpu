@@ -8,11 +8,6 @@ class Photo extends Controller
 {
     use CropTrait;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function crop(): void
     {
         $this->view->setPath("Modals")->render("crop");

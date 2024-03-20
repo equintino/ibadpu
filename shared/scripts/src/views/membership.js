@@ -53,7 +53,8 @@ export default class Membership extends AbstractView {
                         }
 
                         if (this.#validate(required) !== true) return
-                        fn({ formData })
+                        const response = fn({ formData })
+                        if (typeof(response) !== 'undefined') this.message.text(response)
                     }
                 }
             })

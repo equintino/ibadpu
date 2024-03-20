@@ -36,8 +36,8 @@ class AjaxTransaction
 
     private function cleanFields(): array
     {
-        foreach($this->params as $key => $value) {
-            if(in_array($key, $this->cleanFields)) {
+        foreach ($this->params as $key => $value) {
+            if (in_array($key, $this->cleanFields)) {
                 unset($this->params[$key]);
             }
         }
@@ -48,7 +48,7 @@ class AjaxTransaction
     {
         $password = $this->params["password"];
         $confPassword = $this->params["confPassword"];
-        if($password !== $confPassword) {
+        if ($password !== $confPassword) {
             print(json_encode("<span class='warning'>The password was not confirmed</span>"));
             die;
         }
@@ -56,7 +56,7 @@ class AjaxTransaction
 
     private function replaceData($class): object
     {
-        foreach($this->params as $key => $value) {
+        foreach ($this->params as $key => $value) {
             $class->$key = $value;
         }
         return $class;
@@ -73,7 +73,7 @@ class AjaxTransaction
     {
         $className = $this->getClassName();
 
-        switch($className) {
+        switch ($className) {
             case "User":
                 $this->params["user"] = &$this->params["login"];
                 $this->search = $this->params["login"];
@@ -86,7 +86,7 @@ class AjaxTransaction
 
     private function setMethodClass()
     {
-        switch($this->action) {
+        switch ($this->action) {
             case "add": case "change": case "edit": case "reset":
                 $this->method = "save";
                 break;
@@ -110,7 +110,7 @@ class AjaxTransaction
 
     private function setData()
     {
-        switch($this->action) {
+        switch ($this->action) {
             case "add":
                 $data = $this->class->bootstrap($this->params);
                 $this->class = $data;

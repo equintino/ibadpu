@@ -10,17 +10,17 @@ class Session
     public function __construct()
     {
         $connectionDirectory = __DIR__ . "/../ses";
-        if(!file_exists($connectionDirectory)) {
+        if (!file_exists($connectionDirectory)) {
             mkdir($connectionDirectory);
         }
-        if(!session_id()) {
+        if (!session_id()) {
             session_save_path($connectionDirectory);
             session_name("SVSESSID");
             // ini_set('session.gc_maxlifetime', 3600);
             session_start();
         }
 
-        if(!empty($_SESSION["id"])) {
+        if (!empty($_SESSION["id"])) {
             $this->setSID(session_id());
         }
     }

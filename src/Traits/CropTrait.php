@@ -17,7 +17,7 @@ trait CropTrait
 
     public function newimg()
     {
-        if(!empty($this->resize_height)) {
+        if (!empty($this->resize_height)) {
             // $this->imageProcess();
             $this->height = $this->height == "" ? 1 : (int) $this->height;
             $resize_ratio = (float) $this->resize_width / (float) $this->resize_height;
@@ -87,7 +87,7 @@ trait CropTrait
     public function getMime($fileName): string
     {
         list($w, $h, $t, $attr) = getimagesize($fileName);
-        switch($t) {
+        switch ($t) {
             case 1:
                 return "image/gif";
             case 2:

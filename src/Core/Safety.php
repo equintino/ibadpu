@@ -20,8 +20,8 @@ abstract class Safety
     public static function screens($path): ?array
     {
         $directory = dir(__DIR__ . "/../{$path}");
-        while($file = $directory->read()) {
-            if(!preg_match("/^[.]/", $file) && !in_array($file, self::$exceptions)) {
+        while ($file = $directory->read()) {
+            if (!preg_match("/^[.]/", $file) && !in_array($file, self::$exceptions)) {
                 $screens[] = self::renameScreen(substr($file, 0, -4));
             }
         }

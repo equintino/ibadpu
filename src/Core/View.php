@@ -29,17 +29,17 @@ class View
         $logged = ($_SESSION["login"]->login ?? null);
 
         /** makes variables available to the page */
-        if($params) {
-            foreach($params as $param) {
-                if(!empty($param)) {
-                    foreach($param as $key => $values) {
+        if ($params) {
+            foreach ($params as $param) {
+                if (!empty($param)) {
+                    foreach ($param as $key => $values) {
                         $$key = $values;
                     }
                 }
             }
         }
 
-        if(!strpos($this->path, "Modals") && !empty($this->access) && !$this->restrictAccess($page)) {
+        if (!strpos($this->path, "Modals") && !empty($this->access) && !$this->restrictAccess($page)) {
             return print("<h5 align='center' style='color: var(--cor-primary)'>Restricted access</h5>");
         }
         require $this->path . "/{$page}.php";
@@ -55,10 +55,10 @@ class View
             theme("assets/img/logo-menu.png")
         );
         /** makes variables available to the page */
-        if($params) {
-            foreach($params as $var => $param) {
-                if(!empty($param)) {
-                    foreach($param as $key => $values) {
+        if ($params) {
+            foreach ($params as $var => $param) {
+                if (!empty($param)) {
+                    foreach ($param as $key => $values) {
                         $$key = $values;
                     }
                 }
@@ -71,14 +71,14 @@ class View
 
     public function validate(): void
     {
-        if(!empty($_SESSION) && array_key_exists("login", $_SESSION)) {
+        if (!empty($_SESSION) && array_key_exists("login", $_SESSION)) {
             $login = $_SESSION["login"];
         }
         /** allows or prohibits access */
-        if(!empty($login) && $login->group_id) {
+        if (!empty($login) && $login->group_id) {
             $group = new Group();
             $gAccess = $group->load($login->group_id, "*", true);
-            if(!$gAccess && preg_match("/[doesn't exist][inválido]/", $group->message())) {
+            if (!$gAccess && preg_match("/[doesn't exist][inválido]/", $group->message())) {
                 $createTable = new CreationProcess();
                 $data = [
                     "name" => "Administrador",
@@ -89,7 +89,7 @@ class View
                 header("Refresh: 0");
             } else {
                 $screens = $gAccess->access;
-                foreach(explode(",", $screens) as $screen) {
+                foreach (explode(",", $screens) as $screen) {
                     array_push($this->access, trim($screen));
                 }
             }
@@ -98,7 +98,7 @@ class View
 
     private function restrictAccess(string $page): bool
     {
-        if(in_array("*", $this->access) || $page === "home" || $page === "error" || in_array(Safety::renameScreen($page), $this->access)) {
+        if (in_array("*", $this->access) || $page === "home" || $page === "error" || in_array(Safety::renameScreen($page), $this->access)) {
             return true;
         }
         return false;

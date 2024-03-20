@@ -6,11 +6,6 @@ class Documentation extends Controller
 {
     protected $page = "documentation";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $act = "show";

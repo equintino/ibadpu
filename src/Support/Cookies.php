@@ -16,10 +16,10 @@ class Cookies
     public function setCookies($remember, $class, $connectionName)
     {
         $login = $class->login;
-        if($remember) {
+        if ($remember) {
             $time = time() + 60*60*24*7;
             $className = get_class($class);
-            foreach($this->data as $name) {
+            foreach ($this->data as $name) {
                 $data[$name] = $class->$name;
             }
             $data["expire"] = $time;
@@ -40,7 +40,7 @@ class Cookies
 
     public function clean(array $names): void
     {
-        foreach($names  as $name) {
+        foreach ($names  as $name) {
             setcookie($name, null, 0, "/");
         }
     }

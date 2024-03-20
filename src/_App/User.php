@@ -8,11 +8,6 @@ class User extends Controller
 {
     protected $page = " user";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function init(?array $data): void
     {
         $params = [];
@@ -23,7 +18,7 @@ class User extends Controller
     {
         $data["act"] = "list";
         $login = $_SESSION["login"]->login;
-        if(!empty($data["company_id"])) {
+        if (!empty($data["company_id"])) {
             $users = (new \Models\User())->find(["company_id" => $data["company_id"]]);
         } else {
             $users = (new \Models\User())->activeAll();
@@ -33,7 +28,6 @@ class User extends Controller
         $groups = (new Group())->all();
         $params = [ $data, compact("login", "users", "user", "groups") ];
 
-        // $this->view->setPath("Modals")->render("user", $params);
         $this->view->render("user", $params);
     }
 
@@ -72,7 +66,7 @@ class User extends Controller
     public function update(array $data): string
     {
         $user = (new \Models\User())->load($data["id"]);
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $user->$key = $value;
         }
 
@@ -99,8 +93,8 @@ class User extends Controller
     {
         $passwd = $params["password"];
         $confPasswd = $params["confPassword"];
-        if($passwd !== $confPasswd) {
-            die("<span class='warning'>The password was not confirmed</span>");
+        if ($passwd !== $confPasswd) {
+            die ("<span class='warning'>The password was not confirmed</span>");
         } else {
             unset($params["confPassword"]);
         }

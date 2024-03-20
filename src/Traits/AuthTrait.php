@@ -6,7 +6,7 @@ trait AuthTrait
 {
     public function login(): void
     {
-        if(!empty($_SESSION["login"])) {
+        if (!empty($_SESSION["login"])) {
             header("Location: " . url());
         }
         (new Web())->start();

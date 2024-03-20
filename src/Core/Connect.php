@@ -26,10 +26,10 @@ class Connect
     public static function getInstance(bool $msgDb = false): ?PDO
     {
         $config = self::getData();
-        if(empty($config)) {
-            die("<script>alert('Need to clean the browser cache')</script>");
+        if (empty($config)) {
+            die ("<script>alert('Need to clean the browser cache')</script>");
         }
-        if(empty(self::$instance)) {
+        if (empty(self::$instance)) {
             try {
                 self::$instance = new PDO(
                     $config["dsn"],
@@ -38,10 +38,10 @@ class Connect
                     self::OPTIONS
                 );
             } catch (\PDOException $exception) {
-                if($msgDb) {
-                    die("<i style='font-size: .7em'>" . $exception->getMessage() . "</i>)");
+                if ($msgDb) {
+                    die ("<i style='font-size: .7em'>" . $exception->getMessage() . "</i>)");
                 }
-                die("<div>Whoops, There was a mistake when connecting with the bank!</div>");
+                die ("<div>Whoops, There was a mistake when connecting with the bank!</div>");
             }
         }
 
@@ -50,7 +50,7 @@ class Connect
 
     public static function getConfConnection(): string
     {
-        if(!defined("CONF_CONNECTION")) {
+        if (!defined("CONF_CONNECTION")) {
             return "local";
         }
         return CONF_CONNECTION;
@@ -63,7 +63,7 @@ class Connect
 
     public static function getData(): ?array
     {
-        if(self::$data !== null) {
+        if (self::$data !== null) {
             return self::$data[self::getConfConnection()];
         }
 
@@ -73,7 +73,7 @@ class Connect
 
     public static function getFile()
     {
-        if(file_exists(__DIR__ . "/../Config/.config.ini")) {
+        if (file_exists(__DIR__ . "/../Config/.config.ini")) {
             return self::$file = __DIR__ . "/../Config/.config.ini";
         }
         return "Configuration file not found!";

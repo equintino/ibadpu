@@ -35,7 +35,7 @@ abstract class Model
 
     public function __set($name, $value)
     {
-        if(empty($this->data)) {
+        if (empty($this->data)) {
             $this->data = new \stdClass();
         }
         $this->data->$name = $value;
@@ -54,8 +54,8 @@ abstract class Model
     /** @var array $data columns names and values */
     public function bootstrap(array $data): ?object
     {
-        foreach($data as $name => $value) {
-            if($name === "password" || $name === "passwd") $value = $this->crypt($value);
+        foreach ($data as $name => $value) {
+            if ($name === "password" || $name === "passwd") $value = $this->crypt($value);
             $this->$name = $value;
         }
 
@@ -94,7 +94,7 @@ abstract class Model
             . $this->order($order));
             // . ($limit !== 0 ? $this->limit() : null), "limit={$limit}&offset={$offset}", $msgDb);
 
-        if($this->fail || !$all->rowCount()) {
+        if ($this->fail || !$all->rowCount()) {
             $this->message = "<span class='warning'>Your query has not returned data</span>";
             return null;
         }
@@ -111,7 +111,7 @@ abstract class Model
             $sql = "INSERT INTO {$entity} (" . $this->getAccentWorlds($columns) . ") VALUES ({$values})";
             $this->execute($sql, removeAccentArray($data));
             return Connect::getInstance($msgDb)->lastInsertId();
-        } catch(\PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
             return null;
         }
@@ -148,7 +148,7 @@ abstract class Model
         );
         parse_str($params, $params);
 
-        foreach($data as $bind => $value) {
+        foreach ($data as $bind => $value) {
             $dataSet[] = "{$bind} = '{$value}'";
         }
         $dataSet = implode(", ", $dataSet);
@@ -166,7 +166,7 @@ abstract class Model
             parse_str($params, $params);
             $stmt->execute($params);
             return $stmt->rowCount() ?? 1;
-        } catch(\PDOException $exception) {
+        } catch (\PDOException $exception) {
             $this->fail = $exception;
             return null;
         }
@@ -175,7 +175,7 @@ abstract class Model
     protected function safe(): ?array
     {
         $safe_ = (array) $this->data();
-        foreach(static::$safe as $unset) {
+        foreach (static::$safe as $unset) {
             unset($safe_[$unset]);
         }
         return array_filter($safe_, "filterNull");
@@ -190,8 +190,8 @@ abstract class Model
     {
         $worlds = explode(", ", $columns);
         $arr = [];
-        foreach($worlds as $world) {
-            if(!empty($this->accentWorlds) && array_key_exists($world, $this->accentWorlds)) {
+        foreach ($worlds as $world) {
+            if (!empty($this->accentWorlds) && array_key_exists($world, $this->accentWorlds)) {
                 array_push($arr, $this->accentWorlds[$world]);
             } else {
                 array_push($arr, $world);
@@ -203,8 +203,8 @@ abstract class Model
     private function filter(array $data, array $filtered = []): ?array
     {
         $filter = [];
-        foreach($data as $key => $value) {
-            if(!in_array($key, $filtered)) {
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $filtered)) {
                 $filter[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }

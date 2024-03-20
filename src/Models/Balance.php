@@ -28,7 +28,7 @@ class Balance extends Model implements Models
 
     public function find(string $search, string $columns = "*")
     {
-        if (filter_var($search, FILTER_SANITIZE_STRIPPED)) {
+        if (filter_var($search, FILTER_UNSAFE_RAW)) {
             $find = $this->read("SELECT {$columns} FROM " . self::$entity . " WHERE name=:name ", "name={$search}");
         }
 
@@ -72,12 +72,6 @@ class Balance extends Model implements Models
         } else {
             $all = $this->read($sql);
         }
-
-        // $all = $this->read(
-        //     "SELECT {$columns} FROM  "
-        //     . self::$entity
-        //     . " {$this->order($order)}  {$this->limit()} WHERE active=1 ", "limit={$limit}&offset={$offset}"
-        // );
 
         if ($this->fail) {
             $this->message = "<span class='error'>" . $this->fail->errorInfo[2] . "</span>";
