@@ -187,7 +187,6 @@ export default class Modal {
 
             const box = [
                 this.title,
-                this.btnClose,
                 this.message,
                 this.content,
                 this.buttons,
